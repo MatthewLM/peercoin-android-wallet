@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:orientation="vertical"
+	tools:ignore="RequiredSize" >
+
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="@dimen/list_entry_padding_horizontal_lax"
+		android:layout_marginRight="@dimen/list_entry_padding_horizontal_lax"
+		android:layout_marginTop="8dp"
+		android:text="@string/send_coins_fragment_receiving_address_label"
+		android:textColor="#000"
+		android:textSize="@dimen/font_size_small"
+		android:textStyle="bold" />
+
+	<TextView
+		android:id="@+id/send_coins_payee_name"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="@dimen/list_entry_padding_horizontal_lax"
+		android:layout_marginRight="@dimen/list_entry_padding_horizontal_lax"
+		android:layout_marginTop="8dp"
+		android:singleLine="true"
+		android:textColor="@color/fg_significant"
+		android:textSize="@dimen/font_size_normal" />
+
+	<TextView
+		android:id="@+id/send_coins_payee_organization"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="@dimen/list_entry_padding_horizontal_lax"
+		android:layout_marginRight="@dimen/list_entry_padding_horizontal_lax"
+		android:singleLine="true"
+		android:textColor="@color/fg_significant"
+		android:textSize="@dimen/font_size_normal" />
+
+	<TextView
+		android:id="@+id/send_coins_payee_verified_by"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="@dimen/list_entry_padding_horizontal_lax"
+		android:layout_marginRight="@dimen/list_entry_padding_horizontal_lax"
+		android:singleLine="true"
+		android:textColor="@color/fg_less_significant"
+		android:textSize="@dimen/font_size_small" />
+
+	<AutoCompleteTextView
+		android:id="@+id/send_coins_receiving_address"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="@dimen/list_entry_padding_horizontal"
+		android:layout_marginRight="@dimen/list_entry_padding_horizontal"
+		android:completionThreshold="1"
+		android:hint="@string/send_coins_fragment_receiving_address_hint"
+		android:imeOptions="flagNoExtractUi"
+		android:singleLine="true"
+		android:textColor="#000"
+		android:textSize="@dimen/font_size_normal" />
+
+	<LinearLayout
+		android:id="@+id/send_coins_receiving_static"
+		style="@style/My.Widget.EditText"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="@dimen/list_entry_padding_horizontal"
+		android:layout_marginRight="@dimen/list_entry_padding_horizontal"
+		android:orientation="horizontal"
+		android:visibility="gone" >
+
+		<TextView
+			android:id="@+id/send_coins_receiving_static_label"
+			android:layout_width="0px"
+			android:layout_height="wrap_content"
+			android:layout_gravity="left"
+			android:layout_weight="1"
+			android:ellipsize="end"
+			android:maxLines="3"
+			android:singleLine="false"
+			android:textSize="@dimen/font_size_normal"
+			android:textStyle="bold" />
+
+		<TextView
+			android:id="@+id/send_coins_receiving_static_address"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="@dimen/list_entry_padding_horizontal"
+			android:textSize="@dimen/font_size_normal" />
+	</LinearLayout>
+
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="@dimen/list_entry_padding_horizontal_lax"
+		android:layout_marginRight="@dimen/list_entry_padding_horizontal_lax"
+		android:layout_marginTop="8dp"
+		android:text="@string/send_coins_fragment_amount_label"
+		android:textSize="@dimen/font_size_small"
+		android:textStyle="bold" />
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="@dimen/list_entry_padding_horizontal"
+		android:layout_marginRight="@dimen/list_entry_padding_horizontal"
+		android:divider="@drawable/divider_currency"
+		android:orientation="horizontal"
+		android:showDividers="middle" >
+
+		<com.matthewmitchell.peercoin_android_wallet.ui.CurrencyAmountView
+			android:id="@+id/send_coins_amount_ppc"
+			android:layout_width="0px"
+			android:layout_height="wrap_content"
+			android:layout_weight="1" >
+
+			<EditText
+				android:id="@+id/send_coins_amount_ppc_edittext"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:imeOptions="flagNoExtractUi"
+				android:textSize="@dimen/font_size_large"
+				tools:ignore="TextFields" />
+		</com.matthewmitchell.peercoin_android_wallet.ui.CurrencyAmountView>
+
+		<com.matthewmitchell.peercoin_android_wallet.ui.CurrencyAmountView
+			android:id="@+id/send_coins_amount_local"
+			android:layout_width="0px"
+			android:layout_height="wrap_content"
+			android:layout_weight="1" >
+
+			<EditText
+				android:id="@+id/send_coins_amount_local_edittext"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:imeOptions="flagNoExtractUi"
+				android:textSize="@dimen/font_size_large"
+				tools:ignore="TextFields" />
+		</com.matthewmitchell.peercoin_android_wallet.ui.CurrencyAmountView>
+	</LinearLayout>
+
+	<CheckBox
+		android:id="@+id/send_coins_direct_payment_enable"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="@dimen/list_entry_padding_horizontal"
+		android:layout_marginRight="@dimen/list_entry_padding_horizontal"
+		android:layout_marginTop="8dp"
+		android:text="@string/send_coins_fragment_direct_payment_enable"
+		android:textSize="@dimen/font_size_normal" />
+
+	<!-- stretch dummy -->
+
+	<ImageView
+		android:layout_width="0px"
+		android:layout_height="0px"
+		android:layout_weight="1" />
+
+	<TextView
+		android:id="@+id/send_coins_direct_payment_message"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="@dimen/list_entry_padding_vertical"
+		android:layout_marginLeft="@dimen/list_entry_padding_horizontal_lax"
+		android:layout_marginRight="@dimen/list_entry_padding_horizontal_lax"
+		android:textSize="@dimen/font_size_normal"
+		android:visibility="gone" />
+
+	<ListView
+		android:id="@+id/send_coins_sent_transaction"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:visibility="gone" />
+
+	<include layout="@layout/send_coins_buttons_include" />
+
+</LinearLayout>

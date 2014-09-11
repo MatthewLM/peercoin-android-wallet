@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+	<PreferenceCategory android:title="@string/about_title" >
+		<Preference
+			android:key="about_version"
+			android:title="@string/about_version_title" />
+		<Preference
+			android:summary="© 2011-2014, Andreas Schildbach\n© 2014, Rimbit Developers\n© 2014, Matthew Mitchell"
+			android:title="@string/about_copyright_title" />
+		<Preference
+			android:key="about_license"
+			android:title="@string/about_license_title" />
+		<Preference
+			android:key="about_source"
+			android:title="@string/about_source_title" />
+		<Preference
+			android:key="about_market_app"
+			android:summary="@string/about_market_app_summary"
+			android:title="@string/about_market_app_title" />
+		<Preference
+			android:key="about_author_twitter"
+			android:summary="\@Matt_vom_Mises"
+			android:title="@string/about_author_twitter_title" />
+		<Preference
+			android:key="about_market_publisher"
+			android:title="@string/about_credits_market_publisher_title" />
+		<Preference android:key="about_credits_peercoinj" />
+		<Preference
+			android:key="about_credits_zxing"
+			android:title="@string/about_credits_zxing_title" />
+	</PreferenceCategory>
+
+</PreferenceScreen>

@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+
+	<string-array name="preferences_precision_labels">
+		<item>PPC, 8 dígitos</item>
+		<item>PPC, 6 dígitos</item>
+		<item>PPC, 4 dígitos</item>
+		<item>mPPC, 2 dígitos</item>
+		<item>µPPC, sin dígitos</item>
+	</string-array>
+
+</resources>

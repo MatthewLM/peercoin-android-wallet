@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="horizontal" >
+
+	<LinearLayout
+		android:layout_width="0px"
+		android:layout_height="match_parent"
+		android:layout_weight="1"
+		android:background="@color/bg_less_bright"
+		android:orientation="vertical" >
+
+		<TextView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginBottom="@dimen/list_entry_padding_vertical"
+			android:layout_marginLeft="@dimen/list_entry_padding_horizontal"
+			android:layout_marginRight="@dimen/list_entry_padding_horizontal"
+			android:layout_marginTop="@dimen/list_entry_padding_vertical"
+			android:shadowColor="@color/bg_bright"
+			android:shadowRadius="1"
+			android:text="@string/address_book_list_receiving_title"
+			android:textSize="@dimen/font_size_normal"
+			android:textStyle="bold" />
+
+		<FrameLayout
+			android:layout_width="match_parent"
+			android:layout_height="0px"
+			android:layout_weight="1"
+			android:background="@color/bg_bright"
+			android:foreground="@drawable/fragment_shadow_horizontal_light"
+			android:foregroundGravity="top|fill_horizontal" >
+
+			<FrameLayout
+				android:id="@+id/wallet_addresses_fragment"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent" />
+		</FrameLayout>
+	</LinearLayout>
+
+	<View
+		android:layout_width="1dp"
+		android:layout_height="match_parent"
+		android:background="@color/bg_less_bright" />
+
+	<LinearLayout
+		android:layout_width="0px"
+		android:layout_height="match_parent"
+		android:layout_weight="1"
+		android:background="@color/bg_less_bright"
+		android:orientation="vertical" >
+
+		<TextView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginBottom="@dimen/list_entry_padding_vertical"
+			android:layout_marginLeft="@dimen/list_entry_padding_horizontal"
+			android:layout_marginRight="@dimen/list_entry_padding_horizontal"
+			android:layout_marginTop="@dimen/list_entry_padding_vertical"
+			android:shadowColor="@color/bg_bright"
+			android:shadowRadius="1"
+			android:text="@string/address_book_list_sending_title"
+			android:textSize="@dimen/font_size_normal"
+			android:textStyle="bold" />
+
+		<FrameLayout
+			android:layout_width="match_parent"
+			android:layout_height="0px"
+			android:layout_weight="1"
+			android:background="@color/bg_bright"
+			android:foreground="@drawable/fragment_shadow_horizontal_light"
+			android:foregroundGravity="top|fill_horizontal" >
+
+			<FrameLayout
+				android:id="@+id/sending_addresses_fragment"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent" />
+		</FrameLayout>
+	</LinearLayout>
+
+</LinearLayout>

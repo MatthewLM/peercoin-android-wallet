@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content" >
+
+	<LinearLayout
+		android:id="@+id/wallet_balance"
+		style="@style/My.Widget.Button.Borderless"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:gravity="center"
+		android:orientation="vertical" >
+
+		<com.matthewmitchell.peercoin_android_wallet.ui.CurrencyTextView
+			android:id="@+id/wallet_balance_ppc"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textSize="@dimen/font_size_huge" />
+
+		<FrameLayout
+			android:id="@+id/wallet_balance_local_frame"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginBottom="12dp"
+			android:foregroundGravity="bottom|right"
+			android:paddingRight="8dp" >
+
+			<com.matthewmitchell.peercoin_android_wallet.ui.CurrencyTextView
+				android:id="@+id/wallet_balance_local"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textSize="@dimen/font_size_small" />
+		</FrameLayout>
+	</LinearLayout>
+
+	<TextView
+		android:id="@+id/wallet_balance_progress"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center"
+		android:layout_marginLeft="@dimen/list_entry_padding_horizontal_lax"
+		android:layout_marginRight="@dimen/list_entry_padding_horizontal_lax"
+		android:textColor="@color/fg_less_significant"
+		android:textSize="@dimen/font_size_small"
+		android:visibility="gone" />
+
+</FrameLayout>

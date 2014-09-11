@@ -1,0 +1,21 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+GenericUtils	/home/matt/Programming/ADT/workspace/peercoin-android-wallet/wallet/src/de/schildbach/wallet/util/GenericUtils.java	/^public class GenericUtils$/;"	c	language:Java
+ONE_MRBT	/home/matt/Programming/ADT/workspace/peercoin-android-wallet/wallet/src/de/schildbach/wallet/util/GenericUtils.java	/^	public static final BigInteger ONE_MRBT = new BigInteger("1000", 10);$/;"	f	language:Java	class:GenericUtils
+ONE_MRBT_INT	/home/matt/Programming/ADT/workspace/peercoin-android-wallet/wallet/src/de/schildbach/wallet/util/GenericUtils.java	/^	private static final int ONE_MRBT_INT = ONE_MRBT.intValue();$/;"	f	language:Java	class:GenericUtils	file:
+ONE_RBT	/home/matt/Programming/ADT/workspace/peercoin-android-wallet/wallet/src/de/schildbach/wallet/util/GenericUtils.java	/^	public static final BigInteger ONE_RBT = new BigInteger("1000000", 10);$/;"	f	language:Java	class:GenericUtils
+ONE_RBT_INT	/home/matt/Programming/ADT/workspace/peercoin-android-wallet/wallet/src/de/schildbach/wallet/util/GenericUtils.java	/^	private static final int ONE_RBT_INT = ONE_RBT.intValue();$/;"	f	language:Java	class:GenericUtils	file:
+ONE_URBT	/home/matt/Programming/ADT/workspace/peercoin-android-wallet/wallet/src/de/schildbach/wallet/util/GenericUtils.java	/^	public static final BigInteger ONE_URBT = new BigInteger("1", 10);$/;"	f	language:Java	class:GenericUtils
+ONE_URBT_INT	/home/matt/Programming/ADT/workspace/peercoin-android-wallet/wallet/src/de/schildbach/wallet/util/GenericUtils.java	/^	private static final int ONE_URBT_INT = ONE_URBT.intValue();$/;"	f	language:Java	class:GenericUtils	file:
+currencySymbol	/home/matt/Programming/ADT/workspace/peercoin-android-wallet/wallet/src/de/schildbach/wallet/util/GenericUtils.java	/^	public static String currencySymbol(@Nonnull final String currencyCode)$/;"	m	language:Java	class:GenericUtils
+com.matthewmitchell.peercoin_android_wallet.util	/home/matt/Programming/ADT/workspace/peercoin-android-wallet/wallet/src/de/schildbach/wallet/util/GenericUtils.java	/^package com.matthewmitchell.peercoin_android_wallet.util;$/;"	p	language:Java
+formatDebugValue	/home/matt/Programming/ADT/workspace/peercoin-android-wallet/wallet/src/de/schildbach/wallet/util/GenericUtils.java	/^	public static String formatDebugValue(@Nonnull final BigInteger value)$/;"	m	language:Java	class:GenericUtils
+formatValue	/home/matt/Programming/ADT/workspace/peercoin-android-wallet/wallet/src/de/schildbach/wallet/util/GenericUtils.java	/^	public static String formatValue(@Nonnull final BigInteger value, @Nonnull final String plusSign, @Nonnull final String minusSign,$/;"	m	language:Java	class:GenericUtils
+formatValue	/home/matt/Programming/ADT/workspace/peercoin-android-wallet/wallet/src/de/schildbach/wallet/util/GenericUtils.java	/^	public static String formatValue(@Nonnull final BigInteger value, final int precision, final int shift)$/;"	m	language:Java	class:GenericUtils
+parseCoin	/home/matt/Programming/ADT/workspace/peercoin-android-wallet/wallet/src/de/schildbach/wallet/util/GenericUtils.java	/^	public static BigInteger parseCoin(final String str, final int shift) throws ArithmeticException$/;"	m	language:Java	class:GenericUtils
+setNextFocusForwardId	/home/matt/Programming/ADT/workspace/peercoin-android-wallet/wallet/src/de/schildbach/wallet/util/GenericUtils.java	/^	public static void setNextFocusForwardId(final View view, final int nextFocusForwardId)$/;"	m	language:Java	class:GenericUtils
+startsWithIgnoreCase	/home/matt/Programming/ADT/workspace/peercoin-android-wallet/wallet/src/de/schildbach/wallet/util/GenericUtils.java	/^	public static boolean startsWithIgnoreCase(final String string, final String prefix)$/;"	m	language:Java	class:GenericUtils
