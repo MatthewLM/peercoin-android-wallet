@@ -1,21 +1,21 @@
-Bitcoin'leriniz daima cebinizde sizinle olsun! Herhangi bir QR kodunu okuyarak çabuk ödeme yapabilirsiniz. Bir tüccar olarak ödemeleri güvenilir ve anında alabilirsiniz. Bitcoin cüzdanı ilk mobil Bitcoin uygulamasıdır ve muhtemelen en güvenli Bitcoin uygulamasıdır!
+Peercoin'leriniz daima cebinizde sizinle olsun! Herhangi bir QR kodunu okuyarak çabuk ödeme yapabilirsiniz. Bir tüccar olarak ödemeleri güvenilir ve anında alabilirsiniz. Peercoin cüzdanı ilk mobil Peercoin uygulamasıdır ve muhtemelen en güvenli Peercoin uygulamasıdır!
 
 İŞLEVLERİ:
 
 • Hiçbir oturuma, web ya da bulut hizmetine gerek yoktur. Bu cüzdan merkezsiz ve eşten eşedir.
-• Bitcoin meblağlarını BTC, mBTC ve µBTC olarak göster.
+• Peercoin meblağlarını PPC, mPPC ve µPPC olarak göster.
 • Ulusal para birimlerine ve bu para birimlerinden dönüştürme.
-• NFC, QR kodu veya Bitcoin bağlantıları ile Bitcoin gönderir ve alır.
-• Sık kullanılan Bitcoin adresleri için adres defteri içerir.
+• NFC, QR kodu veya Peercoin bağlantıları ile Peercoin gönderir ve alır.
+• Sık kullanılan Peercoin adresleri için adres defteri içerir.
 • Çevrimdışı olduğunuzda Bluetooth vasıtasıyla ödemeler.
-• Alınan bitcoin'ler için sistem bildirimleri.
-• Bitcoin bakiyesini görüntüleyen widget.
+• Alınan peercoin'ler için sistem bildirimleri.
+• Peercoin bakiyesini görüntüleyen widget.
 
-Bitcoin hakkında daha fazla bilgiyi şurada bulabilirsiniz:
-http://bitcoin.org
+Peercoin hakkında daha fazla bilgiyi şurada bulabilirsiniz:
+http://peercoin.net
 
-Bitcoin Wallet'e iştirak etmek istiyorsanız, projenin adresi şudur:
-https://github.com/schildbach/bitcoin-wallet
+Peercoin Wallet'e iştirak etmek istiyorsanız, projenin adresi şudur:
+https://github.com/MatthewLM/peercoin-android-wallet
 
 Lisans: GPLv3
 Tüm riski siz üstlenmiş olursunuz.
