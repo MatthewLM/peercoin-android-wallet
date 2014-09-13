@@ -1,21 +1,21 @@
-Miej swoje Bitcoiny zawsze w swojej kieszeni! Zapłacisz skanując kod QR. Jako sprzedawca odbierzesz płatności niezawodnie i natychmiastowo. Bitcoin Wallet jest pierwszą aplikacją Bitcoinową na telefony i niezaprzeczalnie najbezpieczniejszą.
+Miej swoje Peercoiny zawsze w swojej kieszeni! Zapłacisz skanując kod QR. Jako sprzedawca odbierzesz płatności niezawodnie i natychmiastowo. Peercoin Wallet jest pierwszą aplikacją Peercoinową na telefony i niezaprzeczalnie najbezpieczniejszą.
 
 WŁAŚCIWOŚCI:
 
 • Brak konieczności rejestracji, serwisu online lub chmury! Ten portfel używa zdecentralizowanej sieci peer-to-peer.
-• Wyświetl ilość kwotę w BTC i mBTC.
+• Wyświetl ilość kwotę w PPC i mPPC.
 • Zamiana z i na waluty narodowe
-• Wysyłąnie i odbieranie Bitcoin za pomocą NFC, kodów QR czy adresów Bitcoin URL.
-• Książka adresowa dla regularnie używanych adresów Bitcoin.
+• Wysyłąnie i odbieranie Peercoin za pomocą NFC, kodów QR czy adresów Peercoin URL.
+• Książka adresowa dla regularnie używanych adresów Peercoin.
 • Gdy jesteś offline, wciąż możesz zapłacić przy użyciu Bluetooth.
 • System powiadomień dla przychodzących transakcji.
 • Widget aplikacji dla stanu konta.
 
-Dowiedz się więcej o Bitcoin
-http://bitcoin.org
+Dowiedz się więcej o Peercoin
+http://peercoin.net
 
-Jeśli chcesz przyczynić się do rozwoju Bitcoin Wallet to projekt znajduje się pod adresem
-https://github.com/schildbach/bitcoin-wallet
+Jeśli chcesz przyczynić się do rozwoju Peercoin Wallet to projekt znajduje się pod adresem
+https://github.com/MatthewLM/peercoin-android-wallet
 
 Licencja: GPLv3
 Używasz na własne ryzyko!
