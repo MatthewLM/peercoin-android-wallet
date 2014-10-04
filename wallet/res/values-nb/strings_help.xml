@@ -4,110 +4,110 @@
   <string name="help_wallet">
 <![CDATA[
     <p>
-      The upper left part of the screen displays your selected Peercoin address that other people need to know in order to send you Peercoins.
-      Tap to change the address.
+      Den øvre venstre delen av skjermen viser din valgte Peercoin-adresse, som andre folk trenger å vite for å sende deg peercoins.
+      Trykk for å endre adressen.
     </p>
     <p>
-      The QR code on the right contains your peercoin address and can be used for scanning by another party.
-      Tap on the QR code to get a larger version of it.
+      QR-koden til høyre inneholder din Peercoin-adresse og kan skannes av noen andre.
+      Trykk på QR-koden for å få en større versjon av den.
     </p>
     <p>
-      In the middle of the screen, your balance is displayed.
-      The value of your wallet is also shown in one selected local currency.
-      Tap on balance to display list of all local currencies, and tap on one of the currencies to select it as default.
+      I midten av skjermen kan du se saldoen din.
+      Saldoen i lommeboken vises også i en valgt lokal valuta.
+      Trykk på saldoen for å vise listen over alle lokale valutaer, og trykk på en av valutaene for å velge den som standard.
     </p>
     <p>
-      The bottom of the screen is covered by your transactions list, which is empty at the beginning.
-      Pending transactions are greyed out until they are confirmed.
-      Tap on one entry to add the senders or receivers address to the address book.
-      Swipe left or right to apply filters to the list.
+      Bunnen av skjermen inneholder din transaksjonsliste, som er tom i begynnelsen.
+      Ventende transaksjoner er grå til de er bekreftet.
+      Trykk på en oppføring for å legge til avsenderens eller mottakerens adresse i adresseboken.
+      Sveip til venstre eller høyre for å bruke filtre på listen.
     </p>
     <p>
-      You can send or request coins by tapping the buttons in the action bar.
-      More options are available in the options menu.
+      Du kan sende eller be om mynter ved å trykke på knappene i handlingsfeltet.
+      Flere alternativer er tilgjengelige i menyen for alternativer.
     </p>
   ]]>
   </string>
   <string name="help_request_coins">
 <![CDATA[
     <p>
-      Using this dialog, you can request coins from another person (who should already have installed Peercoin Wallet).
+      Ved å bruke denne dialogen kan du be om mynter fra en annen person (som allerede har installert Peercoin Wallet).
     </p>
     <p>
-      First, you can enter an amount of Peercoins to request.
+      Først kan du legge inn et beløp på antall peercoins som skal forespørres.
     </p>
     <p>
-      Then, you either have the generated QR code scanned by the other person.
-      Or, you can send your request to a remote person with the share button in the action bar.
-      The other person will have to click the Peercoin URL.
+      Etterpå får du enten QR-koden skannet av den andre personen, 
+      eller så kan du sende en forespørsel til en person langt unna med del-knappen i handlingsfeltet.
+      Den andre personen skal klikke på Peercoin-URLen.
     </p>
     <p>
-      Either way, the other person will be presented a dialog for sending coins with all fields pre-populated.
-      If she accepts, all she needs to do is sending the payment.
+      Den andre personen vil bli presentert en dialog for å sende mynter med alle felt forhåndsutfylt.
+      Hvis hun aksepterer, er alt hun trenger å gjøre å sende betalingen.
     </p>
   ]]>
   </string>
   <string name="help_send_coins">
 <![CDATA[
     <p>
-      You have initiated the process of sending coins.
-      You came here either through the main screen or by clicking on a Peercoin URL in your mobile browser.
+      Du har startet prosessen med å sende mynter.
+      Du kom hit enten via hovedskjermen eller ved å klikke på en Peercoin-URL i nettleseren på mobilen.
     </p>
     <p>
-      First, you enter the Peercoin address to pay to.
-      The address will autocomplete from known entries in your address book.
-      You can also scan QR codes with Peercoin addresses or Peercoin requests by pressing the QR button in the action bar.
+      Først skriver du inn den Peercoin-adressen du vil betale til.
+      Adressen vil automatisk fylles ut fra kjente oppføringer i adresseboken din.
+      Du kan også skanne QR-koder med Peercoin-adresser eller Peercoin-forespørsler ved å trykke på QR-knappen i handlingsfeltet.
     </p>
     <p>
-      Next, you can see how many Peercoins you can spend at the moment.
-      Any difference to the balance from the main screen is still unconfirmed and can thus not yet be spent.
+      Deretter kan du se hvor mange peercoins du kan bruke for øyeblikket.
+      En eventuell forskjell i saldoen fra hovedskjermen er fortsatt ubekreftet, og kan dermed ikke brukes.
     </p>
     <p>
-      Last, you enter the amount to pay.
+      Til slutt fører du inn beløpet som skal betales.
     </p>
     <p>
-      You can enter a payment while being offline.
-      It will be sent on next restart of Peercoin Wallet.
-      If you want a payment to be processed as fast as possible, make sure you are well connected (i.e. on a WLAN).
+      Du kan legge inn en betaling mens du er offline.
+      Den vil bli sendt når Peercoin Wallet startes på nytt.
+      Hvis du ønsker at en betaling går igjennom så raskt som mulig, sørg for at du er godt tilkoblet (dvs. på et WLAN).
     </p>
     <p>
-      Note:
-      Payments are irreversible!
-      Always check the receiving address.
+      OBS:
+      Betalinger er irreversible!
+      Sjekk alltid mottakeradresse.
     </p>
   ]]>
   </string>
   <string name="help_safety">
 <![CDATA[
     <p>
-      <b>Important safety notes:</b>
+      <b>Viktige sikkerhetsmerknader:</b>
     </p>
     <p>
-      Peercoins are stored on the device.
-      <b>If you lose it, you\'ll lose your Peercoins.</b>
+      Peercoins er lagret på enheten.
+      <b>Hvis du mister den, mister du dine peercoins.</b>
     </p>
     <p>
-      This means you need to <b>back up your wallet</b>!
-      Use the in-app backup facility for this, rather than a third party backup app.
-      Keep your backup safe and remember the password.
+      Dette betyr at du må <b>sikkerhetskopiere lommeboken din</b>!
+      Bruk funksjonen for sikkerhetskopiering i appen for dette, snarere enn en tredjepartsapp for sikkerhetskopiering.
+      Oppbevar sikkerhetskopien sikkert og husk passordet.
     </p>
     <p>
-      <b>Before uninstalling</b> (or clearing app data/wiping your device), <b>transfer your Peercoins to another wallet</b>.
-      Remaining Peercoins will be lost.
+      <b>Før avinstallering</b> (eller sletting av appdata/nullstilling av enheten til fabrikkinnstillinger), <b>overfør dine peercoins til en annen lommebok</b>.
+      Resterende peercoins vil gå tapt.
     </p>
     <p>
-      <b>Payments are irreversible</b>.
-      If you send your Peercoins into the void, there is almost no way to get them back.
+      <b>Betalinger er irreversible</b>.
+      Hvis du sender dine peercoins ut i det blå, er det stort sett ikke mulig å få dem tilbake.
     </p>
     <p>
-      <b>Keep your mobile device safe!</b>
-      Do not root your device.
-      Do only install apps you fully trust.
-      Malicious apps could be trying to steal your wallet.
+      <b>Oppbevar din mobile enhet sikkert!</b>
+      Utfør ikke root på enheten.
+      Installer kun apps du stoler helt på.
+      Skadelige apper kan prøve å stjele lommeboken din.
     </p>
     <p>
-      Keep the risk low!
-      <b>Only use with small amounts</b> for day use.
+      Hold risikoen lav!
+      <b>Bruk kun med små beløp</b> til daglig bruk.
     </p>
   ]]>
   </string>
