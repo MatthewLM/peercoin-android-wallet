@@ -3,18 +3,18 @@ FILES
 Your wallet contains your private keys and various transaction related metadata. It is stored in app-private
 storage:
 
-	Mainnet: /data/data/de.schildbach.wallet/files/wallet-protobuf (MODE_PRIVATE)
+	Mainnet: /data/data/com.matthewmitchell.peercoin_android_wallet/files/wallet-protobuf (MODE_PRIVATE)
 
-	Testnet: /data/data/de.schildbach.wallet_test/files/wallet-protobuf-testnet (MODE_WORLD_READABLE | MODE_WORLD_WRITEABLE)
+	Testnet: /data/data/com.matthewmitchell.peercoin_android_wallet_test/files/wallet-protobuf-testnet (MODE_WORLD_READABLE | MODE_WORLD_WRITEABLE)
 
 The wallet file format is not compatible to wallet.dat (Satoshi client). Rather, it uses a custom protobuf format
 which should be compatible between clients using peercoinj.
 
 Certain actions cause automatic rolling backups of your wallet to app-private storage:
 
-	Mainnet: /data/data/de.schildbach.wallet/files/key-backup-protobuf (MODE_PRIVATE)
+	Mainnet: /data/data/com.matthewmitchell.peercoin_android_wallet/files/key-backup-protobuf (MODE_PRIVATE)
 
-	Testnet: /data/data/de.schildbach.wallet_test/files/key-backup-protobuf-testnet (MODE_PRIVATE)
+	Testnet: /data/data/com.matthewmitchell.peercoin_android_wallet_test/files/key-backup-protobuf-testnet (MODE_PRIVATE)
 
 Your wallet can be manually backed up to and restored from external storage:
 
@@ -22,16 +22,15 @@ Your wallet can be manually backed up to and restored from external storage:
 
 	Testnet: /sdcard/Download/peercoin-wallet-backup-testnet-<yyyy-MM-dd>
 
-The manual backup files are encrypted using your chosen backup password. You can use OpenSSL to decrypt:
-
-	openssl enc -d -aes-256-cbc -a -in <filename>
+If you want to recover coins from manual backups and for whatever reason you cannot use the app
+itself to restore from the backup, see the separate README.recover guide.
 
 
 DEBUGGING
 
 Wallet file for Testnet can be pulled from an (even un-rooted) device using
 
-	adb pull /data/data/de.schildbach.wallet_test/files/wallet-protobuf-testnet
+	adb pull /data/data/com.matthewmitchell.peercoin_android_wallet_test/files/wallet-protobuf-testnet
 
 Log messages can be viewed by
 
@@ -52,19 +51,23 @@ You'll need git, a Java SDK 6 (or later) and Maven 3.0.4 for this. I'll assume U
 the package installs.
 
 	# first time only
-	sudo apt-get install git maven openjdk-6-jdk
+	sudo apt-get install git maven openjdk-6-jdk libstdc++6:i386
 
 If you want to use Maven 3.1.0 or later, you need edit pom.xml to use android-maven-plugin version
 3.8.2 or later.
 
-Get the Android SDK Tools from
+Get the Android SDK (Tools only) from
 
 	http://developer.android.com/sdk/
 
-and unpack it to your workspace directory. Switch to that Android SDK directory, and use
+and unpack it to your workspace directory. Point your ANDROID_HOME variable to that Android SDK directory
+and switch to it. Use
 
-	# first time only
-	tools/android update sdk --no-ui --force --filter platform,platform-tools
+	# make sure tools are at the newest version
+	tools/android update sdk --no-ui --force --filter tools
+
+	# fetch required android dependencies
+	tools/android update sdk --no-ui --force --filter build-tools-20.0.0,android-10,android-16,extra-android-m2repository
 
 to download the necessary API level.
 
@@ -77,7 +80,7 @@ use
 	# each time
 	cd peercoin-wallet
 	git pull
-	mvn clean install -Dandroid.sdk.path=<path to your android sdk>
+	mvn clean install
 
 To upload the app to your Android device, use
 
@@ -107,7 +110,7 @@ separate 'prod' branch that gets rebased against master with each released versi
 
 SETTING UP FOR DEVELOPMENT
 
-Make sure you've got Eclipse 3.7 (Indigo) with ADT 20 installed.
+Make sure you've got Eclipse Luna with ADT 23 installed.
 
 Use Git to check out the project and an Android library dependency to your workspace:
 
@@ -122,7 +125,7 @@ Use Git to check out the project and an Android library dependency to your works
 Use the maven-eclipse-plugin to create Eclipse project files:
 
 	cd peercoin-wallet
-	mvn eclipse:eclipse
+	mvn clean install eclipse:eclipse
 
 Optional: In the generated .classpath, remove the org.eclipse.jdt.launching.JRE_CONTAINER
 classpath entry. It does not belong there, but cannot be excluded from being generated currently.
@@ -158,32 +161,16 @@ Instructions for preparing an NFC tag with your address:
 - If you put your tag at a public place, don't forget to enable write protect. Otherwise, someone
   could overwrite the tag with his own Peercoin address.
 
+PEERCOINJ
+
+peercoinj is used for Peercoin specific logic:
+
+    https://github.com/MatthewLM/peercoinj
 
 EXCHANGE RATES
 
-Peercoin Wallet reads this feed from "peercoin charts" for getting exchange rates:
+Exchange rates are taken from:
 
-	http://peercoincharts.com/t/weighted_prices.json
+    Peercoin to USD: btc-e.com
+    USD to Other Fiat: yahooapis.com
 
-The feed is described on this page (see Weighted Prices):
-
-	http://peercoincharts.com/about/markets-api/
-
-I chose this feed because it is not dependent on a single exchange. However, you should keep in
-mind it's always a 24h average (falling back to 7d or even 30d if no trade occurred for a long
-time).
-
-If Peercoincharts is not available, the feed from "Blockchain" is fetched instead:
-
-	https://blockchain.info/ticker
-
-The feed is described here:
-
-	https://blockchain.info/api/exchange_rates_api
-
-
-PeercoinJ
-
-Peercoin Wallet uses peercoinj for Peercoin specific logic:
-
-https://github.Com.matthewmitchell.peercoinjj

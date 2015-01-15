@@ -8,7 +8,7 @@
 
 	<fragment
 		android:id="@+id/send_coins_fragment"
-		android:name="com.matthewmitchell.peercoin_android_wallet.ui.SendCoinsFragment"
+		android:name="com.matthewmitchell.peercoin_android_wallet.ui.send.SendCoinsFragment"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content" />
 

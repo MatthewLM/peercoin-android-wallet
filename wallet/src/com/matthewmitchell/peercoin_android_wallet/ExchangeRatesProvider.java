@@ -22,8 +22,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.math.BigInteger;
-import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -33,13 +31,19 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.zip.GZIPInputStream;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 
+import com.matthewmitchell.peercoinj.core.Coin;
+import com.matthewmitchell.peercoinj.utils.Fiat;
+import com.matthewmitchell.peercoinj.utils.ExchangeRate;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,46 +56,53 @@ import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.provider.BaseColumns;
 import android.text.format.DateUtils;
+
+import com.google.common.base.Charsets;
+
 import com.matthewmitchell.peercoin_android_wallet.util.GenericUtils;
 import com.matthewmitchell.peercoin_android_wallet.util.Io;
-import com.matthewmitchell.peercoinj.core.Utils;
 
 /**
  * @author Andreas Schildbach
  */
 public class ExchangeRatesProvider extends ContentProvider
 {
-	public static class ExchangeRate
+	public static class WalletExchangeRate
 	{
-		public ExchangeRate(@Nonnull final String currencyCode, @Nonnull final BigInteger rate, final String source)
+		public WalletExchangeRate(@Nonnull final ExchangeRate rate, final String source)
 		{
-			this.currencyCode = currencyCode;
 			this.rate = rate;
 			this.source = source;
 		}
 
-		public final String currencyCode;
-		public final BigInteger rate;
+		public final ExchangeRate rate;
 		public final String source;
+
+		public String getCurrencyCode()
+		{
+			return rate.fiat.currencyCode;
+		}
 
 		@Override
 		public String toString()
 		{
-			return getClass().getSimpleName() + '[' + currencyCode + ':' + GenericUtils.formatDebugValue(rate) + ']';
+			return getClass().getSimpleName() + '[' + rate.fiat + ']';
 		}
 	}
 
 	public static final String KEY_CURRENCY_CODE = "currency_code";
-	private static final String KEY_RATE = "rate";
+	private static final String KEY_RATE_COIN = "rate_coin";
+	private static final String KEY_RATE_FIAT = "rate_fiat";
 	private static final String KEY_SOURCE = "source";
 
 	public static final String QUERY_PARAM_Q = "q";
+	private static final String QUERY_PARAM_OFFLINE = "offline";
 
 	private Configuration config;
 	private String userAgent;
 
 	@CheckForNull
-	private Map<String, ExchangeRate> exchangeRates = null;
+	private Map<String, WalletExchangeRate> exchangeRates = null;
 	private long lastUpdated = 0;
 
 	private static final URL BTCE_URL;
@@ -109,6 +120,7 @@ public class ExchangeRatesProvider extends ContentProvider
 
 	private static final long UPDATE_FREQ_MS = 10 * DateUtils.MINUTE_IN_MILLIS;
 
+
 	private static final Logger log = LoggerFactory.getLogger(ExchangeRatesProvider.class);
 
 	@Override
@@ -119,20 +131,23 @@ public class ExchangeRatesProvider extends ContentProvider
 		this.config = new Configuration(PreferenceManager.getDefaultSharedPreferences(context));
 
 		this.userAgent = WalletApplication.httpUserAgent(WalletApplication.packageInfoFromContext(context).versionName);
-		
-		final ExchangeRate cachedExchangeRate = config.getCachedExchangeRate();
+
+		final WalletExchangeRate cachedExchangeRate = config.getCachedExchangeRate();
 		if (cachedExchangeRate != null)
 		{
-			exchangeRates = new TreeMap<String, ExchangeRate>();
-			exchangeRates.put(cachedExchangeRate.currencyCode, cachedExchangeRate);
+			exchangeRates = new TreeMap<String, WalletExchangeRate>();
+			exchangeRates.put(cachedExchangeRate.getCurrencyCode(), cachedExchangeRate);
 		}
 
 		return true;
 	}
 
-	public static Uri contentUri(@Nonnull final String packageName)
+	public static Uri contentUri(@Nonnull final String packageName, final boolean offline)
 	{
-		return Uri.parse("content://" + packageName + '.' + "exchange_rates");
+		final Uri.Builder uri = Uri.parse("content://" + packageName + '.' + "exchange_rates").buildUpon();
+		if (offline)
+			uri.appendQueryParameter(QUERY_PARAM_OFFLINE, "1");
+		return uri.build();
 	}
 
 	@Override
@@ -140,9 +155,11 @@ public class ExchangeRatesProvider extends ContentProvider
 	{
 		final long now = System.currentTimeMillis();
 
-		if (lastUpdated == 0 || now - lastUpdated > UPDATE_FREQ_MS)
+		final boolean offline = uri.getQueryParameter(QUERY_PARAM_OFFLINE) != null;
+
+		if (!offline && (lastUpdated == 0 || now - lastUpdated > UPDATE_FREQ_MS))
 		{
-			Map<String, ExchangeRate> newExchangeRates = null;
+			Map<String, WalletExchangeRate> newExchangeRates = null;
 			if (newExchangeRates == null)
 				newExchangeRates = requestExchangeRates(userAgent);
 
@@ -151,7 +168,7 @@ public class ExchangeRatesProvider extends ContentProvider
 				exchangeRates = newExchangeRates;
 				lastUpdated = now;
 
-				final ExchangeRate exchangeRateToCache = bestExchangeRate(config.getExchangeCurrencyCode());
+				final WalletExchangeRate exchangeRateToCache = bestExchangeRate(config.getExchangeCurrencyCode());
 				if (exchangeRateToCache != null)
 					config.setCachedExchangeRate(exchangeRateToCache);
 			}
@@ -160,42 +177,49 @@ public class ExchangeRatesProvider extends ContentProvider
 		if (exchangeRates == null)
 			return null;
 
-		final MatrixCursor cursor = new MatrixCursor(new String[] { BaseColumns._ID, KEY_CURRENCY_CODE, KEY_RATE, KEY_SOURCE });
+		final MatrixCursor cursor = new MatrixCursor(new String[] { BaseColumns._ID, KEY_CURRENCY_CODE, KEY_RATE_COIN, KEY_RATE_FIAT, KEY_SOURCE });
 
 		if (selection == null)
 		{
-			for (final Map.Entry<String, ExchangeRate> entry : exchangeRates.entrySet())
+			for (final Map.Entry<String, WalletExchangeRate> entry : exchangeRates.entrySet())
 			{
-				final ExchangeRate rate = entry.getValue();
-				cursor.newRow().add(rate.currencyCode.hashCode()).add(rate.currencyCode).add(rate.rate.longValue()).add(rate.source);
+				final WalletExchangeRate exchangeRate = entry.getValue();
+				final ExchangeRate rate = exchangeRate.rate;
+				final String currencyCode = exchangeRate.getCurrencyCode();
+				cursor.newRow().add(currencyCode.hashCode()).add(currencyCode).add(rate.coin.value).add(rate.fiat.value).add(exchangeRate.source);
 			}
 		}
 		else if (selection.equals(QUERY_PARAM_Q))
 		{
 			final String selectionArg = selectionArgs[0].toLowerCase(Locale.US);
-			for (final Map.Entry<String, ExchangeRate> entry : exchangeRates.entrySet())
+			for (final Map.Entry<String, WalletExchangeRate> entry : exchangeRates.entrySet())
 			{
-				final ExchangeRate rate = entry.getValue();
-				final String currencyCode = rate.currencyCode;
+				final WalletExchangeRate exchangeRate = entry.getValue();
+				final ExchangeRate rate = exchangeRate.rate;
+				final String currencyCode = exchangeRate.getCurrencyCode();
 				final String currencySymbol = GenericUtils.currencySymbol(currencyCode);
 				if (currencyCode.toLowerCase(Locale.US).contains(selectionArg) || currencySymbol.toLowerCase(Locale.US).contains(selectionArg))
-					cursor.newRow().add(currencyCode.hashCode()).add(currencyCode).add(rate.rate.longValue()).add(rate.source);
+					cursor.newRow().add(currencyCode.hashCode()).add(currencyCode).add(rate.coin.value).add(rate.fiat.value).add(exchangeRate.source);
 			}
 		}
 		else if (selection.equals(KEY_CURRENCY_CODE))
 		{
 			final String selectionArg = selectionArgs[0];
-			final ExchangeRate rate = bestExchangeRate(selectionArg);
-			if (rate != null)
-				cursor.newRow().add(rate.currencyCode.hashCode()).add(rate.currencyCode).add(rate.rate.longValue()).add(rate.source);
+			final WalletExchangeRate exchangeRate = bestExchangeRate(selectionArg);
+			if (exchangeRate != null)
+			{
+				final ExchangeRate rate = exchangeRate.rate;
+				final String currencyCode = exchangeRate.getCurrencyCode();
+				cursor.newRow().add(currencyCode.hashCode()).add(currencyCode).add(rate.coin.value).add(rate.fiat.value).add(exchangeRate.source);
+			}
 		}
 
 		return cursor;
 	}
 
-	private ExchangeRate bestExchangeRate(final String currencyCode)
+	private WalletExchangeRate bestExchangeRate(final String currencyCode)
 	{
-		ExchangeRate rate = currencyCode != null ? exchangeRates.get(currencyCode) : null;
+		WalletExchangeRate rate = currencyCode != null ? exchangeRates.get(currencyCode) : null;
 		if (rate != null)
 			return rate;
 
@@ -220,13 +244,14 @@ public class ExchangeRatesProvider extends ContentProvider
 		}
 	}
 
-	public static ExchangeRate getExchangeRate(@Nonnull final Cursor cursor)
+	public static WalletExchangeRate getExchangeRate(@Nonnull final Cursor cursor)
 	{
 		final String currencyCode = cursor.getString(cursor.getColumnIndexOrThrow(ExchangeRatesProvider.KEY_CURRENCY_CODE));
-		final BigInteger rate = BigInteger.valueOf(cursor.getLong(cursor.getColumnIndexOrThrow(ExchangeRatesProvider.KEY_RATE)));
+		final Coin rateCoin = Coin.valueOf(cursor.getLong(cursor.getColumnIndexOrThrow(ExchangeRatesProvider.KEY_RATE_COIN)));
+		final Fiat rateFiat = Fiat.valueOf(currencyCode, cursor.getLong(cursor.getColumnIndexOrThrow(ExchangeRatesProvider.KEY_RATE_FIAT)));
 		final String source = cursor.getString(cursor.getColumnIndexOrThrow(ExchangeRatesProvider.KEY_SOURCE));
 
-		return new ExchangeRate(currencyCode, rate, source);
+		return new WalletExchangeRate(new ExchangeRate(rateCoin, rateFiat), source);
 	}
 
 	@Override
@@ -260,19 +285,24 @@ public class ExchangeRatesProvider extends ContentProvider
 
 		try {
 			connection = (HttpURLConnection) url.openConnection();
-			
+
 			connection.setInstanceFollowRedirects(false);
 			connection.setConnectTimeout(Constants.HTTP_TIMEOUT_MS);
 			connection.setReadTimeout(Constants.HTTP_TIMEOUT_MS);
 			connection.addRequestProperty("User-Agent", userAgent);
+			connection.addRequestProperty("Accept-Encoding", "gzip");
 			connection.connect();
 
 			final int responseCode = connection.getResponseCode();
 			if (responseCode == HttpURLConnection.HTTP_OK) {
-				
-				InputStream is = new BufferedInputStream(connection.getInputStream(), 1024);
 
-				reader = new InputStreamReader(is, Constants.UTF_8);
+				final String contentEncoding = connection.getContentEncoding();
+
+				InputStream is = new BufferedInputStream(connection.getInputStream(), 1024);
+				if ("gzip".equalsIgnoreCase(contentEncoding))
+					is = new GZIPInputStream(is);
+
+				reader = new InputStreamReader(is, Charsets.UTF_8);
 				final StringBuilder content = new StringBuilder();
 
 				Io.copy(reader, content);	
@@ -300,23 +330,25 @@ public class ExchangeRatesProvider extends ContentProvider
 
 	}
 
-	private static Map<String, ExchangeRate> requestExchangeRates(final String userAgent) {
+	private static Map<String, WalletExchangeRate> requestExchangeRates(final String userAgent) {
 
-		final Map<String, ExchangeRate> rates = new TreeMap<String, ExchangeRate>();
+		final Map<String, WalletExchangeRate> rates = new TreeMap<String, WalletExchangeRate>();
 
 		String usdPriceResult = getURLResult(BTCE_URL, userAgent);
 		if (usdPriceResult == null)
 			return null;
-		
-		BigInteger usdPrice;
+
+		final Fiat usdPrice;
+
 		try {
 			JSONObject jsonResult = new JSONObject(usdPriceResult);
-			usdPrice = GenericUtils.parseCoin(jsonResult.getJSONObject("ticker").getString("last"), 0);
+			String usdStr = jsonResult.getJSONObject("ticker").getString("last");
+			usdPrice = Fiat.parseFiat("USD", usdStr);
 		}catch (JSONException e) {
 			return null;
 		}
 			
-		rates.put("USD", new ExchangeRate("USD", usdPrice, BTCE_SOURCE));
+		rates.put("USD", new WalletExchangeRate(new ExchangeRate(usdPrice), BTCE_SOURCE));
 
 		// Now for USD conversions
 		
@@ -346,10 +378,11 @@ public class ExchangeRatesProvider extends ContentProvider
 					JSONObject conv = convs.getJSONObject(x);
 					String currency = conv.getString("id").substring(3);
 					String priceString = conv.getString("Rate");
-					
-					BigInteger price = (new BigDecimal(GenericUtils.parseCoin(priceString, 0).multiply(usdPrice))).movePointLeft(6).toBigInteger();
-					rates.put(currency, new ExchangeRate(currency, price, BTCE_SOURCE));
 
+                    // Divide by 10000 as Fiat are moved 4 decimal places
+                    Fiat price = Fiat.parseFiat(currency, priceString).multiply(usdPrice.longValue()).divide(10000); 
+
+					rates.put(currency, new WalletExchangeRate(new ExchangeRate(price), BTCE_SOURCE));
 				}
 
 			} catch (Exception e) {
@@ -361,3 +394,4 @@ public class ExchangeRatesProvider extends ContentProvider
 
 	}
 }
+

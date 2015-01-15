@@ -1,7 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-
-	<string name="help_wallet">
+  <string name="help_wallet">
 <![CDATA[
 		<p>
 			В верхней левой части экрана отображается выбранный Peercoin-адрес, который нужно знать остальным людям для отправки Вам Peercoin-монет.
@@ -27,10 +26,10 @@
 		</p>
 	]]>
 	</string>
-	<string name="help_request_coins">
+  <string name="help_request_coins">
 <![CDATA[
 		<p>
-			С помощью этого диалога Вы можете запросить монет у другого пользователя Peercoin Кошелька.
+			С помощью этого диалога Вы можете запросить монет у другого пользователя Peercoin Wallet.
 		</p>
 		<p>
 			Сперва Вы можете ввести запрашиваемую сумму, или оставить поле нетронутым, чтобы сумму определил отправитель.
@@ -44,7 +43,7 @@
 		</p>
 	]]>
 	</string>
-	<string name="help_send_coins">
+  <string name="help_send_coins">
 <![CDATA[
 		<p>
 			Вы инициировали процесс отправки монет.
@@ -75,7 +74,7 @@
 		</p>
 	]]>
 	</string>
-	<string name="help_safety">
+  <string name="help_safety">
 <![CDATA[
 		<p>
 			<b>Несколько слов о безопасности Ваших Peercoin-монет:</b>
@@ -99,9 +98,8 @@
 		</p>
 		<p>
 			Не слишком рискуйте!
-			<b>Используйте Android-версию Peercoin Кошелька для малых сумм</b> для использования в течение дня.
+			<b>Используйте Peercoin Wallet для малых сумм</b> для использования в течение дня.
 		</p>
 	]]>
 	</string>
-
 </resources>

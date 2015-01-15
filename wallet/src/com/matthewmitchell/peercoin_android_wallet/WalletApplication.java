@@ -23,12 +23,23 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nonnull;
 
-import org.peercoinj.wallet.Protos;
+import com.matthewmitchell.peercoinj.core.Transaction;
+import com.matthewmitchell.peercoinj.core.VerificationException;
+import com.matthewmitchell.peercoinj.core.VersionMessage;
+import com.matthewmitchell.peercoinj.core.Wallet;
+import com.matthewmitchell.peercoinj.crypto.MnemonicCode;
+import com.matthewmitchell.peercoinj.store.UnreadableWalletException;
+import com.matthewmitchell.peercoinj.store.WalletProtobufSerializer;
+import com.matthewmitchell.peercoinj.utils.Threading;
+import com.matthewmitchell.peercoinj.wallet.Protos;
+import com.matthewmitchell.peercoinj.wallet.WalletFiles;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,8 +51,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.os.Handler;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.format.DateUtils;
 import android.widget.Toast;
 import ch.qos.logback.classic.Level;
@@ -52,16 +65,6 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.rolling.RollingFileAppender;
 import ch.qos.logback.core.rolling.TimeBasedRollingPolicy;
 
-import com.matthewmitchell.peercoinj.core.Address;
-import com.matthewmitchell.peercoinj.core.ECKey;
-import com.matthewmitchell.peercoinj.core.Transaction;
-import com.matthewmitchell.peercoinj.core.VersionMessage;
-import com.matthewmitchell.peercoinj.core.Wallet;
-import com.matthewmitchell.peercoinj.store.UnreadableWalletException;
-import com.matthewmitchell.peercoinj.store.WalletProtobufSerializer;
-import com.matthewmitchell.peercoinj.utils.Threading;
-import com.matthewmitchell.peercoinj.wallet.WalletFiles;
-
 import com.matthewmitchell.peercoin_android_wallet.service.BlockchainService;
 import com.matthewmitchell.peercoin_android_wallet.service.BlockchainServiceImpl;
 import com.matthewmitchell.peercoin_android_wallet.util.CrashReporter;
@@ -69,12 +72,14 @@ import com.matthewmitchell.peercoin_android_wallet.util.Io;
 import com.matthewmitchell.peercoin_android_wallet.util.LinuxSecureRandom;
 import com.matthewmitchell.peercoin_android_wallet.R;
 
+import static junit.framework.Assert.assertTrue;
+
 /**
  * @author Andreas Schildbach
  */
 public class WalletApplication extends Application
 {
-	private Configuration config;
+	private Configuration config = null; 
 	private ActivityManager activityManager;
 
 	private Intent blockchainServiceIntent;
@@ -85,20 +90,21 @@ public class WalletApplication extends Application
 	private Wallet wallet;
 	private PackageInfo packageInfo;
 
+	public static final String ACTION_WALLET_CHANGED = WalletApplication.class.getPackage().getName() + ".wallet_changed";
+
 	private static final Logger log = LoggerFactory.getLogger(WalletApplication.class);
+	
+	private ArrayList<Runnable> loadedCallbacks = new ArrayList<Runnable>();
+	private boolean isLoaded = false;
 
-	@Override
-	public void onCreate()
-	{
+	private void initWallet() {
+		
 		new LinuxSecureRandom(); // init proper random number generator
-
 		initLogging();
-
-		StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll().permitDiskReads().permitDiskWrites().penaltyLog().build());
 
 		Threading.throwOnLockCycles();
 
-		log.info("configuration: " + (Constants.TEST ? "test" : "prod") + ", " + Constants.NETWORK_PARAMETERS.getId());
+		log.info("=== starting app using configuration: {}, {}", Constants.TEST ? "test" : "prod", Constants.NETWORK_PARAMETERS.getId());
 
 		super.onCreate();
 
@@ -116,6 +122,8 @@ public class WalletApplication extends Application
 			}
 		};
 
+		initMnemonicCode();
+
 		config = new Configuration(PreferenceManager.getDefaultSharedPreferences(this));
 		activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
 
@@ -124,23 +132,61 @@ public class WalletApplication extends Application
 				BlockchainServiceImpl.class);
 		blockchainServiceResetBlockchainIntent = new Intent(BlockchainService.ACTION_RESET_BLOCKCHAIN, null, this, BlockchainServiceImpl.class);
 
-		walletFile = getFileStreamPath(Constants.WALLET_FILENAME_PROTOBUF);
+		walletFile = getFileStreamPath(Constants.Files.WALLET_FILENAME_PROTOBUF);
 
 		loadWalletFromProtobuf();
 
 		config.updateLastVersionCode(packageInfo.versionCode);
 
 		afterLoadWallet();
+		
+		synchronized (this) {
+		
+			isLoaded = true;
+			
+			for (Runnable callback : loadedCallbacks)
+				callback.run();
+			
+		}
+		
 	}
+	
+	public void setOnLoadedCallback(Runnable callback) {
+		
+		synchronized (this) {
+			
+			if (isLoaded) {
+				callback.run();
+				return;
+			}
+			
+			loadedCallbacks.add(callback);
+		
+		}
+		
+	}
+	
+	@Override
+	public void onCreate() {
+		
+            // Do not use main thread!
+            new Thread(new Runnable() {
 
+                    @Override
+                    public void run() {
+                            initWallet();
+                    }
+
+            }).start();
+		
+	}
+	
 	private void afterLoadWallet()
 	{
-		wallet.autosaveToFile(walletFile, 1, TimeUnit.SECONDS, new WalletAutosaveEventListener());
+		wallet.autosaveToFile(walletFile, 10, TimeUnit.SECONDS, new WalletAutosaveEventListener());
 
 		// clean up spam
 		wallet.cleanup();
-
-		ensureKey();
 
 		migrateBackup();
 	}
@@ -192,6 +238,22 @@ public class WalletApplication extends Application
 		log.addAppender(fileAppender);
 		log.addAppender(logcatAppender);
 		log.setLevel(Level.INFO);
+	}
+
+	private static final String BIP39_WORDLIST_FILENAME = "bip39-wordlist.txt";
+
+	private void initMnemonicCode()
+	{
+		try
+		{
+			final long start = System.currentTimeMillis();
+			MnemonicCode.INSTANCE = new MnemonicCode(getAssets().open(BIP39_WORDLIST_FILENAME), null);
+			log.info("BIP39 wordlist loaded from: '" + BIP39_WORDLIST_FILENAME + "', took " + (System.currentTimeMillis() - start) + "ms");
+		}
+		catch (final IOException x)
+		{
+			throw new Error(x);
+		}
 	}
 
 	private static final class WalletAutosaveEventListener implements WalletFiles.Listener
@@ -284,13 +346,12 @@ public class WalletApplication extends Application
 		{
 			wallet = new Wallet(Constants.NETWORK_PARAMETERS);
 
+			backupWallet();
+
+			config.armBackupReminder();
+
 			log.info("new wallet created");
 		}
-
-		// this check is needed so encrypted wallets won't get their private keys removed accidently
-		for (final ECKey key : wallet.getKeys())
-			if (key.getPrivKeyBytes() == null)
-				throw new Error("found read-only key, but wallet is likely an encrypted wallet from the future");
 	}
 
 	private Wallet restoreWalletFromBackup()
@@ -299,7 +360,7 @@ public class WalletApplication extends Application
 
 		try
 		{
-			is = openFileInput(Constants.WALLET_KEY_BACKUP_PROTOBUF);
+			is = openFileInput(Constants.Files.WALLET_KEY_BACKUP_PROTOBUF);
 
 			final Wallet wallet = new WalletProtobufSerializer().readWallet(is);
 
@@ -310,7 +371,7 @@ public class WalletApplication extends Application
 
 			Toast.makeText(this, R.string.toast_wallet_reset, Toast.LENGTH_LONG).show();
 
-			log.info("wallet restored from backup: '" + Constants.WALLET_KEY_BACKUP_PROTOBUF + "'");
+			log.info("wallet restored from backup: '" + Constants.Files.WALLET_KEY_BACKUP_PROTOBUF + "'");
 
 			return wallet;
 		}
@@ -333,25 +394,6 @@ public class WalletApplication extends Application
 				// swallow
 			}
 		}
-	}
-
-	private void ensureKey()
-	{
-		for (final ECKey key : wallet.getKeys())
-			if (!wallet.isKeyRotating(key))
-				return; // found
-
-		log.info("wallet has no usable key - creating");
-		addNewKeyToWallet();
-	}
-
-	public void addNewKeyToWallet()
-	{
-		wallet.addKey(new ECKey());
-
-		backupWallet();
-
-		config.armBackupReminder();
 	}
 
 	public void saveWallet()
@@ -394,7 +436,7 @@ public class WalletApplication extends Application
 
 		try
 		{
-			os = openFileOutput(Constants.WALLET_KEY_BACKUP_PROTOBUF, Context.MODE_PRIVATE);
+			os = openFileOutput(Constants.Files.WALLET_KEY_BACKUP_PROTOBUF, Context.MODE_PRIVATE);
 			walletProto.writeTo(os);
 		}
 		catch (final IOException x)
@@ -415,7 +457,7 @@ public class WalletApplication extends Application
 
 		try
 		{
-			final String filename = String.format(Locale.US, "%s.%02d", Constants.WALLET_KEY_BACKUP_PROTOBUF,
+			final String filename = String.format(Locale.US, "%s.%02d", Constants.Files.WALLET_KEY_BACKUP_PROTOBUF,
 					(System.currentTimeMillis() / DateUtils.DAY_IN_MILLIS) % 100l);
 			os = openFileOutput(filename, Context.MODE_PRIVATE);
 			walletProto.writeTo(os);
@@ -439,7 +481,7 @@ public class WalletApplication extends Application
 
 	private void migrateBackup()
 	{
-		if (!getFileStreamPath(Constants.WALLET_KEY_BACKUP_PROTOBUF).exists())
+		if (!getFileStreamPath(Constants.Files.WALLET_KEY_BACKUP_PROTOBUF).exists())
 		{
 			log.info("migrating automatic backup to protobuf");
 
@@ -448,39 +490,26 @@ public class WalletApplication extends Application
 
 			// remove old backups
 			for (final String filename : fileList())
-				if (filename.startsWith(Constants.WALLET_KEY_BACKUP_BASE58))
+				if (filename.startsWith(Constants.Files.WALLET_KEY_BACKUP_BASE58))
 					new File(getFilesDir(), filename).delete();
 		}
 	}
 
-	public Address determineSelectedAddress()
-	{
-		final String selectedAddress = config.getSelectedAddress();
+	public void startBlockchainService(final boolean cancelCoinsReceived) {
+		
+		setOnLoadedCallback(new Runnable() {
 
-		Address firstAddress = null;
-		for (final ECKey key : wallet.getKeys())
-		{
-			if (!wallet.isKeyRotating(key))
-			{
-				final Address address = key.toAddress(Constants.NETWORK_PARAMETERS);
-
-				if (address.toString().equals(selectedAddress))
-					return address;
-
-				if (firstAddress == null)
-					firstAddress = address;
+			@Override
+			public void run() {
+				assertTrue(config != null);
+				if (cancelCoinsReceived)
+					startService(blockchainServiceCancelCoinsReceivedIntent);
+				else
+					startService(blockchainServiceIntent);
 			}
-		}
-
-		return firstAddress;
-	}
-
-	public void startBlockchainService(final boolean cancelCoinsReceived)
-	{
-		if (cancelCoinsReceived)
-			startService(blockchainServiceCancelCoinsReceivedIntent);
-		else
-			startService(blockchainServiceIntent);
+			
+		});
+		
 	}
 
 	public void stopBlockchainService()
@@ -490,23 +519,51 @@ public class WalletApplication extends Application
 
 	public void resetBlockchain()
 	{
+		internalResetBlockchain();
+
+		final Intent broadcast = new Intent(ACTION_WALLET_CHANGED);
+		broadcast.setPackage(getPackageName());
+		LocalBroadcastManager.getInstance(this).sendBroadcast(broadcast);
+	}
+
+	private void internalResetBlockchain()
+	{
 		// actually stops the service
+		assertTrue(config != null);
 		startService(blockchainServiceResetBlockchainIntent);
 	}
 
-	public void replaceWallet(final Wallet newWallet)
-	{
-		resetBlockchain(); // implicitly stops blockchain service
+	public void replaceWallet(final Wallet newWallet){
+		
+		internalResetBlockchain(); // implicitly stops blockchain service
 		wallet.shutdownAutosaveAndWait();
 
 		wallet = newWallet;
+		config.maybeIncrementBestChainHeightEver(newWallet.getLastBlockSeenHeight());
 		afterLoadWallet();
+
+		final Intent broadcast = new Intent(ACTION_WALLET_CHANGED);
+		broadcast.setPackage(getPackageName());
+		LocalBroadcastManager.getInstance(this).sendBroadcast(broadcast);
+		
+		config.disarmBackupReminder();
+		
+	}
+
+	public void processDirectTransaction(@Nonnull final Transaction tx) throws VerificationException
+	{
+		if (wallet.isTransactionRelevant(tx))
+		{
+			wallet.receivePending(tx, null);
+			broadcastTransaction(tx);
+		}
 	}
 
 	public void broadcastTransaction(@Nonnull final Transaction tx)
 	{
 		final Intent intent = new Intent(BlockchainService.ACTION_BROADCAST_TRANSACTION, null, this, BlockchainServiceImpl.class);
 		intent.putExtra(BlockchainService.ACTION_BROADCAST_TRANSACTION_HASH, tx.getHash().getBytes());
+		assertTrue(config != null);
 		startService(intent);
 	}
 
@@ -559,29 +616,45 @@ public class WalletApplication extends Application
 			return 6;
 	}
 
-	public static void scheduleStartBlockchainService(@Nonnull final Context context)
-	{
-		final Configuration config = new Configuration(PreferenceManager.getDefaultSharedPreferences(context));
-		final long lastUsedAgo = config.getLastUsedAgo();
+	public void scheduleStartBlockchainService() {
+		
+		final WalletApplication wa = this;
+		
+		this.setOnLoadedCallback(new Runnable() {
 
-		// apply some backoff
-		final long alarmInterval;
-		if (lastUsedAgo < Constants.LAST_USAGE_THRESHOLD_JUST_MS)
-			alarmInterval = AlarmManager.INTERVAL_FIFTEEN_MINUTES;
-		else if (lastUsedAgo < Constants.LAST_USAGE_THRESHOLD_RECENTLY_MS)
-			alarmInterval = AlarmManager.INTERVAL_HALF_DAY;
-		else
-			alarmInterval = AlarmManager.INTERVAL_DAY;
-
-		log.info("last used {} minutes ago, rescheduling blockchain sync in roughly {} minutes", lastUsedAgo / DateUtils.MINUTE_IN_MILLIS,
+			@Override
+			public void run() {
+				
+				final long lastUsedAgo = config.getLastUsedAgo();
+				
+				// apply some backoff
+				final long alarmInterval;
+				if (lastUsedAgo < Constants.LAST_USAGE_THRESHOLD_JUST_MS)
+					alarmInterval = AlarmManager.INTERVAL_FIFTEEN_MINUTES;
+				else if (lastUsedAgo < Constants.LAST_USAGE_THRESHOLD_RECENTLY_MS)
+					alarmInterval = AlarmManager.INTERVAL_HALF_DAY;
+				else
+					alarmInterval = AlarmManager.INTERVAL_DAY;
+				
+				log.info("last used {} minutes ago, rescheduling blockchain sync in roughly {} minutes", lastUsedAgo / DateUtils.MINUTE_IN_MILLIS,
 				alarmInterval / DateUtils.MINUTE_IN_MILLIS);
-
-		final AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-		final PendingIntent alarmIntent = PendingIntent.getService(context, 0, new Intent(context, BlockchainServiceImpl.class), 0);
-		alarmManager.cancel(alarmIntent);
-
-		// workaround for no inexact set() before KitKat
-		final long now = System.currentTimeMillis();
-		alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, now + alarmInterval, AlarmManager.INTERVAL_DAY, alarmIntent);
+				assertTrue(config != null);
+				final AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+				final PendingIntent alarmIntent = PendingIntent.getService(wa, 0, new Intent(wa, BlockchainServiceImpl.class), 0);
+				alarmManager.cancel(alarmIntent);
+				
+				// workaround for no inexact set() before KitKat
+				final long now = System.currentTimeMillis();
+				alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, now + alarmInterval, AlarmManager.INTERVAL_DAY, alarmIntent);
+				
+			}
+			
+		});
+		
 	}
+
+	public boolean isLoaded() {
+		return isLoaded;
+	}
+	
 }

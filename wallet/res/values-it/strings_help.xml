@@ -1,7 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-
-	<string name="help_wallet">
+  <string name="help_wallet">
 <![CDATA[
 		<p>
 			La parte in alto a sinistra dello schermo mostra gli indirizzo Peercoin che le altre persone hanno bisogno per poterti inviare dei Peercoin.
@@ -28,7 +27,7 @@
 		</p>
 	]]>
 	</string>
-	<string name="help_request_coins">
+  <string name="help_request_coins">
 <![CDATA[
 		<p>
 			Utilizzando questa finestra puoi richiedere dei Peercoin ad un\'altra persona
@@ -39,7 +38,7 @@
 		</p>
 		<p>
 			Poi puoi generare dei codici QR da far acquisire all\'altra persona.
-			Oppure puoi inviare la richiesta con il tasto "condividi" nella barra azioni.
+			Oppure puoi inviare la richiesta con il tasto \"condividi\" nella barra azioni.
 			La persona che riceve la richiesta dovrà cliccare l\'URL Peercoin.
 		</p>
 		<p>
@@ -48,7 +47,7 @@
 		</p>
 	]]>
 	</string>
-	<string name="help_send_coins">
+  <string name="help_send_coins">
 <![CDATA[
 		<p>
 			Hai iniziato il processo per inviare Peercoins.
@@ -78,7 +77,7 @@
 		</p>
 	]]>
 	</string>
-	<string name="help_safety">
+  <string name="help_safety">
 <![CDATA[
 		<p>
 			<b>Alcune informazioni riguardo la sicurezza relativa ai vostri Peercoins:</b>
@@ -108,5 +107,4 @@
 		</p>
 	]]>
 	</string>
-
 </resources>

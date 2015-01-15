@@ -22,22 +22,37 @@ import javax.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.google.common.base.Charsets;
+import com.matthewmitchell.peercoin_android_wallet.Constants;
 
 import com.matthewmitchell.peercoin_android_wallet.WalletApplication;
 import com.matthewmitchell.peercoin_android_wallet.R;
+import com.matthewmitchell.peercoin_android_wallet.util.Crypto;
+import com.matthewmitchell.peercoin_android_wallet.util.Io;
+import com.matthewmitchell.peercoin_android_wallet.util.WalletUtils;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 /**
  * @author Andreas Schildbach
  */
-public abstract class AbstractWalletActivity extends SherlockFragmentActivity
+public abstract class AbstractWalletActivity extends LoaderActivity
 {
+	protected static final int DIALOG_RESTORE_WALLET = 0;
 	private WalletApplication application;
+	
+	protected RestoreWalletTask restoreTask = null;
 
 	protected static final Logger log = LoggerFactory.getLogger(AbstractWalletActivity.class);
 
@@ -99,4 +114,34 @@ public abstract class AbstractWalletActivity extends SherlockFragmentActivity
 		toast.setDuration(duration);
 		toast.show();
 	}
+	
+	protected void restoreWalletFromEncrypted(@Nonnull final InputStream cipher, @Nonnull final String password) {
+		restoreTask = new RestoreWalletTask();
+		restoreTask.restoreWalletFromEncrypted(cipher, password, this);
+	}
+	
+	protected void restoreWalletFromEncrypted(@Nonnull final File file, @Nonnull final String password) {
+		restoreTask = new RestoreWalletTask();
+		restoreTask.restoreWalletFromEncrypted(file, password, this);
+	}
+
+	protected void restoreWalletFromProtobuf(@Nonnull final File file) {
+		restoreTask = new RestoreWalletTask();
+		restoreTask.restoreWalletFromProtobuf(file, this);
+	}
+
+	protected void restorePrivateKeysFromBase58(@Nonnull final File file) {
+		restoreTask = new RestoreWalletTask();
+		restoreTask.restorePrivateKeysFromBase58(file, this);
+	}
+	
+	@Override
+	protected void onStop() {
+		if (restoreTask != null) { 
+			restoreTask.cancel(false);
+			restoreTask = null;
+		}
+		super.onStop();
+	}
+
 }

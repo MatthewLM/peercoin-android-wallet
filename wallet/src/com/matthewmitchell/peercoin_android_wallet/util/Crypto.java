@@ -22,7 +22,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.nio.charset.Charset;
 import java.security.SecureRandom;
 import java.util.Arrays;
 
@@ -39,6 +38,7 @@ import org.spongycastle.crypto.modes.CBCBlockCipher;
 import org.spongycastle.crypto.paddings.PaddedBufferedBlockCipher;
 import org.spongycastle.crypto.params.ParametersWithIV;
 
+import com.google.common.base.Charsets;
 import com.google.common.io.BaseEncoding;
 
 /**
@@ -56,8 +56,8 @@ import com.google.common.io.BaseEncoding;
  */
 public class Crypto
 {
-	private static final BaseEncoding BASE64 = BaseEncoding.base64().withSeparator("\n", 76);
-	private static final Charset UTF_8 = Charset.forName("UTF-8");
+	private static final BaseEncoding BASE64_ENCRYPT = BaseEncoding.base64().withSeparator("\n", 76);
+	private static final BaseEncoding BASE64_DECRYPT = BaseEncoding.base64().withSeparator("\r\n", 76);
 
 	/**
 	 * number of times the password & salt are hashed during key creation.
@@ -87,13 +87,13 @@ public class Crypto
 	/**
 	 * OpenSSL salted prefix bytes - also used as magic number for encrypted key file.
 	 */
-	private static final byte[] OPENSSL_SALTED_BYTES = OPENSSL_SALTED_TEXT.getBytes(UTF_8);
+	private static final byte[] OPENSSL_SALTED_BYTES = OPENSSL_SALTED_TEXT.getBytes(Charsets.UTF_8);
 
 	/**
 	 * Magic text that appears at the beginning of every OpenSSL encrypted file. Used in identifying encrypted key
 	 * files.
 	 */
-	private static final String OPENSSL_MAGIC_TEXT = BASE64.encode(Crypto.OPENSSL_SALTED_BYTES).substring(0,
+	private static final String OPENSSL_MAGIC_TEXT = BASE64_ENCRYPT.encode(Crypto.OPENSSL_SALTED_BYTES).substring(0,
 			Crypto.NUMBER_OF_CHARACTERS_TO_MATCH_IN_OPENSSL_MAGIC_TEXT);
 
 	private static final int NUMBER_OF_CHARACTERS_TO_MATCH_IN_OPENSSL_MAGIC_TEXT = 10;
@@ -131,7 +131,7 @@ public class Crypto
 	 */
 	public static String encrypt(@Nonnull final String plainText, @Nonnull final char[] password) throws IOException
 	{
-		final byte[] plainTextAsBytes = plainText.getBytes(UTF_8);
+		final byte[] plainTextAsBytes = plainText.getBytes(Charsets.UTF_8);
 
 		return encrypt(plainTextAsBytes, password);
 	}
@@ -153,7 +153,7 @@ public class Crypto
 		// OpenSSL prefixes the salt bytes + encryptedBytes with Salted___ and then base64 encodes it
 		final byte[] encryptedBytesPlusSaltedText = concat(OPENSSL_SALTED_BYTES, encryptedBytes);
 
-		return BASE64.encode(encryptedBytesPlusSaltedText);
+		return BASE64_ENCRYPT.encode(encryptedBytesPlusSaltedText);
 	}
 
 	/**
@@ -210,7 +210,7 @@ public class Crypto
 	{
 		final byte[] decryptedBytes = decryptBytes(textToDecode, password);
 
-		return new String(decryptedBytes, UTF_8).trim();
+		return new String(decryptedBytes, Charsets.UTF_8).trim();
 	}
 
 	/**
@@ -228,7 +228,7 @@ public class Crypto
 		final byte[] decodeTextAsBytes;
 		try
 		{
-			decodeTextAsBytes = BASE64.decode(textToDecode);
+			decodeTextAsBytes = BASE64_DECRYPT.decode(textToDecode);
 		}
 		catch (final IllegalArgumentException x)
 		{
@@ -312,7 +312,7 @@ public class Crypto
 			Reader in = null;
 			try
 			{
-				in = new InputStreamReader(new FileInputStream(file), UTF_8);
+				in = new InputStreamReader(new FileInputStream(file), Charsets.UTF_8);
 				if (in.read(buf) == -1)
 					return false;
 				final String str = new String(buf);

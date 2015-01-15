@@ -3,10 +3,7 @@
 
 	<string name="toast_wallet_reset">Το πορτοφόλι έχει αποκατασταθεί,\nθα πάρει κάποιο χρόνο για την ανάκτηση</string>
 	<string name="wallet_disclaimer_fragment_remind_safety">Χρησιμοποιήστε με δική σας ευθύνη. Διαβάστε τις οδηγίες ασφαλείας</string>
-	<string name="wallet_address_fragment_your">H Peercoin διεύθυνή σας:</string>
 	<string name="wallet_address_fragment_clipboard_msg">H Peercoin διεύθυνή αντιγράφικε στο clipboard</string>
-	<string name="wallet_addresses_fragment_add_dialog_title">Προσθήκη διεύθυνσης Peercoin</string>
-	<string name="wallet_addresses_fragment_add_dialog_message">Οι Peercoin διευθύνσεις δεν μπορούν να διαγραφούν. Θέλετε να προσθέσετε μια νέα διεύθυνση στο πορτοφόλι σας;</string>
 	<string name="exchange_rates_fragment_empty_text">Δεν ήταν δυνατή η φόρτωση των συναλλαγματικών ισοτιμιών</string>
 	<string name="wallet_transactions_fragment_tab_received">Ελήφθη</string>
 	<string name="wallet_transactions_fragment_tab_all">Και τα δύο</string>
@@ -40,7 +37,6 @@
 	<string name="address_book_context_send_title">Αποστολή Peercoins στη διεύθυνση</string>
 	<string name="address_book_context_edit_title">Επεξεργασία διεύθυνσης</string>
 	<string name="address_book_context_remove_title">Αφαιρέστε τη διεύθυνση</string>
-	<string name="address_book_context_show_qr_title">Εμφάνιση κώδικα QR</string>
 	<string name="address_book_context_copy_to_clipboard_title">Αντιγραφή στο clipboard</string>
 	<string name="edit_address_book_entry_dialog_title_add">Προσθήκη διεύθυνσης</string>
 	<string name="edit_address_book_entry_dialog_title_edit">Επεξεργασία διεύθυνσης</string>
@@ -52,10 +48,7 @@
 	<string name="about_credits_peercoinj_title">Αυτή η εφαρμογή χρησιμοποιεί peercoinj %s</string>
 	<string name="about_credits_zxing_title">Αυτή η εφαρμογή χρησιμοποιεί\'zxing\'</string>
 	<string name="about_credits_icon_title">Η εφαρμογή αυτή χρησιμοποιεί ένα εικονίδιο από τη \'bitboy\'</string>
-	<string name="about_author_twitter_title">Δημιουργός στο Twitter</string>
-	<string name="about_author_googleplus_title">Δημιουργός στο Google+</string>
 	<string name="about_market_app_title">Σελίδα Εφαρμογών του Google Play</string>
-	<string name="about_credits_market_publisher_title">Άλλες εφαρμογές του δημιουργού</string>
 	<string name="notification_coins_received_msg">Ελήφθη %s</string>
 	<string name="notification_peers_connected_msg">%d χρήστες συνδεμένοι</string>
 	<!-- generic buttons -->
@@ -67,5 +60,6 @@
 	<string name="button_share">Μοιραστείτε</string>
 	<string name="button_request_coins">Ζητήστε νομίσματα</string>
 	<string name="button_send_coins">Αποστολή νομισμάτων</string>
+	<string name="action_show_qr">Εμφάνιση κώδικα QR</string>
 
 </resources>

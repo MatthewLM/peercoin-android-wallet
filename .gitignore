@@ -7,3 +7,5 @@ bin/
 gen/
 target/
 *.sw*
+Session.vim
+tags

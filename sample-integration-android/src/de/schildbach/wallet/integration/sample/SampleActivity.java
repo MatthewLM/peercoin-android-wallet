@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.schildbach.wallet.integration.sample;
+package com.matthewmitchell.peercoin_android_wallet.integration.sample;
 
 import org.peercoin.protocols.payments.Protos;
 
@@ -37,7 +37,7 @@ import com.matthewmitchell.peercoinj.core.NetworkParameters;
 import com.matthewmitchell.peercoinj.script.ScriptBuilder;
 import com.google.protobuf.ByteString;
 
-import de.schildbach.wallet.integration.android.PeercoinIntegration;
+import com.matthewmitchell.peercoin_android_wallet.integration.android.PeercoinIntegration;
 
 /**
  * @author Andreas Schildbach

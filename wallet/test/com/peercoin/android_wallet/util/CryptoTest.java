@@ -19,10 +19,18 @@ package com.matthewmitchell.peercoin_android_wallet.util;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
+import com.matthewmitchell.peercoinj.store.WalletProtobufSerializer;
 import org.junit.Test;
+
+import com.google.common.base.Charsets;
 
 import com.matthewmitchell.peercoin_android_wallet.util.Crypto;
 
@@ -90,4 +98,5 @@ public class CryptoTest
 			builder.append('x');
 		}
 	}
+
 }

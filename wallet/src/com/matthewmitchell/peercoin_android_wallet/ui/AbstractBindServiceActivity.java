@@ -19,13 +19,18 @@ package com.matthewmitchell.peercoin_android_wallet.ui;
 
 import javax.annotation.CheckForNull;
 
+import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
+
+import com.matthewmitchell.peercoin_android_wallet.WalletApplication;
 import com.matthewmitchell.peercoin_android_wallet.service.BlockchainService;
 import com.matthewmitchell.peercoin_android_wallet.service.BlockchainServiceImpl;
+
+import static junit.framework.Assert.assertTrue;
 
 /**
  * @author Andreas Schildbach
@@ -54,8 +59,19 @@ public abstract class AbstractBindServiceActivity extends AbstractWalletActivity
 	protected void onResume()
 	{
 		super.onResume();
+		
+		final Activity a = this;
+		
+		runAfterLoad(new Runnable() {
 
-		bindService(new Intent(this, BlockchainServiceImpl.class), serviceConnection, Context.BIND_AUTO_CREATE);
+			@Override
+			public void run() {
+				assertTrue(((WalletApplication)a.getApplication()).getConfiguration() != null);
+				bindService(new Intent(a, BlockchainServiceImpl.class), serviceConnection, Context.BIND_AUTO_CREATE);
+			}
+			
+		});
+		
 	}
 
 	@Override

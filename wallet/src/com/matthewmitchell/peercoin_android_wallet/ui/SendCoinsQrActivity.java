@@ -17,21 +17,27 @@
 
 package com.matthewmitchell.peercoin_android_wallet.ui;
 
+import javax.annotation.Nonnull;
+
+import com.matthewmitchell.peercoinj.core.Transaction;
+import com.matthewmitchell.peercoinj.core.VerificationException;
+import com.matthewmitchell.peercoinj.core.VersionedChecksummedBytes;
+
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.matthewmitchell.peercoinj.core.Transaction;
-
+import com.matthewmitchell.peercoin_android_wallet.WalletApplication;
 import com.matthewmitchell.peercoin_android_wallet.data.PaymentIntent;
 import com.matthewmitchell.peercoin_android_wallet.ui.InputParser.StringInputParser;
+import com.matthewmitchell.peercoin_android_wallet.ui.send.SendCoinsActivity;
 
 /**
  * @author Andreas Schildbach
  */
-public final class SendCoinsQrActivity extends AbstractOnDemandServiceActivity
+public final class SendCoinsQrActivity extends Activity
 {
 	private static final int REQUEST_CODE_SCAN = 0;
 
@@ -53,7 +59,7 @@ public final class SendCoinsQrActivity extends AbstractOnDemandServiceActivity
 			new StringInputParser(input)
 			{
 				@Override
-				protected void handlePaymentIntent(final PaymentIntent paymentIntent)
+				protected void handlePaymentIntent(@Nonnull final PaymentIntent paymentIntent)
 				{
 					SendCoinsActivity.start(SendCoinsQrActivity.this, paymentIntent);
 
@@ -61,9 +67,10 @@ public final class SendCoinsQrActivity extends AbstractOnDemandServiceActivity
 				}
 
 				@Override
-				protected void handleDirectTransaction(final Transaction transaction)
+				protected void handleDirectTransaction(final Transaction transaction) throws VerificationException
 				{
-					processDirectTransaction(transaction);
+					final WalletApplication application = (WalletApplication) getApplication();
+					application.processDirectTransaction(transaction);
 
 					SendCoinsQrActivity.this.finish();
 				}

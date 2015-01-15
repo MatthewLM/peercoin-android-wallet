@@ -1999,12 +1999,12 @@ customNavigationLayout	gen/de/schildbach/wallet_test/R.java	/^        public sta
 customTitle	src/de/schildbach/wallet/ui/DialogBuilder.java	/^	private final View customTitle;$/;"	f	class:DialogBuilder	file:
 dataUsageIntent	src/de/schildbach/wallet/ui/PreferencesActivity.java	/^	private static final Intent dataUsageIntent = new Intent();$/;"	f	class:PreferencesActivity	file:
 dateFormat	src/de/schildbach/wallet/ui/WalletAddressesAdapter.java	/^	private final DateFormat dateFormat;$/;"	f	class:WalletAddressesAdapter	file:
-de.schildbach.wallet	src/de/schildbach/wallet/AddressBookProvider.java	/^package de.schildbach.wallet;$/;"	p
-de.schildbach.wallet	src/de/schildbach/wallet/Configuration.java	/^package de.schildbach.wallet;$/;"	p
-de.schildbach.wallet	src/de/schildbach/wallet/Constants.java	/^package de.schildbach.wallet;$/;"	p
-de.schildbach.wallet	src/de/schildbach/wallet/ExchangeRatesProvider.java	/^package de.schildbach.wallet;$/;"	p
-de.schildbach.wallet	src/de/schildbach/wallet/WalletApplication.java	/^package de.schildbach.wallet;$/;"	p
-de.schildbach.wallet	src/de/schildbach/wallet/WalletBalanceWidgetProvider.java	/^package de.schildbach.wallet;$/;"	p
+com.matthewmitchell.peercoin_android_wallet	src/de/schildbach/wallet/AddressBookProvider.java	/^package com.matthewmitchell.peercoin_android_wallet;$/;"	p
+com.matthewmitchell.peercoin_android_wallet	src/de/schildbach/wallet/Configuration.java	/^package com.matthewmitchell.peercoin_android_wallet;$/;"	p
+com.matthewmitchell.peercoin_android_wallet	src/de/schildbach/wallet/Constants.java	/^package com.matthewmitchell.peercoin_android_wallet;$/;"	p
+com.matthewmitchell.peercoin_android_wallet	src/de/schildbach/wallet/ExchangeRatesProvider.java	/^package com.matthewmitchell.peercoin_android_wallet;$/;"	p
+com.matthewmitchell.peercoin_android_wallet	src/de/schildbach/wallet/WalletApplication.java	/^package com.matthewmitchell.peercoin_android_wallet;$/;"	p
+com.matthewmitchell.peercoin_android_wallet	src/de/schildbach/wallet/WalletBalanceWidgetProvider.java	/^package com.matthewmitchell.peercoin_android_wallet;$/;"	p
 com.matthewmitchell.peercoin_android_wallet.camera	src/de/schildbach/wallet/camera/CameraManager.java	/^package com.matthewmitchell.peercoin_android_wallet.camera;$/;"	p
 com.matthewmitchell.peercoin_android_wallet.data	src/de/schildbach/wallet/data/PaymentIntent.java	/^package com.matthewmitchell.peercoin_android_wallet.data;$/;"	p
 com.matthewmitchell.peercoin_android_wallet.offline	src/de/schildbach/wallet/offline/AcceptBluetoothService.java	/^package com.matthewmitchell.peercoin_android_wallet.offline;$/;"	p
@@ -2083,8 +2083,8 @@ com.matthewmitchell.peercoin_android_wallet.util	test/de/schildbach/wallet/util/
 com.matthewmitchell.peercoin_android_wallet.util	test/de/schildbach/wallet/util/BluetoothTest.java	/^package com.matthewmitchell.peercoin_android_wallet.util;$/;"	p
 com.matthewmitchell.peercoin_android_wallet.util	test/de/schildbach/wallet/util/CryptoTest.java	/^package com.matthewmitchell.peercoin_android_wallet.util;$/;"	p
 com.matthewmitchell.peercoin_android_wallet.util	test/de/schildbach/wallet/util/GenericUtilsTest.java	/^package com.matthewmitchell.peercoin_android_wallet.util;$/;"	p
-de.schildbach.wallet_test	gen/de/schildbach/wallet_test/BuildConfig.java	/^package de.schildbach.wallet_test;$/;"	p
-de.schildbach.wallet_test	gen/de/schildbach/wallet_test/R.java	/^package de.schildbach.wallet_test;$/;"	p
+com.matthewmitchell.peercoin_android_wallet_test	gen/de/schildbach/wallet_test/BuildConfig.java	/^package com.matthewmitchell.peercoin_android_wallet_test;$/;"	p
+com.matthewmitchell.peercoin_android_wallet_test	gen/de/schildbach/wallet_test/R.java	/^package com.matthewmitchell.peercoin_android_wallet_test;$/;"	p
 decode	src/de/schildbach/wallet/util/Base43.java	/^	public static byte[] decode(@Nonnull final String input) throws IllegalArgumentException$/;"	m	class:Base43
 decode	test/de/schildbach/wallet/util/Base43Test.java	/^	public void decode() throws Exception$/;"	m	class:Base43Test
 decodeBinary	src/de/schildbach/wallet/util/Qr.java	/^	public static byte[] decodeBinary(@Nonnull final String content) throws IOException$/;"	m	class:Qr

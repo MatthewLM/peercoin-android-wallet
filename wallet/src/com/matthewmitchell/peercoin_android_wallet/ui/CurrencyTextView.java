@@ -17,22 +17,20 @@
 
 package com.matthewmitchell.peercoin_android_wallet.ui;
 
-import java.math.BigInteger;
 
 import javax.annotation.Nonnull;
 
+import com.matthewmitchell.peercoinj.core.Monetary;
+import com.matthewmitchell.peercoinj.utils.MonetaryFormat;
+
 import android.content.Context;
 import android.graphics.Paint;
-import android.text.Editable;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.util.AttributeSet;
 import android.widget.TextView;
 import com.matthewmitchell.peercoin_android_wallet.Constants;
-import com.matthewmitchell.peercoin_android_wallet.util.GenericUtils;
-import com.matthewmitchell.peercoin_android_wallet.util.WalletUtils;
+import com.matthewmitchell.peercoin_android_wallet.util.MonetarySpannable;
 import com.matthewmitchell.peercoin_android_wallet.R;
 
 /**
@@ -40,13 +38,11 @@ import com.matthewmitchell.peercoin_android_wallet.R;
  */
 public final class CurrencyTextView extends TextView
 {
-	private String prefix = null;
-	private ForegroundColorSpan prefixColorSpan = null;
-	private BigInteger amount = null;
-	private int precision = 0;
-	private int shift = 0;
+	private Monetary amount = null;
+	private MonetaryFormat format = null;
 	private boolean alwaysSigned = false;
 	private RelativeSizeSpan prefixRelativeSizeSpan = null;
+	private ForegroundColorSpan prefixColorSpan = null;
 	private RelativeSizeSpan insignificantRelativeSizeSpan = null;
 
 	public CurrencyTextView(final Context context)
@@ -59,28 +55,15 @@ public final class CurrencyTextView extends TextView
 		super(context, attrs);
 	}
 
-	public void setPrefix(@Nonnull final String prefix)
-	{
-		this.prefix = prefix + Constants.CHAR_HAIR_SPACE;
-		updateView();
-	}
-
-	public void setPrefixColor(final int prefixColor)
-	{
-		this.prefixColorSpan = new ForegroundColorSpan(prefixColor);
-		updateView();
-	}
-
-	public void setAmount(@Nonnull final BigInteger amount)
+	public void setAmount(@Nonnull final Monetary amount)
 	{
 		this.amount = amount;
 		updateView();
 	}
 
-	public void setPrecision(final int precision, final int shift)
+	public void setFormat(@Nonnull final MonetaryFormat format)
 	{
-		this.precision = precision;
-		this.shift = shift;
+		this.format = format.codeSeparator(Constants.CHAR_HAIR_SPACE);
 		updateView();
 	}
 
@@ -112,6 +95,12 @@ public final class CurrencyTextView extends TextView
 		}
 	}
 
+	public void setPrefixColor(final int prefixColor)
+	{
+		this.prefixColorSpan = new ForegroundColorSpan(prefixColor);
+		updateView();
+	}
+
 	@Override
 	protected void onFinishInflate()
 	{
@@ -124,32 +113,13 @@ public final class CurrencyTextView extends TextView
 
 	private void updateView()
 	{
-		final Editable text;
+		final MonetarySpannable text;
 
 		if (amount != null)
-		{
-			final String s;
-			if (alwaysSigned)
-				s = GenericUtils.formatValue(amount, Constants.CURRENCY_PLUS_SIGN, Constants.CURRENCY_MINUS_SIGN, precision, shift);
-			else
-				s = GenericUtils.formatValue(amount, precision, shift);
-
-			text = new SpannableStringBuilder(s);
-			WalletUtils.formatSignificant(text, insignificantRelativeSizeSpan);
-
-			if (prefix != null)
-			{
-				text.insert(0, prefix);
-				if (prefixRelativeSizeSpan != null)
-					text.setSpan(prefixRelativeSizeSpan, 0, prefix.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-				if (prefixColorSpan != null)
-					text.setSpan(prefixColorSpan, 0, prefix.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-			}
-		}
+			text = new MonetarySpannable(format, alwaysSigned, amount).applyMarkup(prefixRelativeSizeSpan, prefixColorSpan,
+					insignificantRelativeSizeSpan);
 		else
-		{
 			text = null;
-		}
 
 		setText(text);
 	}

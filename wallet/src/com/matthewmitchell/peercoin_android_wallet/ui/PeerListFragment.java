@@ -29,27 +29,28 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import android.app.Activity;
+import android.app.LoaderManager;
+import android.app.LoaderManager.LoaderCallbacks;
+import android.content.AsyncTaskLoader;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.Loader;
 import android.content.ServiceConnection;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.app.LoaderManager.LoaderCallbacks;
-import android.support.v4.content.AsyncTaskLoader;
-import android.support.v4.content.Loader;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.format.DateUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockListFragment;
 import com.matthewmitchell.peercoinj.core.Peer;
 import com.matthewmitchell.peercoinj.core.VersionMessage;
 
@@ -57,11 +58,14 @@ import com.matthewmitchell.peercoin_android_wallet.service.BlockchainService;
 import com.matthewmitchell.peercoin_android_wallet.service.BlockchainServiceImpl;
 import com.matthewmitchell.peercoin_android_wallet.util.WholeStringBuilder;
 import com.matthewmitchell.peercoin_android_wallet.R;
+import com.matthewmitchell.peercoin_android_wallet.WalletApplication;
+
+import static junit.framework.Assert.assertTrue;
 
 /**
  * @author Andreas Schildbach
  */
-public final class PeerListFragment extends SherlockListFragment
+public final class PeerListFragment extends FancyListFragment
 {
 	private AbstractWalletActivity activity;
 	private LoaderManager loaderManager;
@@ -93,16 +97,8 @@ public final class PeerListFragment extends SherlockListFragment
 	public void onActivityCreated(final Bundle savedInstanceState)
 	{
 		super.onActivityCreated(savedInstanceState);
-
+		assertTrue(((WalletApplication)activity.getApplication()).getConfiguration() != null);
 		activity.bindService(new Intent(activity, BlockchainServiceImpl.class), serviceConnection, Context.BIND_AUTO_CREATE);
-	}
-
-	@Override
-	public void onViewCreated(final View view, final Bundle savedInstanceState)
-	{
-		super.onViewCreated(view, savedInstanceState);
-
-		setEmptyText(WholeStringBuilder.bold(getString(R.string.peer_list_fragment_empty)));
 	}
 
 	@Override
@@ -112,11 +108,13 @@ public final class PeerListFragment extends SherlockListFragment
 
 		adapter = new ArrayAdapter<Peer>(activity, 0)
 		{
+			private final LayoutInflater inflater = LayoutInflater.from(activity);
+
 			@Override
 			public View getView(final int position, View row, final ViewGroup parent)
 			{
 				if (row == null)
-					row = getLayoutInflater(null).inflate(R.layout.peer_list_row, null);
+					row = inflater.inflate(R.layout.peer_list_row, null);
 
 				final Peer peer = getItem(position);
 				final VersionMessage versionMessage = peer.getPeerVersionMessage();
@@ -234,14 +232,14 @@ public final class PeerListFragment extends SherlockListFragment
 
 	private static class PeerLoader extends AsyncTaskLoader<List<Peer>>
 	{
-		private Context context;
+		private LocalBroadcastManager broadcastManager;
 		private BlockchainService service;
 
 		private PeerLoader(final Context context, @Nonnull final BlockchainService service)
 		{
 			super(context);
 
-			this.context = context.getApplicationContext();
+			this.broadcastManager = LocalBroadcastManager.getInstance(context.getApplicationContext());
 			this.service = service;
 		}
 
@@ -250,13 +248,15 @@ public final class PeerListFragment extends SherlockListFragment
 		{
 			super.onStartLoading();
 
-			context.registerReceiver(broadcastReceiver, new IntentFilter(BlockchainService.ACTION_PEER_STATE));
+			broadcastManager.registerReceiver(broadcastReceiver, new IntentFilter(BlockchainService.ACTION_PEER_STATE));
+
+			forceLoad();
 		}
 
 		@Override
 		protected void onStopLoading()
 		{
-			context.unregisterReceiver(broadcastReceiver);
+			broadcastManager.unregisterReceiver(broadcastReceiver);
 
 			super.onStopLoading();
 		}
@@ -300,6 +300,8 @@ public final class PeerListFragment extends SherlockListFragment
 			if (peers != null)
 				for (final Peer peer : peers)
 					adapter.add(peer);
+
+			setEmptyText(WholeStringBuilder.bold(getString(R.string.peer_list_fragment_empty)));
 		}
 
 		@Override

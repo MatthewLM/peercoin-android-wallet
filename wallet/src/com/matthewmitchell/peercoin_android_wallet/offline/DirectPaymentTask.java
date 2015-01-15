@@ -29,8 +29,9 @@ import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.peercoin.protocols.payments.Protos;
-import org.peercoin.protocols.payments.Protos.Payment;
+import com.matthewmitchell.peercoinj.protocols.payments.Protos;
+import com.matthewmitchell.peercoinj.protocols.payments.Protos.Payment;
+import com.matthewmitchell.peercoinj.protocols.payments.PaymentProtocol;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +42,6 @@ import android.os.Handler;
 import android.os.Looper;
 import com.matthewmitchell.peercoin_android_wallet.Constants;
 import com.matthewmitchell.peercoin_android_wallet.util.Bluetooth;
-import com.matthewmitchell.peercoin_android_wallet.util.PaymentProtocol;
 import com.matthewmitchell.peercoin_android_wallet.R;
 
 /**
@@ -130,7 +130,7 @@ public abstract class DirectPaymentTask
 
 							final Protos.PaymentACK paymentAck = Protos.PaymentACK.parseFrom(is);
 
-							final boolean ack = !"nack".equals(PaymentProtocol.parsePaymentAck(paymentAck));
+							final boolean ack = !"nack".equals(PaymentProtocol.parsePaymentAck(paymentAck).getMemo());
 
 							log.info("received {} via http", ack ? "ack" : "nack");
 
@@ -220,7 +220,7 @@ public abstract class DirectPaymentTask
 
 					try
 					{
-						socket = device.createInsecureRfcommSocketToServiceRecord(Bluetooth.BLUETOOTH_UUID_PAYMENT_PROTOCOL);
+						socket = device.createInsecureRfcommSocketToServiceRecord(Bluetooth.BIP70_PAYMENT_PROTOCOL_UUID);
 						socket.connect();
 
 						log.info("connected to payment protocol {}", bluetoothMac);
@@ -235,7 +235,7 @@ public abstract class DirectPaymentTask
 
 						final Protos.PaymentACK paymentAck = Protos.PaymentACK.parseDelimitedFrom(is);
 
-						final boolean ack = "ack".equals(PaymentProtocol.parsePaymentAck(paymentAck));
+						final boolean ack = "ack".equals(PaymentProtocol.parsePaymentAck(paymentAck).getMemo());
 
 						log.info("received {} via bluetooth", ack ? "ack" : "nack");
 

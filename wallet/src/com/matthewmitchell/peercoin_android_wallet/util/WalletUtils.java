@@ -18,6 +18,8 @@
 package com.matthewmitchell.peercoin_android_wallet.util;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
@@ -25,27 +27,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Writer;
-import java.math.BigInteger;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import android.graphics.Typeface;
-import android.text.Editable;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
-import android.text.format.DateUtils;
-import android.text.style.RelativeSizeSpan;
-import android.text.style.StyleSpan;
-import android.text.style.TypefaceSpan;
 
 import com.matthewmitchell.peercoinj.core.Address;
 import com.matthewmitchell.peercoinj.core.AddressFormatException;
@@ -58,7 +48,16 @@ import com.matthewmitchell.peercoinj.core.TransactionInput;
 import com.matthewmitchell.peercoinj.core.TransactionOutput;
 import com.matthewmitchell.peercoinj.core.Wallet;
 import com.matthewmitchell.peercoinj.script.Script;
+import com.matthewmitchell.peercoinj.store.UnreadableWalletException;
 import com.matthewmitchell.peercoinj.store.WalletProtobufSerializer;
+
+import android.text.Editable;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.format.DateUtils;
+import android.text.style.TypefaceSpan;
+
+import com.google.common.base.Charsets;
 
 import com.matthewmitchell.peercoin_android_wallet.Constants;
 
@@ -113,35 +112,26 @@ public class WalletUtils
 		return builder;
 	}
 
-	private static final Pattern P_SIGNIFICANT = Pattern.compile("^([-+]" + Constants.CHAR_THIN_SPACE + ")?\\d*(\\.\\d{0,2})?");
-	private static final Object SIGNIFICANT_SPAN = new StyleSpan(Typeface.BOLD);
-	public static final RelativeSizeSpan SMALLER_SPAN = new RelativeSizeSpan(0.85f);
-
-	public static void formatSignificant(@Nonnull final Spannable spannable, @Nullable final RelativeSizeSpan insignificantRelativeSizeSpan)
+	@CheckForNull
+	public static Address getWalletAddressOfReceived(@Nonnull final Transaction tx, @Nonnull final Wallet wallet)
 	{
-		spannable.removeSpan(SIGNIFICANT_SPAN);
-		if (insignificantRelativeSizeSpan != null)
-			spannable.removeSpan(insignificantRelativeSizeSpan);
-
-		final Matcher m = P_SIGNIFICANT.matcher(spannable);
-		if (m.find())
+		for (final TransactionOutput output : tx.getOutputs())
 		{
-			final int pivot = m.group().length();
-			if (pivot > 0)
-				spannable.setSpan(SIGNIFICANT_SPAN, 0, pivot, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-			if (spannable.length() > pivot && insignificantRelativeSizeSpan != null)
-				spannable.setSpan(insignificantRelativeSizeSpan, pivot, spannable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+			try
+			{
+				if (!output.isMine(wallet))
+				{
+					final Script script = output.getScriptPubKey();
+					return script.getToAddress(Constants.NETWORK_PARAMETERS, true);
+				}
+			}
+			catch (final ScriptException x)
+			{
+				// swallow
+			}
 		}
-	}
 
-	public static BigInteger localValue(@Nonnull final BigInteger PPCValue, @Nonnull final BigInteger rate)
-	{
-		return PPCValue.multiply(rate).divide(GenericUtils.ONE_PPC);
-	}
-
-	public static BigInteger PPCValue(@Nonnull final BigInteger localValue, @Nonnull final BigInteger rate)
-	{
-		return localValue.multiply(GenericUtils.ONE_PPC).divide(rate);
+		return null;
 	}
 
 	@CheckForNull
@@ -166,46 +156,51 @@ public class WalletUtils
 		}
 	}
 
-	@CheckForNull
-	public static Address getFirstToAddress(@Nonnull final Transaction tx)
+	public static Wallet restoreWalletFromProtobufOrBase58(final InputStream is) throws IOException
 	{
+		is.mark((int) Constants.BACKUP_MAX_CHARS);
+
 		try
 		{
-			for (final TransactionOutput output : tx.getOutputs())
-			{
-				return output.getScriptPubKey().getToAddress(Constants.NETWORK_PARAMETERS);
-			}
-
-			throw new IllegalStateException();
+			return restoreWalletFromProtobuf(is);
 		}
-		catch (final ScriptException x)
+		catch (final IOException x)
 		{
-			return null;
+			try
+			{
+				is.reset();
+				return restorePrivateKeysFromBase58(is);
+			}
+			catch (final IOException x2)
+			{
+				throw new IOException("cannot read protobuf (" + x.getMessage() + ") or base58 (" + x2.getMessage() + ")", x);
+			}
 		}
 	}
 
-	public static boolean isInternal(@Nonnull final Transaction tx)
+	public static Wallet restoreWalletFromProtobuf(final InputStream is) throws IOException
 	{
-		if (tx.isCoinBase())
-			return false;
-
-		final List<TransactionOutput> outputs = tx.getOutputs();
-		if (outputs.size() != 1)
-			return false;
-
 		try
 		{
-			final TransactionOutput output = outputs.get(0);
-			final Script scriptPubKey = output.getScriptPubKey();
-			if (!scriptPubKey.isSentToRawPubKey())
-				return false;
+			final Wallet wallet = new WalletProtobufSerializer().readWallet(is);
 
-			return true;
+			if (!wallet.getParams().equals(Constants.NETWORK_PARAMETERS))
+				throw new IOException("bad wallet network parameters: " + wallet.getParams().getId());
+
+			return wallet;
 		}
-		catch (final ScriptException x)
+		catch (final UnreadableWalletException x)
 		{
-			return false;
+			throw new IOException("unreadable wallet", x);
 		}
+	}
+
+	public static Wallet restorePrivateKeysFromBase58(final InputStream is) throws IOException
+	{
+		final BufferedReader keyReader = new BufferedReader(new InputStreamReader(is, Charsets.UTF_8));
+		final Wallet wallet = new Wallet(Constants.NETWORK_PARAMETERS);
+		wallet.importKeys(WalletUtils.readKeys(keyReader));
+		return wallet;
 	}
 
 	public static void writeKeys(@Nonnull final Writer out, @Nonnull final List<ECKey> keys) throws IOException
@@ -275,7 +270,7 @@ public class WalletUtils
 
 			try
 			{
-				reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), Constants.UTF_8));
+				reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), Charsets.UTF_8));
 				WalletUtils.readKeys(reader);
 
 				return true;
@@ -334,16 +329,37 @@ public class WalletUtils
 		}
 	};
 
-	@CheckForNull
-	public static ECKey pickOldestKey(@Nonnull final Wallet wallet)
+	public static byte[] walletToByteArray(@Nonnull final Wallet wallet)
 	{
-		ECKey oldestKey = null;
+		try
+		{
+			final ByteArrayOutputStream os = new ByteArrayOutputStream();
+			new WalletProtobufSerializer().writeWallet(wallet, os);
+			os.close();
+			return os.toByteArray();
+		}
+		catch (final IOException x)
+		{
+			throw new RuntimeException(x);
+		}
+	}
 
-		for (final ECKey key : wallet.getKeys())
-			if (!wallet.isKeyRotating(key))
-				if (oldestKey == null || key.getCreationTimeSeconds() < oldestKey.getCreationTimeSeconds())
-					oldestKey = key;
-
-		return oldestKey;
+	public static Wallet walletFromByteArray(@Nonnull final byte[] walletBytes)
+	{
+		try
+		{
+			final ByteArrayInputStream is = new ByteArrayInputStream(walletBytes);
+			final Wallet wallet = new WalletProtobufSerializer().readWallet(is);
+			is.close();
+			return wallet;
+		}
+		catch (final UnreadableWalletException x)
+		{
+			throw new RuntimeException(x);
+		}
+		catch (final IOException x)
+		{
+			throw new RuntimeException(x);
+		}
 	}
 }

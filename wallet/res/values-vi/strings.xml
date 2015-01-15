@@ -75,9 +75,7 @@
 	<string name="address_book_context_send_title">Gửi Peercoin đến địa chỉ</string>
 	<string name="address_book_context_edit_title">Chỉnh sửa địa chỉ</string>
 	<string name="address_book_context_remove_title">Loại bỏ địa chỉ</string>
-	<string name="address_book_context_show_qr_title">Hiển thị mã QR</string>
 	<string name="address_book_context_copy_to_clipboard_title">Sao chép vào bộ nhớ ảo</string>
-	<string name="address_book_context_default_title">Thiết lập làm địa chỉ mặc định</string>
 	<string name="address_book_options_paste_from_clipboard_title">Lấy thông tin từ bộ nhớ ảo</string>
 	<string name="address_book_options_paste_from_clipboard_empty">Bộ nhớ ảo hiện không chứa dữ liệu</string>
 	<string name="address_book_options_scan_title">Quét địa chỉ</string>
@@ -105,13 +103,9 @@
 	<string name="import_keys_dialog_file_created_automatic">tự động sao lưu %s</string>
 	<string name="import_keys_dialog_file_created_manual">dữ liệu do người dùng xuất %s</string>
 	<string name="import_keys_dialog_button_import">Nhập dữ liệu</string>
-	<string name="import_keys_dialog_success_imported">đã nhập %d khóa cá nhân.</string>
-	<string name="import_keys_dialog_success_existing">vẫn chưa nhập được %d khóa cá nhân, vì trong ví tiền của bạn đã có những khóa này.</string>
-	<string name="import_keys_dialog_success_reset">Bạn cần phải thiết đặt lại blockchain để cập nhật trạng thái cân bằng tài khoản. Bạn có muốn thực hiện không?</string>
 	<string name="import_keys_dialog_failure">Khóa cá nhân không thể được nhập vào:\n\n%s\n\nDo sai mật khẩu?</string>
-	<string name="import_keys_dialog_button_reset_blockchain">Thiết đặt lại</string>
 	<string name="export_keys_dialog_title">Xuất dữ liệu từ các khóa cá nhân</string>
-	<string name="export_keys_dialog_message">Các khóa cá nhân của bạn sẽ được mã hóa với một mật khẩu do bạn chọn và sau đó ghi dữ liệu mã hóa vào thẻ nhớ.</string>
+	<string name="backup_wallet_dialog_message">Các khóa cá nhân của bạn sẽ được mã hóa với một mật khẩu do bạn chọn và sau đó ghi dữ liệu mã hóa vào thẻ nhớ.</string>
 	<string name="export_keys_dialog_button_export">Xuất dữ liệu</string>
 	<string name="export_keys_dialog_success">Khóa cá nhân đã được xuất đến\n\n%s\n\nGiữ các khóa này ở nơi an toàn cũng ghi nhớ mật khẩu bạn đã đặt!\n\nBạn có muốn lưu giữ các khóa của bạn khi sử dụng ứng này không?</string>
 	<string name="export_keys_dialog_failure">Khóa cá nhân của bạn vẫn chưa được xuất dữ liệu:\n%s</string>
@@ -128,7 +122,6 @@
 	<string name="input_parser_invalid_peercoin_uri">Peercoin URI không hợp lệ:\n%s</string>
 	<string name="input_parser_invalid_address">Đã nhận được địa chỉ peercoin không hợp lệ!\n(Nhầm lẫn giữa Mainnet/Testnet?)</string>
 	<string name="preferences_activity_title">Thiết lập</string>
-	<string name="preferences_category_main">Tùy biến</string>
 	<string name="preferences_category_diagnostics">Chẩn đoán</string>
 	<string name="preferences_category_labs">Thí nghiệm</string>
 	<string name="preferences_connectivity_notification_title">Chỉ định kết nối</string>
@@ -158,10 +151,7 @@
 	<string name="about_credits_peercoinj_title">Ứng dụng này đang sử dụng peercoinj %s</string>
 	<string name="about_credits_zxing_title">Ứng dụng này sử dụng \'zxing\'</string>
 	<string name="about_credits_icon_title">Ứng dụng này sử dụng biểu tượng bởi \'bitboy\'</string>
-	<string name="about_author_twitter_title">Liên hệ tác giả bằng Twitter</string>
-	<string name="about_author_googleplus_title">Liên hệ tác giả bằng Google+</string>
 	<string name="about_market_app_title">Trang web của ứng dụng trên Google Play</string>
-	<string name="about_credits_market_publisher_title">Các tác giả khác</string>
 	<string name="notification_coins_received_msg">đã nhận %s</string>
 	<string name="notification_peers_connected_msg">%d mạng ngang hàng đã kết nối</string>
 	<!-- generic buttons -->
@@ -181,6 +171,7 @@
 	<string name="button_scan">Quét</string>
 	<string name="button_edit_address">Thêm/chỉnh sửa địa chỉ</string>
 	<string name="button_settings">Thiết lập</string>
+	<string name="action_show_qr">Hiển thị mã QR</string>
 	<string name="time_today">hôm nay</string>
 	<string name="address_unlabeled">(chưa có nhãn)</string>
 

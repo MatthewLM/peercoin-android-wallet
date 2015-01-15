@@ -17,16 +17,16 @@
 
 package com.matthewmitchell.peercoin_android_wallet.ui;
 
-import java.math.BigInteger;
-
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.matthewmitchell.peercoinj.core.Coin;
+import com.matthewmitchell.peercoinj.utils.ExchangeRate;
+import com.matthewmitchell.peercoinj.utils.Fiat;
+
 import android.view.View;
-import com.matthewmitchell.peercoin_android_wallet.ExchangeRatesProvider.ExchangeRate;
 import com.matthewmitchell.peercoin_android_wallet.ui.CurrencyAmountView.Listener;
-import com.matthewmitchell.peercoin_android_wallet.util.WalletUtils;
 
 /**
  * @author Andreas Schildbach
@@ -116,16 +116,23 @@ public final class CurrencyCalculatorLink
 	}
 
 	@CheckForNull
-	public BigInteger getAmount()
+	public Coin getAmount()
 	{
 		if (exchangeDirection)
 		{
-			return PPCAmountView.getAmount();
+			return (Coin) PPCAmountView.getAmount();
 		}
 		else if (exchangeRate != null)
 		{
-			final BigInteger localAmount = localAmountView.getAmount();
-			return localAmount != null ? WalletUtils.PPCValue(localAmount, exchangeRate.rate) : null;
+			final Fiat localAmount = (Fiat) localAmountView.getAmount();
+			try
+			{
+				return localAmount != null ? exchangeRate.fiatToCoin(localAmount) : null;
+			}
+			catch (ArithmeticException x)
+			{
+				return null;
+			}
 		}
 		else
 		{
@@ -145,26 +152,33 @@ public final class CurrencyCalculatorLink
 		if (exchangeRate != null)
 		{
 			localAmountView.setEnabled(enabled);
-			localAmountView.setCurrencySymbol(exchangeRate.currencyCode);
+			localAmountView.setCurrencySymbol(exchangeRate.fiat.currencyCode);
 
 			if (exchangeDirection)
 			{
-				final BigInteger PPCAmount = PPCAmountView.getAmount();
+				final Coin PPCAmount = (Coin) PPCAmountView.getAmount();
 				if (PPCAmount != null)
 				{
 					localAmountView.setAmount(null, false);
-					localAmountView.setHint(WalletUtils.localValue(PPCAmount, exchangeRate.rate));
+					localAmountView.setHint(exchangeRate.coinToFiat(PPCAmount));
 					PPCAmountView.setHint(null);
 				}
 			}
 			else
 			{
-				final BigInteger localAmount = localAmountView.getAmount();
+				final Fiat localAmount = (Fiat) localAmountView.getAmount();
 				if (localAmount != null)
 				{
-					PPCAmountView.setAmount(null, false);
-					PPCAmountView.setHint(WalletUtils.PPCValue(localAmount, exchangeRate.rate));
 					localAmountView.setHint(null);
+					PPCAmountView.setAmount(null, false);
+					try
+					{
+						PPCAmountView.setHint(exchangeRate.fiatToCoin(localAmount));
+					}
+					catch (final ArithmeticException x)
+					{
+						PPCAmountView.setHint(null);
+					}
 				}
 			}
 		}
@@ -201,7 +215,7 @@ public final class CurrencyCalculatorLink
 		activeTextView().requestFocus();
 	}
 
-	public void setPPCAmount(@Nonnull final BigInteger amount)
+	public void setPPCAmount(@Nonnull final Coin amount)
 	{
 		final Listener listener = this.listener;
 		this.listener = null;

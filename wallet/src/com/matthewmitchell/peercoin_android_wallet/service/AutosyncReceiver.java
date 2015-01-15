@@ -25,6 +25,8 @@ import android.content.Context;
 import android.content.Intent;
 import com.matthewmitchell.peercoin_android_wallet.WalletApplication;
 
+import static junit.framework.Assert.assertTrue;
+
 /**
  * @author Andreas Schildbach
  */
@@ -37,8 +39,19 @@ public class AutosyncReceiver extends BroadcastReceiver
 	{
 		log.info("got broadcast: " + intent);
 
-		// make sure there is always an alarm scheduled
-		if (!Intent.ACTION_PACKAGE_REPLACED.equals(intent.getAction()) || intent.getDataString().equals("package:" + context.getPackageName()))
-			WalletApplication.scheduleStartBlockchainService(context);
+		final boolean bootCompleted = Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction());
+		final boolean packageReplaced = Intent.ACTION_MY_PACKAGE_REPLACED.equals(intent.getAction());
+
+		if (packageReplaced || bootCompleted)
+		{
+			// make sure wallet is upgraded to HD
+			if (packageReplaced)
+				UpgradeWalletService.startUpgrade(context);
+
+                        WalletApplication application = (WalletApplication) context.getApplicationContext();
+			
+			// make sure there is always an alarm scheduled
+			application.scheduleStartBlockchainService();
+		}
 	}
 }

@@ -1,6 +1,11 @@
-Welcome to _Peercoin Wallet_, a standalone Peercoin payment app for your Android device!
+## Welcome to _Peercoin Wallet_
 
-This project contains several sub-projects:
+__What is _Peercoin Wallet_?__
+
+It is a standalone Peercoin payment app for your Android device!
+
+
+__This project contains several sub-projects:__
 
  * __wallet__:
      The Android app itself. This is probably what you're searching for.
@@ -13,6 +18,14 @@ This project contains several sub-projects:
      A minimal example app to demonstrate integration of Peercoin payments into
      your Android app.
 
-You can build all sub-projects at once using Maven:
+
+__You can build all sub-projects at once using Maven:__
 
 `mvn clean install`
+
+
+__Donate to support further development:__
+
+You can donate peercoins to support further development of _Peercoin Wallet_ at [http://peer4commit.com/projects/129/](http://peer4commit.com/projects/129/)
+Peer4commit will distribute rewards to people that get pull requests merged into the source code.
+[![tip for next commit](http://peer4commit.com/projects/129.svg)](http://peer4commit.com/projects/129)

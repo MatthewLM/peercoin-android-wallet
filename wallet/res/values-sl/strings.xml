@@ -12,10 +12,7 @@
 	<string name="blockchain_state_progress_stalled">Usklajevanje zaustavljeno</string>
 	<string name="blockchain_state_progress_problem_storage">Usklajevanje: težava s hrambo podatkov</string>
 	<string name="blockchain_state_progress_problem_network">Usklajevanje: težava z omrežjem</string>
-	<string name="wallet_address_fragment_your">Vaš peercoin naslov:</string>
 	<string name="wallet_address_fragment_clipboard_msg">Naslov kopiran na odložišče</string>
-	<string name="wallet_addresses_fragment_add_dialog_title">Ustvari nov naslov</string>
-	<string name="wallet_addresses_fragment_add_dialog_message">Peercoin naslovov se ne da izbrisati. Želite ustvariti nov naslov v denarnici?</string>
 	<string name="wallet_balance_fragment_replaying">Pregled stanja med ponastavitvijo ni mogoč.</string>
 	<string name="exchange_rates_activity_title">Menjalni tečaji</string>
 	<string name="exchange_rates_fragment_empty_text">Nimam dostopa do menjalnih tečajev</string>
@@ -33,7 +30,6 @@
 	<string name="wallet_transactions_row_warning_backup">Čestitke, prejeli ste prvo plačilo! Ste že napravili &lt;u&gt;rezervno kopijo ključev&lt;/u&gt; za zaščito pred izgubo novcev?</string>
 	<string name="wallet_transactions_fragment_coinbase">narudarjeno</string>
 	<string name="wallet_transactions_fragment_internal">notranji</string>
-	<string name="wallet_transactions_context_show_qr_title">Prikazi QR-kodo</string>
 	<string name="wallet_options_safety">O varnosti</string>
 	<string name="wallet_options_donate">Donacije</string>
 	<string name="wallet_donate_address_label">Donacija za Peercoin Wallet</string>
@@ -58,8 +54,6 @@
 	<string name="send_coins_fragment_receiving_address_label">V dobro</string>
 	<string name="send_coins_fragment_receiving_address_hint">vpišite naslov ali ime</string>
 	<string name="send_coins_fragment_receiving_address_error">Neveljaven naslov!</string>
-	<string name="send_coins_fragment_receiving_address_error_cross_network">Naslova %s ne morem uporabljati s to denarnico</string>
-	<string name="send_coins_fragment_receiving_address_error_cross_network_unknown">Naslova iz neznanega omrežja ne morem uporabljati s to denarnico!</string>
 	<string name="send_coins_fragment_receiving_address_complex">kompleksen\nnaslov</string>
 	<string name="send_coins_fragment_pending">(%s čaka na potrditev)</string>
 	<string name="send_coins_fragment_amount_label">Znesek za plačilo</string>
@@ -95,9 +89,7 @@
 	<string name="address_book_context_send_title">Pošlji novce na naslov</string>
 	<string name="address_book_context_edit_title">Uredi naslov</string>
 	<string name="address_book_context_remove_title">Odstrani naslov</string>
-	<string name="address_book_context_show_qr_title">Prikaži QR-kodo</string>
 	<string name="address_book_context_copy_to_clipboard_title">Kopiraj na odložišče</string>
-	<string name="address_book_context_default_title">Nastavi za privzeti naslov</string>
 	<string name="address_book_options_paste_from_clipboard_title">Prilepi z odložišča</string>
 	<string name="address_book_options_paste_from_clipboard_empty">Odložišče je prazno</string>
 	<string name="address_book_options_paste_from_clipboard_invalid">Podatki na odložišču niso prepoznavni</string>
@@ -131,11 +123,7 @@
 	<string name="import_keys_dialog_file_created_automatic">samodejna rezervna kopija %s</string>
 	<string name="import_keys_dialog_file_created_manual">ročna rezervna kopija %s</string>
 	<string name="import_keys_dialog_button_import">Obnovi</string>
-	<string name="import_keys_dialog_success_imported">Število obnovljenih ključev: %d</string>
-	<string name="import_keys_dialog_success_existing">%d zasebnih ključev ni bilo obnovljenih, ker so že prisotni v denarnici.</string>
-	<string name="import_keys_dialog_success_reset">Za osvežitev stanja morate ponovno prenesti nakazila. Želite to storiti zdaj?</string>
 	<string name="import_keys_dialog_failure">Zasebnih ključev ni bilo mogoče obnoviti:\n\n%s\n\nNapačno geslo?</string>
-	<string name="import_keys_dialog_button_reset_blockchain">Ponastavi</string>
 	<string name="export_keys_dialog_title">Rezervno kopiranje zasebnih ključev</string>
 	<string name="export_keys_dialog_message">Vaši zasebni ključi bodo šifrirani z izbranim geslom in zapisani na zunanji pomnilnik.</string>
 	<string name="export_keys_dialog_button_export">Rezervno kopiraj</string>
@@ -160,7 +148,6 @@
 	<string name="input_parser_invalid_paymentrequest">Neveljavna prošnja za plačilo:\n%s</string>
 	<string name="input_parser_invalid_transaction">Neveljavno nakazilo:\n%s</string>
 	<string name="preferences_activity_title">Nastavitve</string>
-	<string name="preferences_category_main">Nastavitve</string>
 	<string name="preferences_category_diagnostics">Diagnostika</string>
 	<string name="preferences_category_labs">V razvoju</string>
 	<string name="preferences_precision_title">Enota in prikaz številk</string>
@@ -198,11 +185,8 @@
 	<string name="about_credits_icon_title">Ta apl. uporablja ikono avtorja bitboy</string>
 	<string name="about_community_googleplus_title">Skupnost na Google+</string>
 	<string name="about_community_googleplus_summary">Razprave o aplikaciji</string>
-	<string name="about_author_twitter_title">Avtor na Twitterju</string>
-	<string name="about_author_googleplus_title">Avtor na Google+</string>
 	<string name="about_market_app_title">Stran na Google Play</string>
 	<string name="about_market_app_summary">Oceni aplikacijo</string>
-	<string name="about_credits_market_publisher_title">Druge aplikacije istega avtorja</string>
 	<string name="notification_coins_received_msg">Prejeto: %s</string>
 	<string name="notification_peers_connected_msg">Število povezanih vrstnikov: %d</string>
 	<!-- generic buttons -->
@@ -223,6 +207,7 @@
 	<string name="button_scan">Prečitaj</string>
 	<string name="button_edit_address">Dodaj/uredi naslov</string>
 	<string name="button_settings">Nastavitve</string>
+	<string name="action_show_qr">Prikazi QR-kodo</string>
 	<string name="action_browse">Ogled v brskalniku</string>
 	<string name="time_today">danes</string>
 	<string name="address_unlabeled">(neoznačen)</string>

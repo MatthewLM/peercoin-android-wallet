@@ -43,7 +43,11 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.common.base.Charsets;
+
 import com.matthewmitchell.peercoin_android_wallet.Constants;
+import com.matthewmitchell.peercoin_android_wallet.FileAttachmentProvider;
 import com.matthewmitchell.peercoin_android_wallet.util.CrashReporter;
 import com.matthewmitchell.peercoin_android_wallet.util.Io;
 import com.matthewmitchell.peercoin_android_wallet.R;
@@ -179,9 +183,7 @@ public abstract class ReportIssueDialogBuilder extends DialogBuilder implements 
 					os.close();
 					is.close();
 
-					Io.chmod(file, 0777);
-
-					attachments.add(Uri.fromFile(file));
+					attachments.add(FileAttachmentProvider.contentUri(context.getPackageName(), file));
 				}
 			}
 			catch (final IOException x)
@@ -200,13 +202,11 @@ public abstract class ReportIssueDialogBuilder extends DialogBuilder implements 
 				{
 					final File file = File.createTempFile("wallet-dump.", ".txt", cacheDir);
 
-					final Writer writer = new OutputStreamWriter(new FileOutputStream(file), Constants.UTF_8);
+					final Writer writer = new OutputStreamWriter(new FileOutputStream(file), Charsets.UTF_8);
 					writer.write(walletDump.toString());
 					writer.close();
 
-					Io.chmod(file, 0777);
-
-					attachments.add(Uri.fromFile(file));
+					attachments.add(FileAttachmentProvider.contentUri(context.getPackageName(), file));
 				}
 			}
 			catch (final IOException x)
@@ -260,6 +260,8 @@ public abstract class ReportIssueDialogBuilder extends DialogBuilder implements 
 		if (subject != null)
 			intent.putExtra(Intent.EXTRA_SUBJECT, subject);
 		intent.putExtra(Intent.EXTRA_TEXT, text);
+
+		intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
 		try
 		{

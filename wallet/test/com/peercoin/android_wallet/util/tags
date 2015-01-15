@@ -4,8 +4,22 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+CryptoTest	/home/matt/Programming/ADT/workspace/peercoin-android-wallet/wallet/test/com/peercoin/android_wallet/util/CryptoTest.java	/^public class CryptoTest$/;"	c	language:Java
+FormatsTest	/home/matt/Programming/ADT/workspace/peercoin-android-wallet/wallet/test/com/peercoin/android_wallet/util/FormatsTest.java	/^public class FormatsTest$/;"	c	language:Java
 GenericUtilsTest	/home/matt/Programming/ADT/workspace/peercoin-android-wallet/wallet/test/de/schildbach/wallet/util/GenericUtilsTest.java	/^public class GenericUtilsTest$/;"	c	language:Java
+PASSWORD	/home/matt/Programming/ADT/workspace/peercoin-android-wallet/wallet/test/com/peercoin/android_wallet/util/CryptoTest.java	/^	private static final char[] PASSWORD = "password".toCharArray();$/;"	f	language:Java	class:CryptoTest	file:
+PLAIN_BYTES	/home/matt/Programming/ADT/workspace/peercoin-android-wallet/wallet/test/com/peercoin/android_wallet/util/CryptoTest.java	/^	private static final byte[] PLAIN_BYTES = PLAIN_TEXT.getBytes();$/;"	f	language:Java	class:CryptoTest	file:
+PLAIN_TEXT	/home/matt/Programming/ADT/workspace/peercoin-android-wallet/wallet/test/com/peercoin/android_wallet/util/CryptoTest.java	/^	private static final String PLAIN_TEXT = "plain text";$/;"	f	language:Java	class:CryptoTest	file:
+com.matthewmitchell.peercoin_android_wallet.util	/home/matt/Programming/ADT/workspace/peercoin-android-wallet/wallet/test/com/peercoin/android_wallet/util/CryptoTest.java	/^package com.matthewmitchell.peercoin_android_wallet.util;$/;"	p	language:Java
+com.matthewmitchell.peercoin_android_wallet.util	/home/matt/Programming/ADT/workspace/peercoin-android-wallet/wallet/test/com/peercoin/android_wallet/util/FormatsTest.java	/^package com.matthewmitchell.peercoin_android_wallet.util;$/;"	p	language:Java
 com.matthewmitchell.peercoin_android_wallet.util	/home/matt/Programming/ADT/workspace/peercoin-android-wallet/wallet/test/de/schildbach/wallet/util/GenericUtilsTest.java	/^package com.matthewmitchell.peercoin_android_wallet.util;$/;"	p	language:Java
 formatMRBTValue	/home/matt/Programming/ADT/workspace/peercoin-android-wallet/wallet/test/de/schildbach/wallet/util/GenericUtilsTest.java	/^	public void formatMRBTValue() throws Exception$/;"	m	language:Java	class:GenericUtilsTest
 formatURBTValue	/home/matt/Programming/ADT/workspace/peercoin-android-wallet/wallet/test/de/schildbach/wallet/util/GenericUtilsTest.java	/^	public void formatURBTValue() throws Exception$/;"	m	language:Java	class:GenericUtilsTest
 formatValue	/home/matt/Programming/ADT/workspace/peercoin-android-wallet/wallet/test/de/schildbach/wallet/util/GenericUtilsTest.java	/^	public void formatValue() throws Exception$/;"	m	language:Java	class:GenericUtilsTest
+maybeRemoveOuterHtmlParagraph	/home/matt/Programming/ADT/workspace/peercoin-android-wallet/wallet/test/com/peercoin/android_wallet/util/FormatsTest.java	/^	public void maybeRemoveOuterHtmlParagraph()$/;"	m	language:Java	class:FormatsTest
+monetarySpannable	/home/matt/Programming/ADT/workspace/peercoin-android-wallet/wallet/test/com/peercoin/android_wallet/util/FormatsTest.java	/^	public void monetarySpannable() throws Exception$/;"	m	language:Java	class:FormatsTest
+roundtripBytes	/home/matt/Programming/ADT/workspace/peercoin-android-wallet/wallet/test/com/peercoin/android_wallet/util/CryptoTest.java	/^	public void roundtripBytes() throws Exception$/;"	m	language:Java	class:CryptoTest
+roundtripDifferentByteSizes	/home/matt/Programming/ADT/workspace/peercoin-android-wallet/wallet/test/com/peercoin/android_wallet/util/CryptoTest.java	/^	public void roundtripDifferentByteSizes() throws Exception$/;"	m	language:Java	class:CryptoTest
+roundtripDifferentPasswordSizes	/home/matt/Programming/ADT/workspace/peercoin-android-wallet/wallet/test/com/peercoin/android_wallet/util/CryptoTest.java	/^	public void roundtripDifferentPasswordSizes() throws Exception$/;"	m	language:Java	class:CryptoTest
+roundtripDifferentTextSizes	/home/matt/Programming/ADT/workspace/peercoin-android-wallet/wallet/test/com/peercoin/android_wallet/util/CryptoTest.java	/^	public void roundtripDifferentTextSizes() throws Exception$/;"	m	language:Java	class:CryptoTest
+roundtripText	/home/matt/Programming/ADT/workspace/peercoin-android-wallet/wallet/test/com/peercoin/android_wallet/util/CryptoTest.java	/^	public void roundtripText() throws Exception$/;"	m	language:Java	class:CryptoTest

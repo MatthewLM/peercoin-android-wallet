@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="de.schildbach.wallet.integration.sample"
+	package="com.matthewmitchell.peercoin_android_wallet.integration.sample"
 	android:versionCode="1"
 	android:versionName="1.0" >
 
@@ -18,7 +18,7 @@
 
 	<application android:label="Peercoin in-app payment sample" >
 		<activity
-			android:name="de.schildbach.wallet.integration.sample.SampleActivity"
+			android:name="com.matthewmitchell.peercoin_android_wallet.integration.sample.SampleActivity"
 			android:theme="@android:style/Theme.Light" >
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />

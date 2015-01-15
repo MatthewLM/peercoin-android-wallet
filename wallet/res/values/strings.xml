@@ -12,10 +12,8 @@
 	<string name="blockchain_state_progress_stalled">Synchronization stalled</string>
 	<string name="blockchain_state_progress_problem_storage">Synchronizing: Storage problem</string>
 	<string name="blockchain_state_progress_problem_network">Synchronizing: Network problem</string>
-	<string name="wallet_address_fragment_your">Your Peercoin Address:</string>
 	<string name="wallet_address_fragment_clipboard_msg">Peercoin address copied to clipboard</string>
-	<string name="wallet_addresses_fragment_add_dialog_title">Add Peercoin address</string>
-	<string name="wallet_addresses_fragment_add_dialog_message">Peercoin addresses cannot be deleted. Do you want to add a new address to your wallet?</string>
+	<string name="wallet_balance_fragment_too_much">This amount is quite high for carrying in your pocket, please move some to a safer place.</string>
 	<string name="wallet_balance_fragment_replaying">Balance is unavailable during replay.</string>
 	<string name="exchange_rates_activity_title">Exchange Rates</string>
 	<string name="exchange_rates_fragment_empty_text">Could not load exchange rates.</string>
@@ -35,8 +33,9 @@
 	<string name="wallet_transactions_row_warning_backup">Congratulations, you received your first payment! Have you already &lt;u&gt;backed up your wallet&lt;/u&gt;, to protect against loss?</string>
 	<string name="wallet_transactions_fragment_coinbase">mined</string>
 	<string name="wallet_transactions_fragment_internal">internal</string>
-	<string name="wallet_transactions_context_show_qr_title">Show QR code</string>
 	<string name="wallet_options_safety_menu">Safety</string>
+	<string name="wallet_options_encrypt_keys_set">Set spending PIN</string>
+	<string name="wallet_options_encrypt_keys_change">Change spending PIN</string>
 	<string name="wallet_options_safety">Safety notes</string>
 	<string name="wallet_options_donate">Tip / Donate</string>
 	<string name="wallet_donate_address_label">Donation for Peercoin Wallet</string>
@@ -61,21 +60,27 @@
 	<string name="send_coins_fragment_receiving_address_label">Pay to</string>
 	<string name="send_coins_fragment_receiving_address_hint">type address or name</string>
 	<string name="send_coins_fragment_receiving_address_error">Invalid Peercoin Address!</string>
-	<string name="send_coins_fragment_receiving_address_error_cross_network">Cannot use %s address with this wallet!</string>
-	<string name="send_coins_fragment_receiving_address_error_cross_network_unknown">Cannot use address of unknown network with this wallet!</string>
 	<string name="send_coins_fragment_receiving_address_complex">complex\naddress</string>
 	<string name="send_coins_fragment_pending">(%s waiting for confirmation)</string>
 	<string name="send_coins_fragment_amount_label">Amount to pay</string>
+	<string name="send_coins_fragment_hint_fee">A small network fee of %s will be paid.</string>
+	<string name="send_coins_fragment_hint_too_small_output">The amount is too small to send.</string>
+	<string name="send_coins_fragment_hint_insufficient_money">Not enough available coins. You\'re missing %s.</string>
+	<string name="send_coins_fragment_hint_empty_wallet_failed">The amount of tiny payments in your wallet doesn\'t add up to a sendable value.</string>
 	<string name="send_coins_fragment_direct_payment_enable">Send payment directly to the payee.</string>
 	<string name="send_coins_fragment_direct_payment_ack">Your payment was successfully sent directly.</string>
 	<string name="send_coins_fragment_direct_payment_nack">Your payment was rejected via direct connection.</string>
 	<string name="send_coins_fragment_direct_payment_failed_title">Direct payment failed</string>
 	<string name="send_coins_fragment_direct_payment_failed_msg">Your payment will still be broadcasted via the P2P network.</string>
+	<string name="send_coins_fragment_private_key_password">PIN</string>
+	<string name="send_coins_fragment_private_key_bad_password">bad PIN!</string>
 	<string name="send_coins_fragment_button_send">Send</string>
 	<string name="send_coins_fragment_button_back">Back</string>
 	<string name="send_coins_fragment_insufficient_money_title">Not enough available coins</string>
 	<string name="send_coins_fragment_insufficient_money_msg1">You\'re missing %s.</string>
 	<string name="send_coins_fragment_insufficient_money_msg2">Do you want to pay with all you have?</string>
+	<string name="send_coins_fragment_empty_wallet_failed_title">Emptying of wallet failed</string>
+	<string name="send_coins_fragment_state_decrypting">Decrypting…</string>
 	<string name="send_coins_preparation_msg">Signing…</string>
 	<string name="send_coins_sending_msg">Sending…</string>
 	<string name="send_coins_sent_msg">Sent!</string>
@@ -83,6 +88,13 @@
 	<string name="send_coins_error_msg">Problem sending coins!</string>
 	<string name="send_coins_options_empty">Empty wallet</string>
 	<string name="send_coins_address_context_clear_title">Enter new address</string>
+	<string name="maintenance_dialog_title">Maintenance recommended</string>
+	<string name="maintenance_dialog_message">You received %1$s to unsecure addresses. Would you like to move these coins to secure addresses? A small network fee of %2$s will be paid.</string>
+	<string name="maintenance_dialog_private_key_password">PIN</string>
+	<string name="maintenance_dialog_private_key_bad_password">bad PIN!</string>
+	<string name="maintenance_dialog_state_decrypting">Decrypting…</string>
+	<string name="maintenance_dialog_state_done">Done.</string>
+	<string name="maintenance_dialog_button_move">Move</string>
 	<string name="request_coins_activity_title">Request Peercoins</string>
 	<string name="request_coins_fragment_amount_label">Requested amount (optional)</string>
 	<string name="request_coins_fragment_accept_bluetooth_payment">Accept payment via Bluetooth for more reliable processing</string>
@@ -90,6 +102,7 @@
 	<string name="request_coins_fragment_initiate_request_nfc">Or tap an NFC enabled device.</string>
 	<string name="request_coins_clipboard_msg">Peercoin request copied to clipboard</string>
 	<string name="request_coins_share_dialog_title">Share request for Peercoins…</string>
+	<string name="request_coins_no_local_app_msg">No other Peercoin app found</string>
 	<string name="request_coins_options_local_app_title">Request from local app</string>
 	<string name="address_book_activity_title">Address Book</string>
 	<string name="address_book_list_receiving_title">Your addresses</string>
@@ -98,9 +111,7 @@
 	<string name="address_book_context_send_title">Send Peercoins to address</string>
 	<string name="address_book_context_edit_title">Edit address</string>
 	<string name="address_book_context_remove_title">Remove address</string>
-	<string name="address_book_context_show_qr_title">Show QR code</string>
 	<string name="address_book_context_copy_to_clipboard_title">Copy to clipboard</string>
-	<string name="address_book_context_default_title">Set as default address</string>
 	<string name="address_book_options_paste_from_clipboard_title">Paste from clipboard</string>
 	<string name="address_book_options_paste_from_clipboard_empty">Clipboard is empty</string>
 	<string name="address_book_options_paste_from_clipboard_invalid">Data from clipboard is unrecognizable</string>
@@ -112,6 +123,7 @@
 	<string name="edit_address_book_entry_dialog_address_label">Address</string>
 	<string name="edit_address_book_entry_dialog_label_label">Name</string>
 	<string name="edit_address_book_entry_dialog_button_edit">Save</string>
+	<string name="transaction_row_fee">Network fee</string>
 	<string name="transaction_row_message_purpose_key_rotation">This transaction strengthens your wallet against theft. &lt;u&gt;More info.&lt;/u&gt;</string>
 	<string name="transaction_row_message_own_unbroadcasted">This payment has not been transmitted yet.</string>
 	<string name="transaction_row_message_received_direct">This payment has been received directly. There is a risk it might never become spendable.</string>
@@ -119,9 +131,11 @@
 	<string name="transaction_row_message_received_unconfirmed_locked">This payment is not standard and should not be trusted.</string>
 	<string name="transaction_row_message_received_dead">This payment has been reversed by the sender.</string>
 	<string name="transaction_row_message_received_dust">This small amount can probably never be spent economically.</string>
-	<string name="network_monitor_activity_title">Network Monitor</string>
+	<string name="transaction_row_message_received_pay_to_many">This payment pays to many wallets besides yours, which makes the app slow down over time. If you can, try receiving payments which pay only to you.</string>
+	<string name="network_monitor_activity_title">Network monitor</string>
 	<string name="network_monitor_peer_list_title">Peers</string>
 	<string name="network_monitor_block_list_title">Blocks</string>
+	<string name="block_row_now">just now</string>
 	<string name="peer_list_fragment_empty">No peers connected</string>
 	<string name="peer_list_row_ping_time">⇆ %d&#x2009;ms</string>
 	<string name="import_keys_dialog_title">Restore wallet</string>
@@ -136,13 +150,11 @@
 	<string name="import_keys_dialog_file_created_manual">manually backed up %s</string>
 	<string name="import_keys_dialog_button_import">Restore</string>
 	<string name="restore_wallet_dialog_success">Wallet was restored.</string>
-	<string name="import_keys_dialog_success_imported">%d private keys were restored.</string>
-	<string name="import_keys_dialog_success_existing">%d private keys were not restored, because you already have them in your wallet.</string>
-	<string name="import_keys_dialog_success_reset">You need to reset your blockchain in order to update your balance. Would you like to?</string>
+	<string name="restore_wallet_dialog_success_replay">Your wallet was successfully restored. Its balance will be determined next. This will take some time.</string>
 	<string name="import_keys_dialog_failure">Wallet could not be restored:\n\n%s\n\nBad password?</string>
-	<string name="import_keys_dialog_button_reset_blockchain">Reset</string>
 	<string name="export_keys_dialog_title">Back up wallet</string>
-	<string name="export_keys_dialog_message">Your wallet will be encrypted with the chosen password and written to external storage.</string>
+	<string name="backup_wallet_dialog_message">Your backup will be encrypted with the chosen password and written to external storage.</string>
+	<string name="backup_wallet_dialog_warning_encrypted">Your wallet is protected by a spending PIN. Make sure you remember the PIN in addition to the backup password!</string>
 	<string name="export_keys_dialog_button_export">Back up</string>
 	<string name="export_keys_dialog_success"><![CDATA[<p>Your wallet has been backed up to <tt>%s</tt></p><p>If your device has a removable SD card, your backup <i>should</i> be on that card. Remove it and keep it at a safe place. If the card is <i>not</i> removable, you need to archive your backup to some other place than your device.</p><p><b>If the only place your backup exists is on your device, you run the risk of losing both at the same time!</b></p><p>In any case, make sure you remember your backup password. Do you want to archive your wallet now?</p>]]></string>
 	<string name="export_keys_dialog_failure">Your wallet could not be backed up:\n%s</string>
@@ -155,6 +167,20 @@
 	<string name="import_export_keys_dialog_show">Show password</string>
 	<string name="import_export_keys_dialog_failure_title">Error</string>
 	<string name="import_keys_intent_filter_action">Restore wallet</string>
+	<string name="encrypt_keys_dialog_title">Spending PIN</string>
+	<string name="encrypt_keys_dialog_message">Spending from your wallet will be protected with the chosen PIN.</string>
+	<string name="encrypt_keys_dialog_warning">Important: Do not use common numbers (like birthdates) in your PIN.</string>
+	<string name="encrypt_keys_dialog_password_old">Old PIN</string>
+	<string name="encrypt_keys_dialog_password_new">PIN</string>
+	<string name="encrypt_keys_dialog_bad_password">bad PIN!</string>
+	<string name="encrypt_keys_dialog_password_strength_weak">weak</string>
+	<string name="encrypt_keys_dialog_password_strength_fair">fair</string>
+	<string name="encrypt_keys_dialog_password_strength_good">good</string>
+	<string name="encrypt_keys_dialog_password_strength_strong">strong</string>
+	<string name="encrypt_keys_dialog_show">Show PIN</string>
+	<string name="encrypt_keys_dialog_state_encrypting">Encrypting…</string>
+	<string name="encrypt_keys_dialog_state_decrypting">Decrypting…</string>
+	<string name="encrypt_keys_dialog_state_done">Done.</string>
 	<string name="scan_camera_problem_dialog_title">Sorry</string>
 	<string name="scan_camera_problem_dialog_message">The camera has a problem. You probably need to restart the device.</string>
 	<string name="input_parser_io_error">Cannot read data:\n%s</string>
@@ -165,7 +191,6 @@
 	<string name="input_parser_invalid_paymentrequest">Invalid payment request:\n%s</string>
 	<string name="input_parser_invalid_transaction">Invalid transaction:\n%s</string>
 	<string name="preferences_activity_title">Settings</string>
-	<string name="preferences_category_main">Preferences</string>
 	<string name="preferences_category_diagnostics">Diagnostics</string>
 	<string name="preferences_category_labs">Labs</string>
 	<string name="preferences_precision_title">Denomination and precision</string>
@@ -204,11 +229,12 @@
 	<string name="about_credits_peercoinj_title">This app is using peercoinj %s</string>
 	<string name="about_credits_zxing_title">This app is using \'zxing\'</string>
 	<string name="about_credits_icon_title">This app is using an icon by \'bitboy\'</string>
-	<string name="about_author_twitter_title">Author at Twitter</string>
-	<string name="about_author_googleplus_title">Author at Google+</string>
+	<string name="about_community_googleplus_title">Google+ community</string>
+	<string name="about_community_googleplus_summary">Discussions about the app</string>
 	<string name="about_market_app_title">Google Play page</string>
 	<string name="about_market_app_summary">Review or rate the app</string>
 	<string name="about_credits_market_publisher_title">Other apps from the author</string>
+    <string name="about_credits_market_publisher_summary">market://search?q=pub:\"Matthew+Mitchell\"</string>
 	<string name="notification_coins_received_msg">Received %s</string>
 	<string name="notification_peers_connected_msg">%d peers connected</string>
 
@@ -220,6 +246,8 @@
 	<string name="button_help">Help</string>
 	<string name="button_add">Add</string>
 	<string name="button_delete">Delete</string>
+	<string name="button_set">Set</string>
+	<string name="button_remove">Remove</string>
 	<string name="button_edit">Edit</string>
 	<string name="button_copy">Copy</string>
 	<string name="button_paste">Paste</string>
@@ -230,13 +258,16 @@
 	<string name="button_scan">Scan</string>
 	<string name="button_edit_address">Add/edit address</string>
 	<string name="button_settings">Settings</string>
+	<string name="action_show_qr">Show QR code</string>
 	<string name="action_browse">Browse</string>
 	<string name="time_today">today</string>
 	<string name="address_unlabeled">(unlabeled)</string>
 
 	<!-- generic error messages -->
 	<string name="error_io">I/O error: %s</string>
+	<string name="error_parse">Parse error: %s</string>
 	<string name="error_http">HTTP error %1$s:\n%2$s</string>
 	<string name="error_bluetooth">Bluetooth error %1$s</string>
 
 </resources>
+

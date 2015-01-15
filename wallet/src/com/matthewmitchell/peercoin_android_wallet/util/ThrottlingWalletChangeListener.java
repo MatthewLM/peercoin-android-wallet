@@ -17,18 +17,18 @@
 
 package com.matthewmitchell.peercoin_android_wallet.util;
 
-import java.math.BigInteger;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
-import android.os.Handler;
-
+import com.matthewmitchell.peercoinj.core.Coin;
 import com.matthewmitchell.peercoinj.core.ECKey;
 import com.matthewmitchell.peercoinj.core.Transaction;
 import com.matthewmitchell.peercoinj.core.Wallet;
 import com.matthewmitchell.peercoinj.core.WalletEventListener;
 import com.matthewmitchell.peercoinj.script.Script;
+
+import android.os.Handler;
 
 /**
  * @author Andreas Schildbach
@@ -106,14 +106,14 @@ public abstract class ThrottlingWalletChangeListener implements WalletEventListe
 	public abstract void onThrottledWalletChanged();
 
 	@Override
-	public void onCoinsReceived(final Wallet wallet, final Transaction tx, final BigInteger prevBalance, final BigInteger newBalance)
+	public void onCoinsReceived(final Wallet wallet, final Transaction tx, final Coin prevBalance, final Coin newBalance)
 	{
 		if (coinsRelevant)
 			relevant.set(true);
 	}
 
 	@Override
-	public void onCoinsSent(final Wallet wallet, final Transaction tx, final BigInteger prevBalance, final BigInteger newBalance)
+	public void onCoinsSent(final Wallet wallet, final Transaction tx, final Coin prevBalance, final Coin newBalance)
 	{
 		if (coinsRelevant)
 			relevant.set(true);
@@ -134,7 +134,7 @@ public abstract class ThrottlingWalletChangeListener implements WalletEventListe
 	}
 
 	@Override
-	public void onKeysAdded(final Wallet wallet, final List<ECKey> keys)
+	public void onKeysAdded(final List<ECKey> keys)
 	{
 		// swallow
 	}

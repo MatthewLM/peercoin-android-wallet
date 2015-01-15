@@ -1,34 +1,28 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-
-	<string name="help_wallet">
+  <string name="help_wallet">
 <![CDATA[
 		<p>
-			La partie supérieure gauche de l\'écran affiche votre adresse Peercoin choisie et que d\'autres personnes doivent connaître pour vous envoyer des peercoins.
-			Toquer pour changer cette adresse.
+			La partie supérieure gauche de l\'écran affiche votre solde en Peercoins ainsi qu\'une devise locale sélectionnée.
+			Tapez sur le solde pour afficher la liste de toutes les devises locales et tapez sur l\'une d\'entre elles pour en faire la devise locale par défaut.
 		</p>
-		<p>
-			Le code QR à droite contient votre adresse Peercoin et peut être numérisée par un tiers.
-			Toquer le code QR pour l\'agrandir.
-		</p>
-		<p>
-			Au milieu de l\'écran, votre solde est affiché.
-			La valeur de votre portefeuille est aussi affichée dans une devise locale choisie.
-			Toquer sur le solde pour afficher la liste de toutes les devises locales et toquer sur l\'une d\'entre elles pour la choisir par défaut.
+		 <p>
+			Le QR code à droite contient votre adresse peercoin et peut être utilisée pour être scannée par un tiers.
+			Tapez sur le code QR pour l\'agrandir.
 		</p>
 		<p>
 			Le bas de l\'écran est couvert par votre liste de transactions, qui est vide initialement.
-			Les transactions en attente sont grisées jusqu\'à ce qu\'elles soient confirmées.
-			Toquer sur une entrée pour ajouter l\'adresse du destinataire ou de l\'envoyeur au carnet d\'adresses.
-			Glisser vers la gauche ou vers la droite pour appliquer des filtres à la liste.
+			Les transactions en cours de traitement sont grisées jusqu\'à ce qu\'elles soient confirmées.
+			Tapez sur une transaction pour ajouter l\'adresse du destinataire ou de l\'envoyeur à votre carnet d\'adresses.
+			Balayer vers la gauche ou vers la droite pour appliquer des filtres à la liste.
 		</p>
 		<p>
-			Vous pouvez envoyer ou recevoir des peercoins en toquant les boutons dans la barre des actions.
-			Plus d\'options sont disponibles dans le menu des options.
+			Vous pouvez envoyer ou recevoir des peercoins en tapant les boutons dans la barre d\'action.
+			Plus d\'options sont disponibles dans le menu options.
 		</p>
 	]]>
 	</string>
-	<string name="help_request_coins">
+  <string name="help_request_coins">
 <![CDATA[
 		<p>
 			En utilisant cette zone de dialogue vous pouvez demander des pièces à une autre personne (qui devrait déjà avoir installé le Peercoin Wallet).
@@ -46,7 +40,7 @@
 		</p>
 	]]>
 	</string>
-	<string name="help_send_coins">
+  <string name="help_send_coins">
 <![CDATA[
 		<p>
 			Vous avez commencé le processus d\'envoi de peercoins.
@@ -76,7 +70,7 @@
 		</p>
 	]]>
 	</string>
-	<string name="help_safety">
+  <string name="help_safety">
 <![CDATA[
 		<p>
 			<b>Notes de sécurité importantes :</b>
@@ -110,5 +104,4 @@
 		</p>
 	]]>
 	</string>
-
 </resources>

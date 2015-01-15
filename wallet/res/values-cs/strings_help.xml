@@ -1,20 +1,14 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-
-	<string name="help_wallet">
+  <string name="help_wallet">
 <![CDATA[
 		<p>
-			Horní levá část obrazovky zobrazuje Vaši aktuální Peercoin adresu, kterou druhá strana potřebuje znát, aby Vám mohla zaslat platbu.
-			Kliknutím na adresu ji změníte.
+			Horní levá část obrazovky zobrazuje Vaši aktuální Peercoin bilanci včetně odpovídající částky ve vaší lokální měně.
+			Kliknutím na částku přejdete do seznamu lokálních měn, kde si můžete vybrat jinou.
 		</p>
 		<p>
-			QR kód na pravé straně obsahuje Vaši Peercoin adresu a může být použit pro naskenování druhou stranou.
+			QR kód na pravé straně obsahuje Vaši Peercoin adresu a může být použita pro naskenování druhou stranou.
 			Klepněte na QR kód pro zobrazení větší verze.
-		</p>
-		<p>
-			Ve středu obrazovky je zobrazen aktuální zůstatek.
-			Hodnota zůstatků je zobrazena i v jiné zvolené měně.
-			Klepnutím na zůstatek zobrazíte seznam možných jiných měn, vybráním konkrétní měny tuto potom nastavíte jako výchozí.
 		</p>
 		<p>
 			Ve spodní části obrazovky je seznam transakcí, který bude samozřejmě na začátku používání aplikace prázdný.
@@ -28,7 +22,7 @@
 		</p>
 	]]>
 	</string>
-	<string name="help_request_coins">
+  <string name="help_request_coins">
 <![CDATA[
 		<p>
 			Pomocí tohoto dialogu můžete vyžádat Peercoiny od někoho jiného (kdo by měl také mít nainstalovanou aplikaci Peercoin Wallet).
@@ -47,7 +41,7 @@
 		</p>
 	]]>
 	</string>
-	<string name="help_send_coins">
+  <string name="help_send_coins">
 <![CDATA[
 		<p>
 			Právě jste zahájil zasílání Peercoinů.
@@ -77,7 +71,7 @@
 		</p>
 	]]>
 	</string>
-	<string name="help_safety">
+  <string name="help_safety">
 <![CDATA[
 		<p>
 			Několik slov o bezpečnosti vašich Peercoinů:
@@ -106,5 +100,4 @@
 		</p>
 	]]>
 	</string>
-
 </resources>
