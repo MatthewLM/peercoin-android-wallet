@@ -717,7 +717,7 @@ public class BlockchainServiceImpl extends android.app.Service implements Blockc
 		if (peerGroup != null) {
 			
 			if (loadPDB != null)
-				loadBlockchain.stopLoading();
+				loadPDB.stopLoading();
 			
 			peerGroup.removeEventListener(peerConnectivityListener);
 			peerGroup.removeWallet(application.getWallet());
@@ -734,7 +734,10 @@ public class BlockchainServiceImpl extends android.app.Service implements Blockc
 		loadBlockchain.unregisterListener(this);
 		loadBlockchain.stopLoading(resetBlockchainOnShutdown);
 		
-		bcd = null; // Everything closed by stopLoading()
+		if (bcd != null)
+			bcd.delete(resetBlockchainOnShutdown);
+		
+		bcd = null;
 		
 		application.saveWallet();
 

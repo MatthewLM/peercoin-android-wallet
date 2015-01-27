@@ -124,6 +124,8 @@ public final class WalletActivity extends AbstractWalletActivity
 	protected void onCreate(final Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+		
+		MaybeMaintenanceFragment.add(getFragmentManager());
 
 		application = getWalletApplication();
 		runAfterLoad(new Runnable() {
@@ -134,21 +136,19 @@ public final class WalletActivity extends AbstractWalletActivity
 				config = application.getConfiguration();
 				wallet = application.getWallet();
 
-				setContentView(R.layout.wallet_content);
-
 				if (savedInstanceState == null)
 					checkAlerts();
 
 				config.touchLastUsed();
 
 				handleIntent(getIntent());
-
-				MaybeMaintenanceFragment.add(getFragmentManager());
 				
 				invalidateOptionsMenu(); // Load menu properly
 				
 			}
 		});
+		
+		setContentView(R.layout.wallet_content);
 		
 	}
 

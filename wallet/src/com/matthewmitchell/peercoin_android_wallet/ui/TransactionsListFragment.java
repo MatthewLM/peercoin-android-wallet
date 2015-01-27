@@ -137,25 +137,38 @@ public class TransactionsListFragment extends FancyListFragment implements Loade
 
 		this.activity = (AbstractWalletActivity) activity;
 		this.application = (WalletApplication) activity.getApplication();
-		this.config = application.getConfiguration();
-		this.wallet = application.getWallet();
 		this.resolver = activity.getContentResolver();
 		this.loaderManager = getLoaderManager();
 	}
 
 	@Override
-	public void onCreate(final Bundle savedInstanceState)
-	{
+	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
 		setRetainInstance(false);
-
 		this.direction = (Direction) getArguments().getSerializable(KEY_DIRECTION);
+	}
+	
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+	    
+	    super.onActivityCreated(savedInstanceState);
+	    
+	    final boolean showBackupWarning = direction == null || direction == Direction.RECEIVED;
+	    
+	    activity.runAfterLoad(new Runnable () {
 
-		final boolean showBackupWarning = direction == null || direction == Direction.RECEIVED;
-
-		adapter = new TransactionsListAdapter(activity, wallet, application.maxConnectedPeers(), showBackupWarning);
-		setListAdapter(adapter);
+			@Override
+			public void run() {
+			    
+			    config = application.getConfiguration();
+			    wallet = application.getWallet();
+			    adapter = new TransactionsListAdapter(activity, wallet, application.maxConnectedPeers(), showBackupWarning);
+			    setListAdapter(adapter);
+			    
+			}
+			
+		});
+	    
 	}
 
 	@Override
@@ -165,13 +178,25 @@ public class TransactionsListFragment extends FancyListFragment implements Loade
 
 		resolver.registerContentObserver(AddressBookProvider.contentUri(activity.getPackageName()), true, addressBookObserver);
 
-		config.registerOnSharedPreferenceChangeListener(this);
+		application.setOnLoadedCallback(new Runnable () {
 
-		loaderManager.initLoader(0, null, this);
+			@Override
+			public void run() {
+			    activity.runOnUiThread(new Runnable () {
+				
+				@Override
+				public void run() {
+				    loaderManager.initLoader(0, null, TransactionsListFragment.this);
+				    config.registerOnSharedPreferenceChangeListener(TransactionsListFragment.this);
+				    wallet.addEventListener(transactionChangeListener, Threading.SAME_THREAD);
+				    updateView();
+				}
+				
+			    });
+			}
+			
+		});
 
-		wallet.addEventListener(transactionChangeListener, Threading.SAME_THREAD);
-
-		updateView();
 	}
 
 	@Override

@@ -130,7 +130,7 @@ public class WalletBalanceWidgetProvider extends AppWidgetProvider
 		final Configuration config = new Configuration(PreferenceManager.getDefaultSharedPreferences(context));
 		final MonetaryFormat ppcFormat = config.getFormat();
 
-		final Spannable balanceStr = new MonetarySpannable(ppcFormat.noCode(), balance).applyMarkup(null, null, MonetarySpannable.SMALLER_SPAN);
+		final Spannable balanceStr = new MonetarySpannable(ppcFormat.noCode(), balance).applyMarkup(null, MonetarySpannable.STANDARD_INSIGNIFICANT_SPANS);
 
 		final Cursor data = context.getContentResolver().query(ExchangeRatesProvider.contentUri(context.getPackageName(), true), null,
 				ExchangeRatesProvider.KEY_CURRENCY_CODE, new String[] { config.getExchangeCurrencyCode() }, null);
@@ -143,8 +143,10 @@ public class WalletBalanceWidgetProvider extends AppWidgetProvider
 				final Fiat localBalance = exchangeRate.rate.coinToFiat(balance);
 				final MonetaryFormat localFormat = Constants.LOCAL_FORMAT.code(0,
 						Constants.PREFIX_ALMOST_EQUAL_TO + GenericUtils.currencySymbol(exchangeRate.getCurrencyCode()));
-				localBalanceStr = new MonetarySpannable(localFormat, localBalance).applyMarkup(MonetarySpannable.SMALLER_SPAN,
-						new ForegroundColorSpan(context.getResources().getColor(R.color.fg_less_significant)), MonetarySpannable.SMALLER_SPAN);
+				final Object[] prefixSpans = new Object[] {MonetarySpannable.SMALLER_SPAN,
+						new ForegroundColorSpan(context.getResources().getColor(R.color.fg_less_significant)) };
+				localBalanceStr = new MonetarySpannable(localFormat, localBalance).applyMarkup(prefixSpans, MonetarySpannable.STANDARD_INSIGNIFICANT_SPANS);
+
 			}
 			else
 			{

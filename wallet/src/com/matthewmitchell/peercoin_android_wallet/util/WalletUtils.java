@@ -50,6 +50,7 @@ import com.matthewmitchell.peercoinj.core.Wallet;
 import com.matthewmitchell.peercoinj.script.Script;
 import com.matthewmitchell.peercoinj.store.UnreadableWalletException;
 import com.matthewmitchell.peercoinj.store.WalletProtobufSerializer;
+import com.matthewmitchell.peercoinj.wallet.KeyChainGroup;
 
 import android.text.Editable;
 import android.text.Spannable;
@@ -198,16 +199,18 @@ public class WalletUtils
 	public static Wallet restorePrivateKeysFromBase58(final InputStream is) throws IOException
 	{
 		final BufferedReader keyReader = new BufferedReader(new InputStreamReader(is, Charsets.UTF_8));
-		final Wallet wallet = new Wallet(Constants.NETWORK_PARAMETERS);
-		wallet.importKeys(WalletUtils.readKeys(keyReader));
-		return wallet;
+
+		// create non-HD wallet
+		final KeyChainGroup group = new KeyChainGroup(Constants.NETWORK_PARAMETERS);
+		group.importKeys(WalletUtils.readKeys(keyReader));
+		return new Wallet(Constants.NETWORK_PARAMETERS, group);
 	}
 
 	public static void writeKeys(@Nonnull final Writer out, @Nonnull final List<ECKey> keys) throws IOException
 	{
 		final DateFormat format = Iso8601Format.newDateTimeFormatT();
 
-		out.write("# KEEP YOUR PRIVATE KEYS SAFE! Anyone who can read this can spend your Peercoins.\n");
+		out.write("# KEEP YOUR PRIVATE KEYS SAFE! Anyone who can read this can spend your Bitcoins.\n");
 
 		for (final ECKey key : keys)
 		{

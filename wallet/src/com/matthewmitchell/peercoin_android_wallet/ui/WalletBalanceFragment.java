@@ -55,8 +55,6 @@ public final class WalletBalanceFragment extends Fragment
 {
 	private WalletApplication application;
 	private AbstractWalletActivity activity;
-	private Configuration config;
-	private Wallet wallet;
 	private LoaderManager loaderManager;
 
 	private View viewBalance;
@@ -88,8 +86,6 @@ public final class WalletBalanceFragment extends Fragment
 
 		this.activity = (AbstractWalletActivity) activity;
 		this.application = (WalletApplication) activity.getApplication();
-		this.config = application.getConfiguration();
-		this.wallet = application.getWallet();
 		this.loaderManager = getLoaderManager();
 
 		showLocalBalance = getResources().getBoolean(R.bool.show_local_balance);
@@ -144,17 +140,23 @@ public final class WalletBalanceFragment extends Fragment
 	public void onResume()
 	{
 		super.onResume();
+		
+		activity.runAfterLoad(new Runnable() {
 
-		loaderManager.initLoader(ID_BALANCE_LOADER, null, balanceLoaderCallbacks);
-		loaderManager.initLoader(ID_RATE_LOADER, null, rateLoaderCallbacks);
-		loaderManager.initLoader(ID_BLOCKCHAIN_STATE_LOADER, null, blockchainStateLoaderCallbacks);
+		    @Override
+		    public void run() {
+			loaderManager.initLoader(ID_BALANCE_LOADER, null, balanceLoaderCallbacks);
+			loaderManager.initLoader(ID_RATE_LOADER, null, rateLoaderCallbacks);
+			loaderManager.initLoader(ID_BLOCKCHAIN_STATE_LOADER, null, blockchainStateLoaderCallbacks);
+		    }
+		    
+		});
 
 		updateView();
 	}
 
 	@Override
-	public void onPause()
-	{
+	public void onPause() {
 		loaderManager.destroyLoader(ID_BLOCKCHAIN_STATE_LOADER);
 		loaderManager.destroyLoader(ID_RATE_LOADER);
 		loaderManager.destroyLoader(ID_BALANCE_LOADER);
@@ -213,10 +215,11 @@ public final class WalletBalanceFragment extends Fragment
 			if (!showLocalBalance)
 				viewBalanceLocalFrame.setVisibility(View.GONE);
 
-			if (balance != null)
-			{
+			if (balance != null) {
+			    
 				viewBalancePPC.setVisibility(View.VISIBLE);
-				viewBalancePPC.setFormat(config.getFormat());
+				// Configuration should be set now since the balance is loaded
+				viewBalancePPC.setFormat(application.getConfiguration().getFormat());
 				viewBalancePPC.setAmount(balance);
 
 				final boolean tooMuch = balance.isGreaterThan(Coin.COIN.multiply(500));
@@ -280,7 +283,7 @@ public final class WalletBalanceFragment extends Fragment
 		@Override
 		public Loader<Coin> onCreateLoader(final int id, final Bundle args)
 		{
-			return new WalletBalanceLoader(activity, wallet);
+			return new WalletBalanceLoader(activity, application.getWallet());
 		}
 
 		@Override
@@ -302,7 +305,7 @@ public final class WalletBalanceFragment extends Fragment
 		@Override
 		public Loader<Cursor> onCreateLoader(final int id, final Bundle args)
 		{
-			return new ExchangeRateLoader(activity, config);
+			return new ExchangeRateLoader(activity, application.getConfiguration());
 		}
 
 		@Override

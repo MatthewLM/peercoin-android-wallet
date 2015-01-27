@@ -87,7 +87,7 @@ public abstract class InputParser
 			{
 				try
 				{
-					final byte[] serializedPaymentRequest = Qr.decodeBinary(input.substring(9));
+					final byte[] serializedPaymentRequest = Qr.decodeBinary(input.substring(8));
 
 					parseAndHandlePaymentRequest(serializedPaymentRequest);
 				}
@@ -202,7 +202,7 @@ public abstract class InputParser
 		}
 
 		protected void handlePrivateKey(@Nonnull final VersionedChecksummedBytes key) {
-            throw new UnsupportedOperationException();
+		    cannotClassify(input);
 		}
 	}
 

@@ -68,18 +68,17 @@ import com.matthewmitchell.peercoin_android_wallet.R;
  */
 public final class WalletAddressFragment extends Fragment implements NfcAdapter.CreateNdefMessageCallback
 {
-	private Activity activity;
+	private WalletActivity activity;
 	private WalletApplication application;
-	private Wallet wallet;
 	private LoaderManager loaderManager;
 	@CheckForNull
 	private NfcAdapter nfcAdapter;
 
 	private ImageView currentAddressQrView;
 
-	private Bitmap currentAddressQrBitmap;
-	private Spanned currentAddressQrLabel;
-	private AtomicReference<String> currentAddressUriRef = new AtomicReference<String>();
+	private Bitmap currentAddressQrBitmap = null;
+	private Spanned currentAddressQrLabel = null;
+	private final AtomicReference<String> currentAddressUriRef = new AtomicReference<String>();
 
 	private static final int ID_ADDRESS_LOADER = 0;
 
@@ -88,9 +87,8 @@ public final class WalletAddressFragment extends Fragment implements NfcAdapter.
 	{
 		super.onAttach(activity);
 
-		this.activity = activity;
+		this.activity = (WalletActivity)activity;
 		this.application = (WalletApplication) activity.getApplication();
-		this.wallet = application.getWallet();
 		this.loaderManager = getLoaderManager();
 		final NfcManager nfcManager = (NfcManager) activity.getSystemService(Context.NFC_SERVICE);
 		this.nfcAdapter = nfcManager.getDefaultAdapter();
@@ -127,8 +125,15 @@ public final class WalletAddressFragment extends Fragment implements NfcAdapter.
 	public void onResume()
 	{
 		super.onResume();
+		
+		activity.runAfterLoad(new Runnable() {
 
-		loaderManager.initLoader(ID_ADDRESS_LOADER, null, addressLoaderCallbacks);
+		    @Override
+		    public void run() {
+			loaderManager.initLoader(ID_ADDRESS_LOADER, null, addressLoaderCallbacks);
+		    }
+		    
+		});
 
 		updateView();
 	}
@@ -258,7 +263,7 @@ public final class WalletAddressFragment extends Fragment implements NfcAdapter.
 		@Override
 		public Loader<AddressData> onCreateLoader(final int id, final Bundle args) {
 			final int size = getResources().getDimensionPixelSize(R.dimen.bitmap_dialog_qr_size);
-			return new CurrentAddressLoader(activity, wallet, size);
+			return new CurrentAddressLoader(activity, application.getWallet(), size);
 		}
 
 		@Override

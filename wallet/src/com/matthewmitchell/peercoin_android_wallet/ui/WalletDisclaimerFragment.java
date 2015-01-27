@@ -50,8 +50,8 @@ import com.matthewmitchell.peercoin_android_wallet.R;
  */
 public final class WalletDisclaimerFragment extends Fragment implements OnSharedPreferenceChangeListener
 {
-	private Activity activity;
-	private Configuration config;
+	private WalletActivity activity;
+	private WalletApplication application;
 	private LoaderManager loaderManager;
 
 	@CheckForNull
@@ -67,9 +67,8 @@ public final class WalletDisclaimerFragment extends Fragment implements OnShared
 		super.onAttach(activity);
 
 		this.activity = (WalletActivity) activity;
-		final WalletApplication application = (WalletApplication) activity.getApplication();
-		this.config = application.getConfiguration();
-		this.loaderManager = getLoaderManager();
+		application = (WalletApplication) activity.getApplication();
+		loaderManager = getLoaderManager();
 	}
 
 	@Override
@@ -82,7 +81,7 @@ public final class WalletDisclaimerFragment extends Fragment implements OnShared
 			@Override
 			public void onClick(final View v)
 			{
-				final boolean showBackup = config.remindBackup();
+				final boolean showBackup = application.getConfiguration().remindBackup();
 				if (showBackup)
 					((WalletActivity) activity).handleBackupWallet();
 				else
@@ -94,25 +93,37 @@ public final class WalletDisclaimerFragment extends Fragment implements OnShared
 	}
 
 	@Override
-	public void onResume()
-	{
-		super.onResume();
+	public void onResume() {
+	    super.onResume();
 
-		config.registerOnSharedPreferenceChangeListener(this);
+	    activity.runAfterLoad(new Runnable() {
 
-		loaderManager.initLoader(ID_BLOCKCHAIN_STATE_LOADER, null, blockchainStateLoaderCallbacks);
+		@Override
+		public void run() {
+		    loaderManager.initLoader(ID_BLOCKCHAIN_STATE_LOADER, null, blockchainStateLoaderCallbacks);
+		    application.getConfiguration().registerOnSharedPreferenceChangeListener(WalletDisclaimerFragment.this);
+		    updateView();
+		}
 
-		updateView();
+	    });
+		
 	}
 
 	@Override
-	public void onPause()
-	{
-		loaderManager.destroyLoader(ID_BLOCKCHAIN_STATE_LOADER);
+	public void onPause() {
+	    
+	    activity.runAfterLoad(new Runnable() {
 
-		config.unregisterOnSharedPreferenceChangeListener(this);
+		@Override
+		public void run() {
+		    loaderManager.destroyLoader(ID_BLOCKCHAIN_STATE_LOADER);
+		    application.getConfiguration().unregisterOnSharedPreferenceChangeListener(WalletDisclaimerFragment.this);
+		}
+		
+	    });
 
-		super.onPause();
+	    super.onPause();
+	    
 	}
 
 	@Override
@@ -127,6 +138,7 @@ public final class WalletDisclaimerFragment extends Fragment implements OnShared
 		if (!isResumed())
 			return;
 
+		final Configuration config = application.getConfiguration();
 		final boolean showBackup = config.remindBackup();
 		final boolean showDisclaimer = config.getDisclaimerEnabled();
 

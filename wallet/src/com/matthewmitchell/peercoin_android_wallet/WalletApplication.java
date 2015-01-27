@@ -108,8 +108,6 @@ public class WalletApplication extends Application
 
 		super.onCreate();
 
-		packageInfo = packageInfoFromContext(this);
-
 		CrashReporter.init(getCacheDir());
 
 		Threading.uncaughtExceptionHandler = new Thread.UncaughtExceptionHandler()
@@ -125,12 +123,6 @@ public class WalletApplication extends Application
 		initMnemonicCode();
 
 		config = new Configuration(PreferenceManager.getDefaultSharedPreferences(this));
-		activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-
-		blockchainServiceIntent = new Intent(this, BlockchainServiceImpl.class);
-		blockchainServiceCancelCoinsReceivedIntent = new Intent(BlockchainService.ACTION_CANCEL_COINS_RECEIVED, null, this,
-				BlockchainServiceImpl.class);
-		blockchainServiceResetBlockchainIntent = new Intent(BlockchainService.ACTION_RESET_BLOCKCHAIN, null, this, BlockchainServiceImpl.class);
 
 		walletFile = getFileStreamPath(Constants.Files.WALLET_FILENAME_PROTOBUF);
 
@@ -139,6 +131,7 @@ public class WalletApplication extends Application
 		config.updateLastVersionCode(packageInfo.versionCode);
 
 		afterLoadWallet();
+		cleanupFiles();
 		
 		synchronized (this) {
 		
@@ -169,15 +162,23 @@ public class WalletApplication extends Application
 	@Override
 	public void onCreate() {
 		
-            // Do not use main thread!
-            new Thread(new Runnable() {
+	    // Do some stuff that is quick
+	    activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+	    packageInfo = packageInfoFromContext(this);
+	    blockchainServiceIntent = new Intent(this, BlockchainServiceImpl.class);
+	    blockchainServiceCancelCoinsReceivedIntent = new Intent(BlockchainService.ACTION_CANCEL_COINS_RECEIVED, null, this,
+				BlockchainServiceImpl.class);
+	    blockchainServiceResetBlockchainIntent = new Intent(BlockchainService.ACTION_RESET_BLOCKCHAIN, null, this, BlockchainServiceImpl.class);
 
-                    @Override
-                    public void run() {
-                            initWallet();
-                    }
+	    // Do not use main thread!
+	    new Thread(new Runnable() {
 
-            }).start();
+		    @Override
+		    public void run() {
+			    initWallet();
+		    }
+
+	    }).start();
 		
 	}
 	
@@ -421,7 +422,7 @@ public class WalletApplication extends Application
 		log.debug("wallet saved to: '" + walletFile + "', took " + (System.currentTimeMillis() - start) + "ms");
 	}
 
-	private void backupWallet()
+	public void backupWallet()
 	{
 		final Protos.Wallet.Builder builder = new WalletProtobufSerializer().walletToProto(wallet).toBuilder();
 
@@ -455,28 +456,6 @@ public class WalletApplication extends Application
 			}
 		}
 
-		try
-		{
-			final String filename = String.format(Locale.US, "%s.%02d", Constants.Files.WALLET_KEY_BACKUP_PROTOBUF,
-					(System.currentTimeMillis() / DateUtils.DAY_IN_MILLIS) % 100l);
-			os = openFileOutput(filename, Context.MODE_PRIVATE);
-			walletProto.writeTo(os);
-		}
-		catch (final IOException x)
-		{
-			log.error("problem writing key backup", x);
-		}
-		finally
-		{
-			try
-			{
-				os.close();
-			}
-			catch (final IOException x)
-			{
-				// swallow
-			}
-		}
 	}
 
 	private void migrateBackup()
@@ -488,13 +467,20 @@ public class WalletApplication extends Application
 			// make sure there is at least one recent backup
 			backupWallet();
 
-			// remove old backups
-			for (final String filename : fileList())
-				if (filename.startsWith(Constants.Files.WALLET_KEY_BACKUP_BASE58))
-					new File(getFilesDir(), filename).delete();
 		}
 	}
-
+	
+	private void cleanupFiles() {
+		for (final String filename : fileList()) {
+			if (filename.startsWith(Constants.Files.WALLET_KEY_BACKUP_BASE58)
+					|| filename.startsWith(Constants.Files.WALLET_KEY_BACKUP_PROTOBUF + '.') || filename.endsWith(".tmp")) {
+				final File file = new File(getFilesDir(), filename);
+				log.info("removing obsolete file: '{}'", file);
+				file.delete();
+			}
+		}
+	}
+	
 	public void startBlockchainService(final boolean cancelCoinsReceived) {
 		
 		setOnLoadedCallback(new Runnable() {
@@ -607,8 +593,7 @@ public class WalletApplication extends Application
 		return httpUserAgent(packageInfo().versionName);
 	}
 
-	public int maxConnectedPeers()
-	{
+	public int maxConnectedPeers() {
 		final int memoryClass = activityManager.getMemoryClass();
 		if (memoryClass <= Constants.MEMORY_CLASS_LOWEND)
 			return 4;

@@ -57,7 +57,8 @@ public class MaybeMaintenanceFragment extends Fragment
 		}
 	}
 
-	private Wallet wallet;
+	private WalletActivity activity;
+	private WalletApplication application;
 	private LocalBroadcastManager broadcastManager;
 	private boolean dialogWasShown = false;
 
@@ -66,9 +67,9 @@ public class MaybeMaintenanceFragment extends Fragment
 	{
 		super.onAttach(activity);
 
-		final WalletApplication application = ((AbstractWalletActivity) activity).getWalletApplication();
-		this.wallet = application.getWallet();
-		this.broadcastManager = LocalBroadcastManager.getInstance(activity);
+		this.activity = (WalletActivity) activity;
+		application = this.activity.getWalletApplication();
+		broadcastManager = LocalBroadcastManager.getInstance(activity);
 	}
 
 	@Override
@@ -84,7 +85,15 @@ public class MaybeMaintenanceFragment extends Fragment
 	{
 		super.onResume();
 
-		broadcastManager.registerReceiver(broadcastReceiver, new IntentFilter(BlockchainService.ACTION_BLOCKCHAIN_STATE));
+		this.activity.runAfterLoad(new Runnable() {
+
+		    @Override
+		    public void run() {
+			broadcastManager.registerReceiver(broadcastReceiver, new IntentFilter(BlockchainService.ACTION_BLOCKCHAIN_STATE));
+		    }
+		    
+		});
+		
 	}
 
 	@Override
@@ -114,7 +123,7 @@ public class MaybeMaintenanceFragment extends Fragment
 	{
 		try
 		{
-			final ListenableFuture<List<Transaction>> result = wallet.doMaintenance(null, false);
+			final ListenableFuture<List<Transaction>> result = application.getWallet().doMaintenance(null, false);
 			return !result.get().isEmpty();
 		}
 		catch (final DeterministicUpgradeRequiresPassword x)
