@@ -70,13 +70,21 @@ public final class RestoreWalletActivity extends AbstractWalletActivity
 		super.onCreate(savedInstanceState);
 
 		application = getWalletApplication();
-		config = application.getConfiguration();
-		wallet = application.getWallet();
-		contentResolver = getContentResolver();
+		
+		runAfterLoad(new Runnable() {
 
-		backupFileUri = getIntent().getData();
+			@Override
+			public void run() {
+			    config = application.getConfiguration();
+			    wallet = application.getWallet();
+			    contentResolver = getContentResolver();
 
-		showDialog(DIALOG_RESTORE_WALLET);
+			    backupFileUri = getIntent().getData();
+
+			    showDialog(DIALOG_RESTORE_WALLET);
+			}
+			
+		});
 	}
 
 	@Override

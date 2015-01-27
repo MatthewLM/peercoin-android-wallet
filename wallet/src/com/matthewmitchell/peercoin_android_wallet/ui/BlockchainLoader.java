@@ -125,7 +125,8 @@ public class BlockchainLoader extends AsyncTaskLoader<BlockchainData> {
 	@Override 
 	public void onCanceled(BlockchainData data) {
 		super.onCanceled(data);
-		data.delete(resetBlockchain);
+		if (data != null)
+		    data.delete(resetBlockchain);
 	}
 	
 }
