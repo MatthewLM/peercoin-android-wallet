@@ -210,7 +210,7 @@ public class WalletUtils
 	{
 		final DateFormat format = Iso8601Format.newDateTimeFormatT();
 
-		out.write("# KEEP YOUR PRIVATE KEYS SAFE! Anyone who can read this can spend your Bitcoins.\n");
+		out.write("# KEEP YOUR PRIVATE KEYS SAFE! Anyone who can read this can spend your Peercoins.\n");
 
 		for (final ECKey key : keys)
 		{
