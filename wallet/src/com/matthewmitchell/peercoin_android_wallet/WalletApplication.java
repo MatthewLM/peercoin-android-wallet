@@ -123,8 +123,13 @@ public class WalletApplication extends Application
 		initMnemonicCode();
 
 		config = new Configuration(PreferenceManager.getDefaultSharedPreferences(this));
-
 		walletFile = getFileStreamPath(Constants.Files.WALLET_FILENAME_PROTOBUF);
+
+		// Rename old wallets
+		
+		final File oldWalletFile = getFileStreamPath(Constants.Files.WALLET_FILENAME_PROTOBUF_OLD);
+		if (oldWalletFile.exists())
+		    oldWalletFile.renameTo(walletFile);
 
 		loadWalletFromProtobuf();
 

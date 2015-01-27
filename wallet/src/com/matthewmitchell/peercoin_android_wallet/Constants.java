@@ -40,6 +40,10 @@ public final class Constants
 
 	public final static class Files
 	{
+		
+		/** Old filename of the wallet. */
+		public static final String WALLET_FILENAME_PROTOBUF_OLD = "wallet-protobuf";
+	    
 		/** Filename of the wallet. */
 		public static final String WALLET_FILENAME_PROTOBUF = "peercoin-wallet-protobuf";
 
