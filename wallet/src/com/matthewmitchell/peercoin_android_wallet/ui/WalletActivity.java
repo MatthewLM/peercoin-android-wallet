@@ -114,7 +114,6 @@ public final class WalletActivity extends AbstractWalletActivity
 
 	private WalletApplication application;
 	private Configuration config;
-	private Wallet wallet;
 
 	private Handler handler = new Handler();
 
@@ -134,7 +133,6 @@ public final class WalletActivity extends AbstractWalletActivity
 			public void run() {
 				
 				config = application.getConfiguration();
-				wallet = application.getWallet();
 
 				if (savedInstanceState == null)
 					checkAlerts();
@@ -265,7 +263,7 @@ public final class WalletActivity extends AbstractWalletActivity
 		menu.findItem(R.id.wallet_options_backup_wallet).setEnabled(Environment.MEDIA_MOUNTED.equals(externalStorageState));
 		
 		menu.findItem(R.id.wallet_options_encrypt_keys).setTitle(
-				wallet.isEncrypted() ? R.string.wallet_options_encrypt_keys_change : R.string.wallet_options_encrypt_keys_set);
+				application.getWallet().isEncrypted() ? R.string.wallet_options_encrypt_keys_change : R.string.wallet_options_encrypt_keys_set);
 
 		return true;
 	}
@@ -509,7 +507,7 @@ public final class WalletActivity extends AbstractWalletActivity
 		});
 
 		final View replaceWarningView = alertDialog.findViewById(R.id.restore_wallet_from_storage_dialog_replace_warning);
-		final boolean hasCoins = wallet.getBalance(BalanceType.ESTIMATED).signum() > 0;
+		final boolean hasCoins = application.getWallet().getBalance(BalanceType.ESTIMATED).signum() > 0;
 		replaceWarningView.setVisibility(hasCoins ? View.VISIBLE : View.GONE);
 
 		final Spinner fileView = (Spinner) alertDialog.findViewById(R.id.import_keys_from_storage_file);
@@ -596,7 +594,7 @@ public final class WalletActivity extends AbstractWalletActivity
 		showView.setOnCheckedChangeListener(new ShowPasswordCheckListener(passwordView));
 
 		final TextView warningView = (TextView) alertDialog.findViewById(R.id.backup_wallet_dialog_warning_encrypted);
-		warningView.setVisibility(wallet.isEncrypted() ? View.VISIBLE : View.GONE);
+		warningView.setVisibility(application.getWallet().isEncrypted() ? View.VISIBLE : View.GONE);
 	}
 
 	private void checkLowStorageAlert()
@@ -742,7 +740,7 @@ public final class WalletActivity extends AbstractWalletActivity
 				@Override
 				protected CharSequence collectWalletDump()
 				{
-					return wallet.toString(false, true, true, null);
+					return application.getWallet().toString(false, true, true, null);
 				}
 			};
 
@@ -825,7 +823,7 @@ public final class WalletActivity extends AbstractWalletActivity
 		final File file = new File(Constants.Files.EXTERNAL_WALLET_BACKUP_DIR, Constants.Files.EXTERNAL_WALLET_BACKUP + "-"
 				+ dateFormat.format(new Date()));
 
-		final Protos.Wallet walletProto = new WalletProtobufSerializer().walletToProto(wallet);
+		final Protos.Wallet walletProto = new WalletProtobufSerializer().walletToProto(application.getWallet());
 
 		Writer cipherOut = null;
 

@@ -139,7 +139,7 @@ public class WalletApplication extends Application
 		cleanupFiles();
 		
 		synchronized (this) {
-		
+		    
 			isLoaded = true;
 			
 			for (Runnable callback : loadedCallbacks)
@@ -644,7 +644,12 @@ public class WalletApplication extends Application
 	}
 
 	public boolean isLoaded() {
+	    
+	    // Wait for loadedCallbacks to run
+	    synchronized (this) {
 		return isLoaded;
+	    }
+	    
 	}
 	
 }
