@@ -110,8 +110,16 @@ public final class ExchangeRatesFragment extends FancyListFragment implements On
 
 		loaderManager.initLoader(ID_RATE_LOADER, null, rateLoaderCallbacks);
 
-		defaultCurrency = config.getExchangeCurrencyCode();
-		config.registerOnSharedPreferenceChangeListener(this);
+		activity.runAfterLoad(new Runnable() {
+
+		    @Override
+		    public void run() {
+			defaultCurrency = config.getExchangeCurrencyCode();
+			config.registerOnSharedPreferenceChangeListener(ExchangeRatesFragment.this);
+		    }
+		    
+		});
+		
 	}
 
 	@Override
@@ -250,18 +258,27 @@ public final class ExchangeRatesFragment extends FancyListFragment implements On
 		}
 	}
 
-	private void updateView()
-	{
-		balance = application.getWallet().getBalance(BalanceType.ESTIMATED);
+	private void updateView() {
+		
+	    activity.runAfterLoad(new Runnable() {
 
-		if (adapter != null)
-		{
-			final int PPCShift = config.getPPCShift();
+			@Override
+			public void run() {
+				
+				balance = application.getWallet().getBalance(BalanceType.ESTIMATED);
+				
+				if (adapter != null) {
+					final int PPCShift = config.getPPCShift();
 
-			final Coin base = PPCShift == 0 ? Coin.COIN : Coin.MILLICOIN;
+					final Coin base = PPCShift == 0 ? Coin.COIN : Coin.MILLICOIN;
 
-			adapter.setRateBase(base);
-		}
+					adapter.setRateBase(base);
+				}
+				
+			}
+			
+		});
+
 	}
 
 	private final LoaderCallbacks<Cursor> rateLoaderCallbacks = new LoaderManager.LoaderCallbacks<Cursor>()
