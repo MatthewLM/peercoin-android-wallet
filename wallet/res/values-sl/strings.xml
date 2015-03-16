@@ -107,7 +107,6 @@
 	<string name="transaction_row_message_received_unconfirmed_unlocked">Te prejete novce boste predvidoma lahko uporabili v nekaj minutah.</string>
 	<string name="transaction_row_message_received_unconfirmed_locked">To plačilo ni standardno in mu ni zaupati.</string>
 	<string name="transaction_row_message_received_dead">To plačilo je pošiljatelj storniral.</string>
-	<string name="transaction_row_message_received_dust">Tega malega zneska najbrž nikoli ne boste mogli smiselno porabiti.</string>
 	<string name="network_monitor_activity_title">Pregled omrežja</string>
 	<string name="network_monitor_peer_list_title">Vrstniki</string>
 	<string name="network_monitor_block_list_title">Bloki</string>

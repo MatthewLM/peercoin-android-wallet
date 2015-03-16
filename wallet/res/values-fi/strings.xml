@@ -127,7 +127,6 @@
   <string name="transaction_row_message_received_unconfirmed_unlocked">Tämän maksun pitäisi muuttua käytettäväksi muutaman minuutin kuluttua.</string>
   <string name="transaction_row_message_received_unconfirmed_locked">Tämä ei ole tavallinen maksu, joten siihen ei pidä luottaa.</string>
   <string name="transaction_row_message_received_dead">Lähettäjä on kumonnut tämän maksun.</string>
-  <string name="transaction_row_message_received_dust">Näin pientä määrää ei voida ehkä koskaan käyttää ekonomiselta näkökannalta.</string>
   <string name="transaction_row_message_received_pay_to_many">Tämä maksu maksaa moniin lompakoihin omasi lisäksi, joka hidastaa ohjelmaa ajan myötä. Jos pystyt, yritä vastaanottaa maksuja jotka maksavat vain sinulle.</string>
   <string name="network_monitor_activity_title">Verkkomittari</string>
   <string name="network_monitor_peer_list_title">Vertaisverkko</string>

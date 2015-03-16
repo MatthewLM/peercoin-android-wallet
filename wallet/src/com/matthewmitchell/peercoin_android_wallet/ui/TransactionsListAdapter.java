@@ -392,12 +392,6 @@ public class TransactionsListAdapter extends BaseAdapter
 				rowMessage.setText(R.string.transaction_row_message_received_direct);
 				rowMessage.setTextColor(colorInsignificant);
 			}
-			else if (!txCache.sent && txCache.value.compareTo(Transaction.MIN_OUTPUT_VALUE) < 0)
-			{
-				rowExtendMessage.setVisibility(View.VISIBLE);
-				rowMessage.setText(R.string.transaction_row_message_received_dust);
-				rowMessage.setTextColor(colorInsignificant);
-			}
 			else if (!txCache.sent && confidenceType == ConfidenceType.PENDING && isTimeLocked)
 			{
 				rowExtendMessage.setVisibility(View.VISIBLE);

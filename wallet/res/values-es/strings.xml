@@ -125,7 +125,6 @@
   <string name="transaction_row_message_received_unconfirmed_unlocked">Este pago debería estar disponible en unos minutos.</string>
   <string name="transaction_row_message_received_unconfirmed_locked">Este pago no es estándar y no ofrece confianza.</string>
   <string name="transaction_row_message_received_dead">Este pago ha sido anulado por el pagador.</string>
-  <string name="transaction_row_message_received_dust">Esta cantidad pequeña probablemente no pueda gastarse económicamente.</string>
   <string name="transaction_row_message_received_pay_to_many">Este pago paga a muchos monederos además del suyo, lo que hace que la aplicación se alente con el tiempo. Si puede, intente recibiendo pagos que sólo paguen a usted.</string>
   <string name="network_monitor_activity_title">Monitor de red</string>
   <string name="network_monitor_peer_list_title">Pares</string>

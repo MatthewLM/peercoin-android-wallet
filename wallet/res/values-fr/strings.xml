@@ -129,7 +129,6 @@
   <string name="transaction_row_message_received_unconfirmed_unlocked">Ce paiement devrait pouvoir être dépensé dans quelques minutes.</string>
   <string name="transaction_row_message_received_unconfirmed_locked">Ce paiement n\'est pas standard et vous ne devriez pas lui faire confiance.</string>
   <string name="transaction_row_message_received_dead">Ce paiement a été renversé par son expéditeur.</string>
-  <string name="transaction_row_message_received_dust">Ce faible montant ne pourra probablement jamais être dépensé de façon économique.</string>
   <string name="transaction_row_message_received_pay_to_many">Ce paiement paie de nombreux portefeuilles en plus du vôtre, ce qui ralentira l\'application au fil du temps. Si vous le pouvez, essayez de recevoir des paiements qui ne paient que vous.</string>
   <string name="network_monitor_activity_title">Surveillance du réseau</string>
   <string name="network_monitor_peer_list_title">Pairs</string>
@@ -249,8 +248,8 @@
   <string name="button_paste">Coller</string>
   <string name="button_share">Partager</string>
   <string name="button_set_as_default">Définir par défaut</string>
-  <string name="button_request_coins">Demande de BTC</string>
-  <string name="button_send_coins">Envoi de BTC</string>
+  <string name="button_request_coins">Demande de PPC</string>
+  <string name="button_send_coins">Envoi de PPC</string>
   <string name="button_scan">Numériser</string>
   <string name="button_edit_address">Ajouter/modifier une adresse</string>
   <string name="button_settings">Paramètres</string>

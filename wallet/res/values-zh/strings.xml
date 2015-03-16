@@ -110,7 +110,6 @@
 	<string name="transaction_row_message_received_unconfirmed_unlocked">此款项几分钟后成为可支配。</string>
 	<string name="transaction_row_message_received_unconfirmed_locked">此款项不标准，不应该被信任。</string>
 	<string name="transaction_row_message_received_dead">此款项已由发送人逆转。</string>
-	<string name="transaction_row_message_received_dust">这少量的应该或许永远不会在经济上消费的。</string>
 	<string name="network_monitor_activity_title">网络监视器</string>
 	<string name="network_monitor_peer_list_title">同行</string>
 	<string name="network_monitor_block_list_title">区块</string>

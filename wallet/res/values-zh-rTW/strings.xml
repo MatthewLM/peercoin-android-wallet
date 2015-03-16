@@ -109,7 +109,6 @@
   <string name="transaction_row_message_received_unconfirmed_unlocked">付款應該在幾分鐘之後才可以使用。</string>
   <string name="transaction_row_message_received_unconfirmed_locked">該付款並不符合標準，不應該被相信。</string>
   <string name="transaction_row_message_received_dead">該付款已被付款人撤銷。</string>
-  <string name="transaction_row_message_received_dust">極小額付款可能無法有效支付</string>
   <string name="network_monitor_activity_title">網路監視器</string>
   <string name="network_monitor_peer_list_title">節點</string>
   <string name="network_monitor_block_list_title">區塊</string>

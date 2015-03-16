@@ -108,14 +108,13 @@ public final class ExchangeRatesFragment extends FancyListFragment implements On
 		adapter = new ExchangeRatesAdapter(activity);
 		setListAdapter(adapter);
 
-		loaderManager.initLoader(ID_RATE_LOADER, null, rateLoaderCallbacks);
-
 		activity.runAfterLoad(new Runnable() {
 
 		    @Override
 		    public void run() {
-			defaultCurrency = config.getExchangeCurrencyCode();
-			config.registerOnSharedPreferenceChangeListener(ExchangeRatesFragment.this);
+				loaderManager.initLoader(ID_RATE_LOADER, null, rateLoaderCallbacks);
+				defaultCurrency = config.getExchangeCurrencyCode();
+				config.registerOnSharedPreferenceChangeListener(ExchangeRatesFragment.this);
 		    }
 		    
 		});
@@ -135,8 +134,15 @@ public final class ExchangeRatesFragment extends FancyListFragment implements On
 	{
 		super.onResume();
 
-		loaderManager.initLoader(ID_BALANCE_LOADER, null, balanceLoaderCallbacks);
-		loaderManager.initLoader(ID_BLOCKCHAIN_STATE_LOADER, null, blockchainStateLoaderCallbacks);
+		activity.runAfterLoad(new Runnable() {
+
+		    @Override
+		    public void run() {
+				loaderManager.initLoader(ID_BALANCE_LOADER, null, balanceLoaderCallbacks);
+				loaderManager.initLoader(ID_BLOCKCHAIN_STATE_LOADER, null, blockchainStateLoaderCallbacks);
+			}
+			
+		});
 
 		updateView();
 	}
