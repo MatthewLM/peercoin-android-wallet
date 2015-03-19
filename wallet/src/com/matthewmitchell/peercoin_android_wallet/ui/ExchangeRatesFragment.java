@@ -91,7 +91,6 @@ public final class ExchangeRatesFragment extends FancyListFragment implements On
 
 		this.activity = (AbstractWalletActivity) activity;
 		this.application = (WalletApplication) activity.getApplication();
-		this.config = application.getConfiguration();
 		this.wallet = application.getWallet();
 		this.contentUri = ExchangeRatesProvider.contentUri(activity.getPackageName(), false);
 		this.loaderManager = getLoaderManager();
@@ -113,6 +112,7 @@ public final class ExchangeRatesFragment extends FancyListFragment implements On
 		    @Override
 		    public void run() {
 				loaderManager.initLoader(ID_RATE_LOADER, null, rateLoaderCallbacks);
+                config = application.getConfiguration();
 				defaultCurrency = config.getExchangeCurrencyCode();
 				config.registerOnSharedPreferenceChangeListener(ExchangeRatesFragment.this);
 		    }

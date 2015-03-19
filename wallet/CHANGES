@@ -1,8 +1,12 @@
+v2.4
+
+* Another startup fix
+
 v2.3
 
 * Use peercoinj 0.12.3, fix loading crash, and remove redundant dust message.
 
 v2.0
 
-* Update in line with peercoinj 0.12.2 and with version 4.13 of Andreas Schildbach's Peercoin wallet
+* Update in line with peercoinj 0.12.2 and with version 4.13 of Andreas Schildbach's Bitcoin Android wallet
 
