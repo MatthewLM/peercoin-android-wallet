@@ -593,8 +593,21 @@ public final class WalletActivity extends AbstractWalletActivity
 		final CheckBox showView = (CheckBox) alertDialog.findViewById(R.id.export_keys_dialog_show);
 		showView.setOnCheckedChangeListener(new ShowPasswordCheckListener(passwordView));
 
-		final TextView warningView = (TextView) alertDialog.findViewById(R.id.backup_wallet_dialog_warning_encrypted);
-		warningView.setVisibility(application.getWallet().isEncrypted() ? View.VISIBLE : View.GONE);
+        final TextView warningView = (TextView) alertDialog.findViewById(R.id.backup_wallet_dialog_warning_encrypted);
+		Wallet wallet = application.getWallet();
+
+        if (wallet == null) {
+			warningView.setVisibility(View.GONE);
+			runAfterLoad(new Runnable() {
+
+				@Override
+				public void run() {
+					warningView.setVisibility(application.getWallet().isEncrypted() ? View.VISIBLE : View.GONE);
+				}
+				
+			});
+		}else
+			warningView.setVisibility(wallet.isEncrypted() ? View.VISIBLE : View.GONE);
 	}
 
 	private void checkLowStorageAlert()
