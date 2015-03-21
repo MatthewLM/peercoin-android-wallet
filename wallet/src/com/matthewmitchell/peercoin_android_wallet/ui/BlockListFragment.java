@@ -104,9 +104,18 @@ public final class BlockListFragment extends ListFragment
 
 		this.activity = (AbstractWalletActivity) activity;
 		this.application = this.activity.getWalletApplication();
-		this.config = application.getConfiguration();
-		this.wallet = application.getWallet();
 		this.loaderManager = getLoaderManager();
+		
+		this.activity.runAfterLoad(new Runnable(){
+
+			@Override
+			public void run() {
+				BlockListFragment.this.config = application.getConfiguration();
+				BlockListFragment.this.wallet = application.getWallet();
+			}
+			
+		});
+		
 	}
 
 	@Override
@@ -114,8 +123,15 @@ public final class BlockListFragment extends ListFragment
 	{
 		super.onActivityCreated(savedInstanceState);
 
-		assertTrue(((WalletApplication)activity.getApplication()).getConfiguration() != null);
-		activity.bindService(new Intent(activity, BlockchainServiceImpl.class), serviceConnection, Context.BIND_AUTO_CREATE);
+		activity.runAfterLoad(new Runnable() {
+
+			@Override
+			public void run() {
+				activity.bindService(new Intent(activity, BlockchainServiceImpl.class), serviceConnection, Context.BIND_AUTO_CREATE);
+			}
+			
+		});
+		
 	}
 
 	@Override
@@ -123,8 +139,16 @@ public final class BlockListFragment extends ListFragment
 	{
 		super.onCreate(savedInstanceState);
 
-		adapter = new BlockListAdapter();
-		setListAdapter(adapter);
+		activity.runAfterLoad(new Runnable() {
+
+			@Override
+			public void run() {
+				adapter = new BlockListAdapter();
+				setListAdapter(adapter);
+			}
+			
+		});
+		
 	}
 
 	private boolean resumed = false;
@@ -135,12 +159,18 @@ public final class BlockListFragment extends ListFragment
 		super.onResume();
 
 		activity.registerReceiver(tickReceiver, new IntentFilter(Intent.ACTION_TIME_TICK));
-
-		loaderManager.initLoader(ID_TRANSACTION_LOADER, null, transactionLoaderCallbacks);
-
 		adapter.notifyDataSetChanged();
-
 		resumed = true;
+		
+		this.activity.runAfterLoad(new Runnable() {
+
+			@Override
+			public void run() {
+				loaderManager.initLoader(ID_TRANSACTION_LOADER, null, transactionLoaderCallbacks);
+			}
+			
+		});
+		
 	}
 
 	@Override

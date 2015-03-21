@@ -158,7 +158,7 @@ public final class RestoreWalletActivity extends AbstractWalletActivity
 		final AlertDialog alertDialog = (AlertDialog) dialog;
 
 		final View replaceWarningView = alertDialog.findViewById(R.id.restore_wallet_from_content_dialog_replace_warning);
-		final boolean hasCoins = wallet.getBalance(BalanceType.ESTIMATED).signum() > 0;
+		final boolean hasCoins = wallet == null ? false : wallet.getBalance(BalanceType.ESTIMATED).signum() > 0;
 		replaceWarningView.setVisibility(hasCoins ? View.VISIBLE : View.GONE);
 
 		final EditText passwordView = (EditText) alertDialog.findViewById(R.id.import_keys_from_content_dialog_password);

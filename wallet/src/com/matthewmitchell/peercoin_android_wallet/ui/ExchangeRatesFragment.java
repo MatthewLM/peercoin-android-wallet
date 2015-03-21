@@ -91,9 +91,18 @@ public final class ExchangeRatesFragment extends FancyListFragment implements On
 
 		this.activity = (AbstractWalletActivity) activity;
 		this.application = (WalletApplication) activity.getApplication();
-		this.wallet = application.getWallet();
 		this.contentUri = ExchangeRatesProvider.contentUri(activity.getPackageName(), false);
 		this.loaderManager = getLoaderManager();
+		
+		this.activity.runAfterLoad(new Runnable() {
+
+			@Override
+			public void run() {
+				ExchangeRatesFragment.this.wallet = application.getWallet();
+			}
+			
+		});
+		
 	}
 
 	@Override

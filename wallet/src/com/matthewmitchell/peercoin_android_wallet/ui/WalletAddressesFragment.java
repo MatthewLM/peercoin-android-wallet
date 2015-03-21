@@ -85,9 +85,18 @@ public final class WalletAddressesFragment extends FancyListFragment
 
 		this.activity = (AddressBookActivity) activity;
 		this.application = (WalletApplication) activity.getApplication();
-		this.wallet = application.getWallet();
 		this.clipboardManager = (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
 		this.contentResolver = activity.getContentResolver();
+		
+		this.activity.runAfterLoad(new Runnable() {
+
+			@Override
+			public void run() {
+				WalletAddressesFragment.this.wallet = application.getWallet();
+			}
+			
+		});
+		
 	}
 
 	@Override
@@ -97,9 +106,16 @@ public final class WalletAddressesFragment extends FancyListFragment
 
 		setHasOptionsMenu(true);
 
-		adapter = new WalletAddressesAdapter(activity, wallet);
+		this.activity.runAfterLoad(new Runnable() {
 
-		setListAdapter(adapter);
+			@Override
+			public void run() {
+				adapter = new WalletAddressesAdapter(activity, wallet);
+				setListAdapter(adapter);
+			}
+			
+		});
+		
 	}
 
 	@Override
@@ -117,8 +133,15 @@ public final class WalletAddressesFragment extends FancyListFragment
 
 		contentResolver.registerContentObserver(AddressBookProvider.contentUri(activity.getPackageName()), true, contentObserver);
 
-		wallet.addEventListener(walletListener, Threading.SAME_THREAD);
-		walletListener.onKeysAdded(null); // trigger initial load of keys
+		activity.runAfterLoad(new Runnable() {
+
+			@Override
+			public void run() {
+				wallet.addEventListener(walletListener, Threading.SAME_THREAD);
+				walletListener.onKeysAdded(null); // trigger initial load of keys
+			}
+			
+		});
 
 		updateView();
 	}

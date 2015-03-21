@@ -127,7 +127,16 @@ public class EncryptKeysDialogFragment extends DialogFragment
 
 		this.activity = (AbstractWalletActivity) activity;
 		this.application = (WalletApplication) activity.getApplication();
-		this.wallet = application.getWallet();
+		
+		this.activity.runAfterLoad(new Runnable() {
+
+			@Override
+			public void run() {
+				EncryptKeysDialogFragment.this.wallet = application.getWallet();
+			}
+			
+		});
+		
 	}
 
 	@Override
@@ -194,7 +203,7 @@ public class EncryptKeysDialogFragment extends DialogFragment
 				showView.setOnCheckedChangeListener(new ShowPasswordCheckListener(newPasswordView, oldPasswordView));
 
 				EncryptKeysDialogFragment.this.dialog = dialog;
-				updateView();
+				safeUpdateView();
 			}
 		});
 
@@ -205,8 +214,7 @@ public class EncryptKeysDialogFragment extends DialogFragment
 	public void onResume()
 	{
 		super.onResume();
-
-		updateView();
+		safeUpdateView();
 	}
 
 	@Override
@@ -310,6 +318,19 @@ public class EncryptKeysDialogFragment extends DialogFragment
 	{
 		oldPasswordView.setText(null);
 		newPasswordView.setText(null);
+	}
+	
+	private void safeUpdateView() {
+		
+		this.activity.runAfterLoad(new Runnable() {
+
+			@Override
+			public void run() {
+				updateView();
+			}
+			
+		});
+		
 	}
 
 	private void updateView()

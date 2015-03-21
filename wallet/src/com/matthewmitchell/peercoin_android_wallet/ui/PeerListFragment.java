@@ -88,7 +88,7 @@ public final class PeerListFragment extends FancyListFragment
 	public void onAttach(final Activity activity)
 	{
 		super.onAttach(activity);
-
+		
 		this.activity = (AbstractWalletActivity) activity;
 		this.loaderManager = getLoaderManager();
 	}
@@ -97,8 +97,16 @@ public final class PeerListFragment extends FancyListFragment
 	public void onActivityCreated(final Bundle savedInstanceState)
 	{
 		super.onActivityCreated(savedInstanceState);
-		assertTrue(((WalletApplication)activity.getApplication()).getConfiguration() != null);
-		activity.bindService(new Intent(activity, BlockchainServiceImpl.class), serviceConnection, Context.BIND_AUTO_CREATE);
+		
+		activity.runAfterLoad(new Runnable() {
+
+			@Override
+			public void run() {
+				activity.bindService(new Intent(activity, BlockchainServiceImpl.class), serviceConnection, Context.BIND_AUTO_CREATE);
+			}
+			
+		});
+		
 	}
 
 	@Override

@@ -17,16 +17,6 @@
 
 package com.matthewmitchell.peercoin_android_wallet;
 
-import java.lang.reflect.Method;
-
-import com.matthewmitchell.peercoinj.core.Coin;
-import com.matthewmitchell.peercoinj.core.Wallet;
-import com.matthewmitchell.peercoinj.core.Wallet.BalanceType;
-import com.matthewmitchell.peercoinj.utils.Fiat;
-import com.matthewmitchell.peercoinj.utils.MonetaryFormat;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -35,20 +25,28 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.text.Spannable;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.RemoteViews;
-
 import com.matthewmitchell.peercoin_android_wallet.ExchangeRatesProvider.WalletExchangeRate;
+import com.matthewmitchell.peercoin_android_wallet.R;
 import com.matthewmitchell.peercoin_android_wallet.ui.RequestCoinsActivity;
 import com.matthewmitchell.peercoin_android_wallet.ui.SendCoinsQrActivity;
 import com.matthewmitchell.peercoin_android_wallet.ui.WalletActivity;
 import com.matthewmitchell.peercoin_android_wallet.ui.send.SendCoinsActivity;
 import com.matthewmitchell.peercoin_android_wallet.util.GenericUtils;
 import com.matthewmitchell.peercoin_android_wallet.util.MonetarySpannable;
-import com.matthewmitchell.peercoin_android_wallet.R;
+import com.matthewmitchell.peercoinj.core.Coin;
+import com.matthewmitchell.peercoinj.core.Wallet;
+import com.matthewmitchell.peercoinj.core.Wallet.BalanceType;
+import com.matthewmitchell.peercoinj.utils.Fiat;
+import com.matthewmitchell.peercoinj.utils.MonetaryFormat;
+import java.lang.reflect.Method;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Andreas Schildbach
@@ -115,13 +113,20 @@ public class WalletBalanceWidgetProvider extends AppWidgetProvider
 		}
 	}
 
-	private static void updateWidgets(final Context context, final AppWidgetManager appWidgetManager, final int[] appWidgetIds, final Coin balance)
-	{
-		for (final int appWidgetId : appWidgetIds)
-		{
-			final Bundle options = getAppWidgetOptions(appWidgetManager, appWidgetId);
-			updateWidget(context, appWidgetManager, appWidgetId, options, balance);
-		}
+	private static void updateWidgets(final Context context, final AppWidgetManager appWidgetManager, final int[] appWidgetIds, final Coin balance) {
+
+        // Use handler to run on UI thread
+        
+        Handler hand = new Handler();
+        hand.post(new Runnable(){
+            public void run() {
+                for (final int appWidgetId : appWidgetIds) {
+                    final Bundle options = getAppWidgetOptions(appWidgetManager, appWidgetId);
+                    updateWidget(context, appWidgetManager, appWidgetId, options, balance);
+                }
+            }
+        });
+
 	}
 
 	private static void updateWidget(final Context context, final AppWidgetManager appWidgetManager, final int appWidgetId,

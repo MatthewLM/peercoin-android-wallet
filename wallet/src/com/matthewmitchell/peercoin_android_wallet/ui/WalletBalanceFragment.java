@@ -145,9 +145,9 @@ public final class WalletBalanceFragment extends Fragment
 
 		    @Override
 		    public void run() {
-			loaderManager.initLoader(ID_BALANCE_LOADER, null, balanceLoaderCallbacks);
-			loaderManager.initLoader(ID_RATE_LOADER, null, rateLoaderCallbacks);
-			loaderManager.initLoader(ID_BLOCKCHAIN_STATE_LOADER, null, blockchainStateLoaderCallbacks);
+				loaderManager.initLoader(ID_BALANCE_LOADER, null, balanceLoaderCallbacks);
+				loaderManager.initLoader(ID_RATE_LOADER, null, rateLoaderCallbacks);
+				loaderManager.initLoader(ID_BLOCKCHAIN_STATE_LOADER, null, blockchainStateLoaderCallbacks);
 		    }
 		    
 		});

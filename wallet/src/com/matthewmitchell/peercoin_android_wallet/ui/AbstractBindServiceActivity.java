@@ -66,7 +66,6 @@ public abstract class AbstractBindServiceActivity extends AbstractWalletActivity
 
 			@Override
 			public void run() {
-				assertTrue(((WalletApplication)a.getApplication()).getConfiguration() != null);
 				bindService(new Intent(a, BlockchainServiceImpl.class), serviceConnection, Context.BIND_AUTO_CREATE);
 			}
 			

@@ -153,13 +153,22 @@ public final class RequestCoinsFragment extends Fragment implements NfcAdapter.C
 
 		this.activity = (AbstractBindServiceActivity) activity;
 		this.application = (WalletApplication) activity.getApplication();
-		this.config = application.getConfiguration();
-		this.wallet = application.getWallet();
 		this.loaderManager = getLoaderManager();
 		this.clipboardManager = (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
 		this.bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 		final NfcManager nfcManager = (NfcManager) activity.getSystemService(Context.NFC_SERVICE);
 		this.nfcAdapter = nfcManager.getDefaultAdapter();
+		
+		this.activity.runAfterLoad(new Runnable() {
+
+			@Override
+			public void run() {
+				RequestCoinsFragment.this.config = application.getConfiguration();
+				RequestCoinsFragment.this.wallet = application.getWallet();
+			}
+			
+		});
+		
 	}
 
 	@Override
@@ -170,14 +179,17 @@ public final class RequestCoinsFragment extends Fragment implements NfcAdapter.C
 		if (nfcAdapter != null && nfcAdapter.isEnabled())
 			nfcAdapter.setNdefPushMessageCallback(this, activity);
 
-		if (savedInstanceState != null)
-		{
+		if (savedInstanceState == null) {
+			activity.runAfterLoad(new Runnable() {
+
+				@Override
+				public void run() {
+					address = wallet.freshReceiveAddress();
+				}
+
+			});
+		}else
 			restoreInstanceState(savedInstanceState);
-		}
-		else
-		{
-			address = wallet.freshReceiveAddress();
-		}
 	}
 
 	@Override
@@ -194,11 +206,19 @@ public final class RequestCoinsFragment extends Fragment implements NfcAdapter.C
 				BitmapFragment.show(getFragmentManager(), qrCodeBitmap);
 			}
 		});
-
+		
 		final CurrencyAmountView PPCAmountView = (CurrencyAmountView) view.findViewById(R.id.request_coins_amount_ppc);
-		PPCAmountView.setCurrencySymbol(config.getFormat().code());
-		PPCAmountView.setInputFormat(config.getMaxPrecisionFormat());
-		PPCAmountView.setHintFormat(config.getFormat());
+
+		activity.runAfterLoad(new Runnable() {
+
+			@Override
+			public void run() {
+				PPCAmountView.setCurrencySymbol(config.getFormat().code());
+				PPCAmountView.setInputFormat(config.getMaxPrecisionFormat());
+				PPCAmountView.setHintFormat(config.getFormat());
+			}
+			
+		});
 
 		final CurrencyAmountView localAmountView = (CurrencyAmountView) view.findViewById(R.id.request_coins_amount_local);
 		localAmountView.setInputFormat(Constants.LOCAL_FORMAT);
@@ -247,8 +267,16 @@ public final class RequestCoinsFragment extends Fragment implements NfcAdapter.C
 		// don't call in onCreate() because ActionBarSherlock invokes onCreateOptionsMenu() too early
 		setHasOptionsMenu(true);
 
-		amountCalculatorLink.setExchangeDirection(config.getLastExchangeDirection());
-		amountCalculatorLink.requestFocus();
+		activity.runAfterLoad(new Runnable() {
+
+			@Override
+			public void run() {
+				amountCalculatorLink.setExchangeDirection(config.getLastExchangeDirection());
+				amountCalculatorLink.requestFocus();
+			}
+			
+		});
+		
 	}
 
 	@Override
@@ -269,13 +297,20 @@ public final class RequestCoinsFragment extends Fragment implements NfcAdapter.C
 			{
 			}
 		});
-
-		loaderManager.initLoader(ID_RATE_LOADER, null, rateLoaderCallbacks);
-
+		
 		if (ENABLE_BLUETOOTH_LISTENING && bluetoothAdapter != null && bluetoothAdapter.isEnabled() && acceptBluetoothPaymentView.isChecked())
 			startBluetoothListening();
 
-		updateView();
+		this.activity.runAfterLoad(new Runnable() {
+
+			@Override
+			public void run() {
+				loaderManager.initLoader(ID_RATE_LOADER, null, rateLoaderCallbacks);
+				updateView();
+			}
+			
+		});
+		
 	}
 
 	@Override

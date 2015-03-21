@@ -35,8 +35,6 @@ public class LoaderActivity extends Activity {
 	
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
-		
-		super.onCreate(savedInstanceState);
             
 		progressDialog = ProgressDialog.show(this, "Loading Wallet",  
 				"Loading the wallet. This may or may not take a while...", true, false); 
@@ -53,6 +51,8 @@ public class LoaderActivity extends Activity {
 			}
 			
 		});
+		
+		super.onCreate(savedInstanceState);
         
 	}
 	
@@ -62,6 +62,14 @@ public class LoaderActivity extends Activity {
 			progressDialog.dismiss();
 			progressDialog = null;
 		}
+		
+	}
+	
+	@Override
+	protected void onDestroy() {
+		
+		dismissDialog();
+		super.onDestroy();
 		
 	}
 	
@@ -79,14 +87,5 @@ public class LoaderActivity extends Activity {
 		});
 		
 	}
-	
-	@Override
-	protected void onDestroy() {
-		
-		dismissDialog();
-		super.onDestroy();
-		
-	}
-	
 	
 }

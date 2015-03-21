@@ -98,12 +98,12 @@ public final class WalletDisclaimerFragment extends Fragment implements OnShared
 
 	    activity.runAfterLoad(new Runnable() {
 
-		@Override
-		public void run() {
-		    loaderManager.initLoader(ID_BLOCKCHAIN_STATE_LOADER, null, blockchainStateLoaderCallbacks);
-		    application.getConfiguration().registerOnSharedPreferenceChangeListener(WalletDisclaimerFragment.this);
-		    updateView();
-		}
+			@Override
+			public void run() {
+				loaderManager.initLoader(ID_BLOCKCHAIN_STATE_LOADER, null, blockchainStateLoaderCallbacks);
+				application.getConfiguration().registerOnSharedPreferenceChangeListener(WalletDisclaimerFragment.this);
+				updateView();
+			}
 
 	    });
 		
@@ -114,11 +114,11 @@ public final class WalletDisclaimerFragment extends Fragment implements OnShared
 	    
 	    activity.runAfterLoad(new Runnable() {
 
-		@Override
-		public void run() {
-		    loaderManager.destroyLoader(ID_BLOCKCHAIN_STATE_LOADER);
-		    application.getConfiguration().unregisterOnSharedPreferenceChangeListener(WalletDisclaimerFragment.this);
-		}
+			@Override
+			public void run() {
+				loaderManager.destroyLoader(ID_BLOCKCHAIN_STATE_LOADER);
+				application.getConfiguration().unregisterOnSharedPreferenceChangeListener(WalletDisclaimerFragment.this);
+			}
 		
 	    });
 

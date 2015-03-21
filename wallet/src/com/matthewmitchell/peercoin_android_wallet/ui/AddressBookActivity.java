@@ -117,8 +117,16 @@ public final class AddressBookActivity extends AbstractWalletActivity
 			fragmentManager.beginTransaction().add(R.id.wallet_addresses_fragment, walletAddressesFragment, TAG_LEFT)
 					.add(R.id.sending_addresses_fragment, sendingAddressesFragment, TAG_RIGHT).commit();
 		}
+		
+		runAfterLoad(new Runnable() {
 
-		updateFragments();
+			@Override
+			public void run() {
+				updateFragments();
+			}
+			
+		});
+		
 	}
 
 	@Override
