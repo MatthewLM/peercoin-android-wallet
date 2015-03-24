@@ -7,7 +7,7 @@
 	<groupId>com.matthewmitchell.peercoin_android_wallet</groupId>
 	<artifactId>base</artifactId>
 	<name>base</name>
-	<version>2.5</version>
+	<version>2.6</version>
 	<packaging>pom</packaging>
 
 	<modules>

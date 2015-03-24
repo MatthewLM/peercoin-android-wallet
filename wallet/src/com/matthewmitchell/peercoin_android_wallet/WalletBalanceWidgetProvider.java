@@ -115,17 +115,10 @@ public class WalletBalanceWidgetProvider extends AppWidgetProvider
 
 	private static void updateWidgets(final Context context, final AppWidgetManager appWidgetManager, final int[] appWidgetIds, final Coin balance) {
 
-        // Use handler to run on UI thread
-        
-        Handler hand = new Handler();
-        hand.post(new Runnable(){
-            public void run() {
-                for (final int appWidgetId : appWidgetIds) {
-                    final Bundle options = getAppWidgetOptions(appWidgetManager, appWidgetId);
-                    updateWidget(context, appWidgetManager, appWidgetId, options, balance);
-                }
-            }
-        });
+        for (final int appWidgetId : appWidgetIds) {
+            final Bundle options = getAppWidgetOptions(appWidgetManager, appWidgetId);
+            updateWidget(context, appWidgetManager, appWidgetId, options, balance);
+        }
 
 	}
 
