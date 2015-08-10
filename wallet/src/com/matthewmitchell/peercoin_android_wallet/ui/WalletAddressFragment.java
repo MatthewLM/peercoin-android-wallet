@@ -130,7 +130,8 @@ public final class WalletAddressFragment extends Fragment implements NfcAdapter.
 
 		    @Override
 		    public void run() {
-				loaderManager.initLoader(ID_ADDRESS_LOADER, null, addressLoaderCallbacks);
+				if (isAdded())
+                    loaderManager.initLoader(ID_ADDRESS_LOADER, null, addressLoaderCallbacks);
 		    }
 		    
 		});

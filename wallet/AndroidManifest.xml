@@ -3,8 +3,8 @@
 	xmlns:tools="http://schemas.android.com/tools"
 	package="com.matthewmitchell.peercoin_android_wallet"
 	android:installLocation="internalOnly"
-	android:versionCode="10"
-	android:versionName="2.6" >
+	android:versionCode="11"
+	android:versionName="3.0" >
 
 	<uses-sdk
 		android:minSdkVersion="15"
@@ -92,6 +92,35 @@
 
 				<data android:scheme="ppcoin" />
 
+                <!-- SHAPESHIFT URIS -->
+                <data android:scheme="bitcoin" />
+                <data android:scheme="blackcoin" />
+                <data android:scheme="BitcoinDark" />
+                <data android:scheme="clam" />	
+                <data android:scheme="counterparty_xcp" />
+                <data android:scheme="dash" />
+                <data android:scheme="digibyte" />
+                <data android:scheme="dogecoin" />
+                <data android:scheme="feathercoin" />
+                <data android:scheme="counterparty_gemz" />
+                <data android:scheme="litecoin" />
+                <data android:scheme="mastercoin" />
+                <data android:scheme="mintcoin" />
+                <data android:scheme="namecoin" />
+                <data android:scheme="novacoin" />
+                <data android:scheme="Nu" />
+                <data android:scheme="nu" />
+                <data android:scheme="potcoin" />
+                <data android:scheme="quark" />
+                <data android:scheme="reddcoin" />
+                <data android:scheme="shadowcoin" />
+                <data android:scheme="startcoin" />
+                <data android:scheme="counterparty_sjcx" />
+                <data android:scheme="counterparty_swarm" />
+                <data android:scheme="tether" />
+                <data android:scheme="unobtainium" />
+                <data android:scheme="vericoin" />
+
 				<category android:name="android.intent.category.DEFAULT" />
 				<category android:name="android.intent.category.BROWSABLE" />
 			</intent-filter>
@@ -147,6 +176,10 @@
 			android:name="com.matthewmitchell.peercoin_android_wallet.ui.preference.PreferenceActivity"
 			android:label="@string/preferences_activity_title"
 			android:screenOrientation="behind" />
+        <activity
+            android:name="com.matthewmitchell.peercoin_android_wallet.ui.preference.TrustedServersActivity"
+            android:label="@string/preferences_category_trusted_servers"
+            android:screenOrientation="behind" />
 		<activity
 			android:name="com.matthewmitchell.peercoin_android_wallet.ui.RestoreWalletActivity"
 			android:configChanges="orientation|keyboard|keyboardHidden"

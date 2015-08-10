@@ -19,6 +19,8 @@ package com.matthewmitchell.peercoin_android_wallet.ui;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -37,8 +39,13 @@ public class AddressAndLabel implements Parcelable
 	public final String label;
 
 	public AddressAndLabel(@Nonnull final NetworkParameters addressParams, @Nonnull final String address, @Nullable final String label)
-			throws WrongNetworkException, AddressFormatException
-	{
+			throws WrongNetworkException, AddressFormatException {
+		this.address = new Address(addressParams, address);
+		this.label = label;
+	}
+
+	public AddressAndLabel(@Nonnull final List<NetworkParameters> addressParams, @Nonnull final String address, @Nullable final String label)
+			throws WrongNetworkException, AddressFormatException {
 		this.address = new Address(addressParams, address);
 		this.label = label;
 	}
@@ -50,11 +57,16 @@ public class AddressAndLabel implements Parcelable
 	}
 
 	@Override
-	public void writeToParcel(final Parcel dest, final int flags)
-	{
-		dest.writeSerializable(address.getParameters());
+	public void writeToParcel(final Parcel dest, final int flags) {
+		
+		List<NetworkParameters> networks = address.getParameters();
+		
+		dest.writeInt(networks.size());
+		
+		for (NetworkParameters network: networks)
+			dest.writeSerializable(network);
+		
 		dest.writeByteArray(address.getHash160());
-
 		dest.writeString(label);
 	}
 
@@ -73,13 +85,20 @@ public class AddressAndLabel implements Parcelable
 		}
 	};
 
-	private AddressAndLabel(final Parcel in)
-	{
-		final NetworkParameters addressParameters = (NetworkParameters) in.readSerializable();
+	private AddressAndLabel(final Parcel in) {
+		
+		final int paramsSize = in.readInt();
+		final List<NetworkParameters> addressParameters = new ArrayList<NetworkParameters>(paramsSize);
+		
+		for (int x = 0; x < paramsSize; x++)
+			addressParameters.add((NetworkParameters) in.readSerializable());
+		
 		final byte[] addressHash = new byte[Address.LENGTH];
 		in.readByteArray(addressHash);
 		address = new Address(addressParameters, addressHash);
 
 		label = in.readString();
 	}
+
 }
+

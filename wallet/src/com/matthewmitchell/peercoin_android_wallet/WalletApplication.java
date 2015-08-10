@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nonnull;
@@ -51,8 +50,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.os.Handler;
-import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.format.DateUtils;
@@ -70,6 +67,7 @@ import com.matthewmitchell.peercoin_android_wallet.service.BlockchainServiceImpl
 import com.matthewmitchell.peercoin_android_wallet.util.CrashReporter;
 import com.matthewmitchell.peercoin_android_wallet.util.Io;
 import com.matthewmitchell.peercoin_android_wallet.util.LinuxSecureRandom;
+import com.matthewmitchell.peercoinj.shapeshift.ShapeShift;
 import com.matthewmitchell.peercoin_android_wallet.R;
 
 import static junit.framework.Assert.assertTrue;
@@ -174,6 +172,8 @@ public class WalletApplication extends Application
 	    blockchainServiceCancelCoinsReceivedIntent = new Intent(BlockchainService.ACTION_CANCEL_COINS_RECEIVED, null, this,
 				BlockchainServiceImpl.class);
 	    blockchainServiceResetBlockchainIntent = new Intent(BlockchainService.ACTION_RESET_BLOCKCHAIN, null, this, BlockchainServiceImpl.class);
+
+        ShapeShift.addAllCoins();
 
 	    // Do not use main thread!
 	    new Thread(new Runnable() {

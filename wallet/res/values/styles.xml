@@ -4,6 +4,7 @@
 	<style name="My.Theme" parent="@android:style/Theme.Holo.Light.DarkActionBar">
 		<item name="android:actionBarStyle">@style/My.Widget.ActionBar</item>
 		<item name="android:actionModeStyle">@style/My.Widget.ActionMode</item>
+        <item name="android:spinnerItemStyle">@style/My.Widget.SpinnerItem</item>
 	</style>
 
 	<style name="My.Theme.Fullscreen" parent="@android:style/Theme.Holo.NoActionBar.Fullscreen" />
@@ -52,5 +53,11 @@
 		<item name="android:drawablePadding">8dp</item>
 		<item name="android:minHeight">48dp</item>
 	</style>
+
+    <style name="My.Widget.SpinnerItem" parent="@android:style/TextAppearance.Holo.Widget.TextView.SpinnerItem">
+        <item name="android:textSize">@dimen/font_size_normal</item>
+        <item name="android:paddingBottom">2dp</item>
+        <item name="android:paddingLeft">6dp</item>
+    </style>
 
 </resources>

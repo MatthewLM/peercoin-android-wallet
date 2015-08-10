@@ -165,6 +165,9 @@ public class TransactionsListFragment extends FancyListFragment implements Loade
                 adapter = new TransactionsListAdapter(activity, wallet, application.maxConnectedPeers(), showBackupWarning);
                 setListAdapter(adapter);
 
+                if (direction == null)
+                    activity.txListAdapter = adapter;
+
             }
 
         });
@@ -214,6 +217,16 @@ public class TransactionsListFragment extends FancyListFragment implements Loade
         super.onPause();
 
     }
+	
+	@Override
+	public void onDetach() {
+		activity.txListAdapter = null;
+		super.onDetach();
+	}
+	
+	public TransactionsListAdapter getAdapter() {
+		return adapter;
+	}
 
     @Override
     public void onListItemClick(final ListView l, final View v, final int position, final long id)
@@ -228,29 +241,21 @@ public class TransactionsListFragment extends FancyListFragment implements Loade
             handleTransactionClick(tx);
     }
 
-    private void handleTransactionClick(@Nonnull final Transaction tx)
-    {
-        activity.startActionMode(new ActionMode.Callback()
-                {
+    private void handleTransactionClick(@Nonnull final Transaction tx) {
+
+        activity.startActionMode(new ActionMode.Callback() {
                     private Address address;
                     private byte[] serializedTx;
 
                     private static final int SHOW_QR_THRESHOLD_BYTES = 2500;
 
                     @Override
-                    public boolean onCreateActionMode(final ActionMode mode, final Menu menu)
-                    {
+                    public boolean onCreateActionMode(final ActionMode mode, final Menu menu) {
                         final MenuInflater inflater = mode.getMenuInflater();
                         inflater.inflate(R.menu.wallet_transactions_context, menu);
 
-                        return true;
-                    }
+                        try {
 
-                    @Override
-                    public boolean onPrepareActionMode(final ActionMode mode, final Menu menu)
-                    {
-                        try
-                        {
                             final Date time = tx.getUpdateTime();
                             final DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(activity);
                             final DateFormat timeFormat = android.text.format.DateFormat.getTimeFormat(activity);
@@ -286,11 +291,16 @@ public class TransactionsListFragment extends FancyListFragment implements Loade
                             menu.findItem(R.id.wallet_transactions_context_show_qr).setVisible(serializedTx.length < SHOW_QR_THRESHOLD_BYTES);
 
                             return true;
-                        }
-                        catch (final ScriptException x)
-                        {
+
+                        } catch (final ScriptException x) {
                             return false;
                         }
+
+                    }
+
+                    @Override
+                    public boolean onPrepareActionMode(final ActionMode mode, final Menu menu) {
+                        return true;
                     }
 
                     @Override

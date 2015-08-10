@@ -16,5 +16,6 @@
 	<dimen name="wallet_address_qr_size">80dp</dimen>
 	<dimen name="request_coins_qr_size">128dp</dimen>
 	<dimen name="bitmap_dialog_qr_size">256dp</dimen>
+    <dimen name="drag_item_height">60dp</dimen>
 
 </resources>

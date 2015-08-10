@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/trusted_servers_help"
+        android:showAsAction="never"
+        android:title="@string/button_help" />
+
+    <item
+        android:id="@+id/trusted_servers_restore_defaults"
+        android:showAsAction="never"
+        android:title="@string/trusted_servers_restore_defaults" />
+
+    <item
+        android:id="@+id/trusted_servers_new"
+        android:icon="@drawable/ic_action_add"
+        android:showAsAction="ifRoom|withText"
+        android:title="@string/trusted_servers_new" />
+
+</menu>

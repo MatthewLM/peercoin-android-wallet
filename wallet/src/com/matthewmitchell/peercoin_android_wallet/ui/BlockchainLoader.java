@@ -30,6 +30,7 @@ import com.matthewmitchell.peercoinj.core.Wallet;
 import com.matthewmitchell.peercoinj.store.BlockStoreException;
 import com.matthewmitchell.peercoinj.store.SPVBlockStore;
 import com.matthewmitchell.peercoinj.store.ValidHashStore;
+import com.matthewmitchell.peercoin_android_wallet.ui.preference.TrustedServerList;
 
 import android.content.AsyncTaskLoader;
 import android.content.Context;
@@ -91,7 +92,7 @@ public class BlockchainLoader extends AsyncTaskLoader<BlockchainData> {
 		log.info("using " + bcd.blockStore.getClass().getName());
 		
 		try{
-			bcd.validHashStore = new ValidHashStore(bcd.validHashStoreFile);
+            bcd.validHashStore = new ValidHashStore(bcd.validHashStoreFile, TrustedServerList.getInstance(context));
 		}catch (IOException x){
 			bcd.validHashStoreFile.delete();
 			final String msg = "validhashstore cannot be created";

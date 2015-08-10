@@ -28,4 +28,9 @@
 	<color name="scan_result_view">#b0000000</color>
 	<color name="scan_result_dots">#c099cc00</color>
 
+    <!-- Trusted Server List -->
+    <color name="trusted_server_bg_no_try">#a0a0a0</color>
+    <color name="trusted_server_bg_success">#20a020</color>
+    <color name="trusted_server_bg_fail">#a02020</color>
+
 </resources>

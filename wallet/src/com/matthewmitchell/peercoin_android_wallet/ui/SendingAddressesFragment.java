@@ -275,7 +275,7 @@ public final class SendingAddressesFragment extends FancyListFragment implements
 				switch (item.getItemId())
 				{
 					case R.id.sending_addresses_context_send:
-						handleSend(getAddress(position));
+						handleSend(getAddress(position), getLabel(position));
 
 						mode.finish();
 						return true;
@@ -327,17 +327,15 @@ public final class SendingAddressesFragment extends FancyListFragment implements
 		});
 	}
 
-	private void handleSend(final String address)
-	{
-		try
-		{
-			SendCoinsActivity.start(activity, PaymentIntent.fromAddress(address, null));
-		}
-		catch (final AddressFormatException x)
-		{
+	private void handleSend(final String address, final String label) {
+
+		try {
+			SendCoinsActivity.start(activity, PaymentIntent.fromAddress(address, label));
+		} catch (final AddressFormatException x) {
 			// cannot happen, address was picked from address book
 			throw new RuntimeException(x);
 		}
+
 	}
 
 	private void handleRemove(final String address)

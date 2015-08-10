@@ -17,15 +17,10 @@
 
 package com.matthewmitchell.peercoin_android_wallet.ui;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.SocketException;
@@ -44,7 +39,6 @@ import javax.annotation.Nonnull;
 import com.matthewmitchell.peercoinj.core.AddressFormatException;
 import com.matthewmitchell.peercoinj.core.Transaction;
 import com.matthewmitchell.peercoinj.core.VerificationException;
-import com.matthewmitchell.peercoinj.core.VersionedChecksummedBytes;
 import com.matthewmitchell.peercoinj.core.Wallet;
 import com.matthewmitchell.peercoinj.core.Wallet.BalanceType;
 import com.matthewmitchell.peercoinj.store.WalletProtobufSerializer;
@@ -53,7 +47,6 @@ import com.matthewmitchell.peercoinj.wallet.Protos;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
@@ -93,14 +86,16 @@ import com.matthewmitchell.peercoin_android_wallet.ui.send.SendCoinsActivity;
 import com.matthewmitchell.peercoin_android_wallet.util.CrashReporter;
 import com.matthewmitchell.peercoin_android_wallet.util.Crypto;
 import com.matthewmitchell.peercoin_android_wallet.util.HttpGetThread;
-import com.matthewmitchell.peercoin_android_wallet.util.Io;
 import com.matthewmitchell.peercoin_android_wallet.util.Iso8601Format;
 import com.matthewmitchell.peercoin_android_wallet.util.Nfc;
 import com.matthewmitchell.peercoin_android_wallet.util.WalletUtils;
 import com.matthewmitchell.peercoin_android_wallet.util.WholeStringBuilder;
 import com.matthewmitchell.peercoin_android_wallet.R;
-
-import static junit.framework.Assert.assertTrue;
+import com.matthewmitchell.peercoinj.utils.MonetaryFormat;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.text.SimpleDateFormat;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
  * @author Andreas Schildbach
@@ -247,8 +242,8 @@ public final class WalletActivity extends AbstractWalletActivity
 	}
 
 	@Override
-	public boolean onPrepareOptionsMenu(final Menu menu)
-	{
+	public boolean onPrepareOptionsMenu(final Menu menu) {
+
 		super.onPrepareOptionsMenu(menu);
 		
 		if (!application.isLoaded())
@@ -257,16 +252,24 @@ public final class WalletActivity extends AbstractWalletActivity
 		final Resources res = getResources();
 		final String externalStorageState = Environment.getExternalStorageState();
 
-		menu.findItem(R.id.wallet_options_exchange_rates).setVisible(res.getBoolean(R.bool.show_exchange_rates_option));
-		menu.findItem(R.id.wallet_options_restore_wallet).setEnabled(
-				Environment.MEDIA_MOUNTED.equals(externalStorageState) || Environment.MEDIA_MOUNTED_READ_ONLY.equals(externalStorageState));
-		menu.findItem(R.id.wallet_options_backup_wallet).setEnabled(Environment.MEDIA_MOUNTED.equals(externalStorageState));
-		
-		menu.findItem(R.id.wallet_options_encrypt_keys).setTitle(
-				application.getWallet().isEncrypted() ? R.string.wallet_options_encrypt_keys_change : R.string.wallet_options_encrypt_keys_set);
+        boolean writable = Environment.MEDIA_MOUNTED.equals(externalStorageState);
+        boolean readOnly = Environment.MEDIA_MOUNTED_READ_ONLY.equals(externalStorageState);
+
+        menu.findItem(R.id.wallet_options_exchange_rates).setVisible(res.getBoolean(R.bool.show_exchange_rates_option));
+        menu.findItem(R.id.wallet_options_restore_wallet).setEnabled(writable || readOnly);
+        menu.findItem(R.id.wallet_options_backup_wallet).setEnabled(writable);
+        menu.findItem(R.id.wallet_options_export).setEnabled(writable && txListAdapter != null && !txListAdapter.transactions.isEmpty());
+
+        menu.findItem(R.id.wallet_options_encrypt_keys).setTitle(
+                application.getWallet().isEncrypted() ? R.string.wallet_options_encrypt_keys_change : R.string.wallet_options_encrypt_keys_set);
 
 		return true;
+
 	}
+
+    private String makeEmailText(String text) {
+        return text + "\n\n" + String.format(Constants.WEBMARKET_APP_URL, getPackageName()) + "\n\n" + Constants.SOURCE_URL + '\n';
+    }
 
 	@Override
 	public boolean onOptionsItemSelected(final MenuItem item)
@@ -292,6 +295,10 @@ public final class WalletActivity extends AbstractWalletActivity
 			case R.id.wallet_options_exchange_rates:
 				startActivity(new Intent(this, ExchangeRatesActivity.class));
 				return true;
+
+            case R.id.wallet_options_export:
+                handleExportTransactions();
+                return true;
 
 			case R.id.wallet_options_network_monitor:
 				startActivity(new Intent(this, NetworkMonitorActivity.class));
@@ -349,19 +356,92 @@ public final class WalletActivity extends AbstractWalletActivity
 		showDialog(DIALOG_BACKUP_WALLET);
 	}
 
+    public void handleExportTransactions() {
+
+        // Create CSV file from transactions
+
+        final File file = new File(Constants.Files.EXTERNAL_WALLET_BACKUP_DIR, Constants.Files.TX_EXPORT_NAME + "-" + getFileDate() + ".csv");
+
+        try {
+
+            final BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+            writer.append("Date,Label,Amount (" + MonetaryFormat.CODE_PPC + "),Fee (" + MonetaryFormat.CODE_PPC + "),Address,Transaction Hash,Confirmations\n");
+
+            if (txListAdapter == null || txListAdapter.transactions.isEmpty()) {
+                longToast(R.string.export_transactions_mail_intent_failed);
+                log.error("exporting transactions failed");
+                return;
+            }
+
+            final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm z");
+            dateFormat.setTimeZone(TimeZone.getDefault());
+
+            for (Transaction tx: txListAdapter.transactions) {
+
+                TransactionsListAdapter.TransactionCacheEntry txCache = txListAdapter.getTxCache(tx);
+                String memo = tx.getMemo() == null ? "" : StringEscapeUtils.escapeCsv(tx.getMemo());
+                String fee = tx.getFee() == null ? "" : tx.getFee().toPlainString();
+
+                writer.append(dateFormat.format(tx.getUpdateTime()) + ",");
+                writer.append(memo + ",");
+                writer.append( txCache.value.toPlainString() + ",");
+                writer.append(fee + ",");
+                writer.append(txCache.address.toString() + ",");
+                writer.append(tx.getHash().toString() + ",");
+                writer.append(tx.getConfidence().getDepthInBlocks() + "\n");
+
+            }
+
+            writer.flush();
+            writer.close();
+
+        } catch (IOException x) {
+            longToast(R.string.export_transactions_mail_intent_failed);
+            log.error("exporting transactions failed", x);
+            return;
+        }
+
+        final DialogBuilder dialog = new DialogBuilder(this);
+        dialog.setMessage(Html.fromHtml(getString(R.string.export_transactions_dialog_success, file)));
+
+        dialog.setPositiveButton(WholeStringBuilder.bold(getString(R.string.export_keys_dialog_button_archive)), new OnClickListener() {
+
+            @Override
+            public void onClick(final DialogInterface dialog, final int which) {
+
+                final Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.export_transactions_mail_subject));
+                intent.putExtra(Intent.EXTRA_TEXT, makeEmailText(getString(R.string.export_transactions_mail_text)));
+                intent.setType(Constants.MIMETYPE_TX_EXPORT);
+                intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+
+                try {
+                    startActivity(Intent.createChooser(intent, getString(R.string.export_transactions_mail_intent_chooser)));
+                    log.info("invoked chooser for exporting transactions");
+                } catch (final Exception x) {
+                    longToast(R.string.export_transactions_mail_intent_failed);
+                    log.error("exporting transactions failed", x);
+                }
+
+            }
+
+        });
+
+        dialog.setNegativeButton(R.string.button_dismiss, null);
+        dialog.show();
+
+    }
+
 	public void handleEncryptKeys()
 	{
 		EncryptKeysDialogFragment.show(getFragmentManager());
 	}
 
-	private void handleDonate()
-	{
-		try
-		{
+	private void handleDonate() {
+		
+		try {
 			SendCoinsActivity.start(this, PaymentIntent.fromAddress(Constants.DONATION_ADDRESS, getString(R.string.wallet_donate_address_label)));
-		}
-		catch (final AddressFormatException x)
-		{
+		} catch (final AddressFormatException x) {
 			// cannot happen, address is hardcoded
 			throw new RuntimeException(x);
 		}
@@ -385,12 +465,21 @@ public final class WalletActivity extends AbstractWalletActivity
 	}
 
 	@Override
-	protected void onPrepareDialog(final int id, final Dialog dialog)
-	{
+	protected void onPrepareDialog(final int id, final Dialog dialog) {
+
+        if (!application.isLoaded()) {
+            // It's possible that the dialogs may be restored when the application initially starts.
+            // This behaviour would cause a crash, so dismiss the dialogs.
+            dismissDialog(DIALOG_RESTORE_WALLET);
+            dismissDialog(DIALOG_BACKUP_WALLET);
+            return;
+        }
+
 		if (id == DIALOG_RESTORE_WALLET)
 			prepareRestoreWalletDialog(dialog);
 		else if (id == DIALOG_BACKUP_WALLET)
 			prepareBackupWalletDialog(dialog);
+
 	}
 
 	private Dialog createRestoreWalletDialog()
@@ -828,14 +917,17 @@ public final class WalletActivity extends AbstractWalletActivity
 		return dialog.create();
 	}
 
-	private void backupWallet(@Nonnull final String password)
-	{
-		Constants.Files.EXTERNAL_WALLET_BACKUP_DIR.mkdirs();
-		final DateFormat dateFormat = Iso8601Format.newDateFormat();
-		dateFormat.setTimeZone(TimeZone.getDefault());
-		final File file = new File(Constants.Files.EXTERNAL_WALLET_BACKUP_DIR, Constants.Files.EXTERNAL_WALLET_BACKUP + "-"
-				+ dateFormat.format(new Date()));
+    private String getFileDate() {
+        final DateFormat dateFormat = Iso8601Format.newDateFormat();
+        dateFormat.setTimeZone(TimeZone.getDefault());
+        return dateFormat.format(new Date());
+    }
 
+	private void backupWallet(@Nonnull final String password) {
+
+		Constants.Files.EXTERNAL_WALLET_BACKUP_DIR.mkdirs();
+
+        final File file = new File(Constants.Files.EXTERNAL_WALLET_BACKUP_DIR, Constants.Files.EXTERNAL_WALLET_BACKUP + "-" + getFileDate());
 		final Protos.Wallet walletProto = new WalletProtobufSerializer().walletToProto(application.getWallet());
 
 		Writer cipherOut = null;
@@ -892,9 +984,7 @@ public final class WalletActivity extends AbstractWalletActivity
 	{
 		final Intent intent = new Intent(Intent.ACTION_SEND);
 		intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.export_keys_dialog_mail_subject));
-		intent.putExtra(Intent.EXTRA_TEXT,
-				getString(R.string.export_keys_dialog_mail_text) + "\n\n" + String.format(Constants.WEBMARKET_APP_URL, getPackageName()) + "\n\n"
-						+ Constants.SOURCE_URL + '\n');
+        intent.putExtra(Intent.EXTRA_TEXT, makeEmailText(getString(R.string.export_keys_dialog_mail_text)));
 		intent.setType(Constants.MIMETYPE_WALLET_BACKUP);
 		intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
 

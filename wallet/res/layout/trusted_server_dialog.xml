@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:scrollbars="none" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/bg_form"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/list_entry_padding_horizontal"
+            android:layout_marginRight="@dimen/list_entry_padding_horizontal"
+            android:layout_marginTop="@dimen/list_entry_padding_vertical"
+            android:divider="@drawable/divider_field"
+            android:orientation="horizontal"
+            android:showDividers="middle" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/trusted_server_dialog_name"
+                android:textSize="@dimen/font_size_normal" />
+
+            <EditText
+                android:id="@+id/trusted_server_dialog_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="flagNoExtractUi"
+                android:singleLine="true"
+                android:textSize="@dimen/font_size_normal"
+                android:maxLength="40"
+                android:inputType="textCapWords" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/list_entry_padding_horizontal"
+            android:layout_marginRight="@dimen/list_entry_padding_horizontal"
+            android:layout_marginTop="@dimen/list_entry_padding_vertical"
+            android:divider="@drawable/divider_field"
+            android:orientation="horizontal"
+            android:showDividers="middle" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/trusted_server_dialog_url"
+                android:textSize="@dimen/font_size_normal" />
+
+            <EditText
+                android:id="@+id/trusted_server_dialog_url"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="flagNoExtractUi"
+                android:singleLine="true"
+                android:textSize="@dimen/font_size_normal"
+                android:maxLength="200"
+                android:inputType="textUri"
+                android:hint="@string/trusted_server_dialog_url_hint" />
+
+        </LinearLayout>
+
+        <CheckBox
+            android:id="@+id/trusted_server_dialog_equal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/list_entry_padding_vertical_lax"
+            android:layout_marginLeft="@dimen/list_entry_padding_horizontal"
+            android:layout_marginRight="@dimen/list_entry_padding_horizontal"
+            android:layout_marginTop="@dimen/list_entry_padding_vertical"
+            android:checked="false"
+            android:text="@string/trusted_server_dialog_equal"
+            android:textSize="@dimen/font_size_normal" />
+
+        <TextView
+            android:id="@+id/trusted_server_dialog_url_error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/trusted_server_dialog_url_error"
+            android:textSize="@dimen/font_size_normal"
+            android:textColor="@color/fg_error"
+            android:visibility="gone"
+            android:layout_marginLeft="@dimen/list_entry_padding_horizontal"
+            android:layout_marginRight="@dimen/list_entry_padding_horizontal"
+            android:layout_marginTop="@dimen/list_entry_padding_vertical"
+            android:layout_marginBottom="@dimen/list_entry_padding_vertical" />
+
+    </LinearLayout>
+
+</ScrollView>
+

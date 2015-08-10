@@ -62,6 +62,9 @@ public final class Constants
 		/** Filename of the manual wallet backup. */
 		public static final String EXTERNAL_WALLET_BACKUP = "peercoin-wallet-backup";
 
+        /** Filename of exported transactions. */
+        public static final String TX_EXPORT_NAME = "peercoin-transactions";
+
 		/** Filename of the block store for storing the chain. */
 		public static final String BLOCKCHAIN_FILENAME = "blockchain";
 
@@ -82,6 +85,9 @@ public final class Constants
 
 	/** MIME type used for transmitting wallet backups. */
 	public static final String MIMETYPE_WALLET_BACKUP = "application/x-peercoin-wallet-backup";
+
+    /** MIME type used for transaction export. */
+    public static final String MIMETYPE_TX_EXPORT = "text/csv";
 
 	/** Number of confirmations until a transaction is fully confirmed. */
 	public static final int MAX_NUM_CONFIRMATIONS = 7;
@@ -122,7 +128,7 @@ public final class Constants
 	public static final String WEBMARKET_APP_URL = "https://play.google.com/store/apps/details?id=%s";
 
 	public static final int HTTP_TIMEOUT_MS = 15 * (int) DateUtils.SECOND_IN_MILLIS;
-	public static final int PEER_TIMEOUT_MS = 15 * (int) DateUtils.SECOND_IN_MILLIS;
+	public static final int PEER_TIMEOUT_MS = 8 * (int) DateUtils.SECOND_IN_MILLIS;
 
 	public static final long LAST_USAGE_THRESHOLD_JUST_MS = DateUtils.HOUR_IN_MILLIS;
 	public static final long LAST_USAGE_THRESHOLD_RECENTLY_MS = 2 * DateUtils.DAY_IN_MILLIS;

@@ -63,6 +63,16 @@
 	<string name="send_coins_fragment_receiving_address_complex">complex\naddress</string>
 	<string name="send_coins_fragment_pending">(%s waiting for confirmation)</string>
 	<string name="send_coins_fragment_amount_label">Amount to pay</string>
+    <string name="send_coins_shapeshift_dest_coin_text">Destination coin</string>
+    <string name="send_coins_fragment_shapeshift_foreign_label">Amount</string>
+    <string name="send_coins_fragment_shapeshift_rate_label">Rate</string>
+    <string name="send_coins_fragment_hint_shapeshift_connection_error">Could not connect to ShapeShift.</string>
+    <string name="send_coins_fragment_hint_shapeshift_parse_error">Could not understand the ShapeShift response.</string>
+    <string name="send_coins_fragment_hint_shapeshift_outside_limits">Peercoin amount must be between %1$s and %2$s.</string>
+    <string name="send_coins_fragment_hint_shapeshift_too_small">The amount is too small.</string>
+    <string name="send_coins_fragment_hint_shapeshift_updating">Updating Information with ShapeShift…</string>
+    <string name="send_coins_fragment_hint_shapeshift_future_update">Will update in %s.</string>
+    <string name="send_coins_fragment_hint_shapeshift_estimated">The rate and foreign amount is estimated and is not guaranteed.</string>
 	<string name="send_coins_fragment_hint_fee">A small network fee of %s will be paid.</string>
 	<string name="send_coins_fragment_hint_too_small_output">The amount is too small to send.</string>
 	<string name="send_coins_fragment_hint_insufficient_money">Not enough available coins. You\'re missing %s.</string>
@@ -81,6 +91,7 @@
 	<string name="send_coins_fragment_insufficient_money_msg2">Do you want to pay with all you have?</string>
 	<string name="send_coins_fragment_empty_wallet_failed_title">Emptying of wallet failed</string>
 	<string name="send_coins_fragment_state_decrypting">Decrypting…</string>
+    <string name="send_coins_fragment_state_finalise_shapeshift">Shifting…</string>
 	<string name="send_coins_preparation_msg">Signing…</string>
 	<string name="send_coins_sending_msg">Sending…</string>
 	<string name="send_coins_sent_msg">Sent!</string>
@@ -236,6 +247,11 @@
     <string name="about_credits_market_publisher_summary">market://search?q=pub:\"Matthew+Mitchell\"</string>
 	<string name="notification_coins_received_msg">Received %s</string>
 	<string name="notification_peers_connected_msg">%d peers connected</string>
+    <string name="export_transactions_mail_subject">Peercoin Wallet Transaction History</string>
+    <string name="export_transactions_mail_text">The attached CSV file contains the transaction history for your Peercoin wallet.</string>
+    <string name="export_transactions_mail_intent_chooser">Export transactions using…</string>
+    <string name="export_transactions_mail_intent_failed">Exporting transactions failed.</string>
+    <string name="export_transactions_dialog_success"><![CDATA[<p>Your transactions have been exported to <tt>%s</tt></p><p>If your device has a removable SD card, your transactions <i>should</i> be on that card. Do you want to archive your transactions now?</p>]]></string>
 
 	<!-- generic buttons -->
 	<string name="button_ok">OK</string>
@@ -257,6 +273,7 @@
 	<string name="button_scan">Scan</string>
 	<string name="button_edit_address">Add/edit address</string>
 	<string name="button_settings">Settings</string>
+    <string name="button_export">Export</string>
 	<string name="action_show_qr">Show QR code</string>
 	<string name="action_browse">Browse</string>
 	<string name="time_today">today</string>
@@ -267,6 +284,26 @@
 	<string name="error_parse">Parse error: %s</string>
 	<string name="error_http">HTTP error %1$s:\n%2$s</string>
 	<string name="error_bluetooth">Bluetooth error %1$s</string>
+
+    <!-- Trusted Servers -->
+    <string name="trusted_servers_restore_defaults">Restore Defaults</string>
+    <string name="trusted_servers_restore_defaults_title">Restore Defaults</string>
+    <string name="trusted_servers_restore_defaults_message">Are you sure you wish to restore the default settings? This will remove the current settings.</string>
+    <string name="trusted_servers_new">Add New</string>
+    <string name="preferences_category_trusted_servers">Trusted Servers</string>
+    <string name="trusted_servers_default_new_york">Default Server - New York</string>
+    <string name="trusted_server_dialog_equal">Equal priority to previous server</string>
+    <string name="trusted_server_dialog_title_new">New Server</string>
+    <string name="trusted_server_dialog_title_edit">Edit Server</string>
+    <string name="trusted_server_dialog_name">Name</string>
+    <string name="trusted_server_dialog_url">URL</string>
+    <string name="trusted_server_dialog_url_hint">Include http:// or https://</string>
+    <string name="trusted_server_dialog_url_error">Invalid URL!</string>
+    <string name="trusted_servers_context_edit_title">Edit Server</string>
+    <string name="trusted_servers_context_remove_title">Remove Server</string>
+    <string name="trusted_servers_delete_server_title">Delete Server</string>
+    <string name="trusted_servers_delete_server_message">Are you sure you wish to permanently remove "%s"?</string>
+    <string name="failed_all_servers">All trusted servers failed.</string>
 
 </resources>
 

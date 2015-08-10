@@ -53,6 +53,7 @@ public abstract class AbstractWalletActivity extends LoaderActivity
 	private WalletApplication application;
 	
 	protected RestoreWalletTask restoreTask = null;
+    public TransactionsListAdapter txListAdapter = null;
 
 	protected static final Logger log = LoggerFactory.getLogger(AbstractWalletActivity.class);
 

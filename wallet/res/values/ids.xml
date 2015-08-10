@@ -2,5 +2,9 @@
 <resources>
 
 	<item name="action_bar_fragment" type="id"/>
+    <item type="id" name="drag_handle" />
+    <item type="id" name="click_remove" />
+    <item type="id" name="new_server" />
+    <item type="id" name="edit_server" />
 
 </resources>

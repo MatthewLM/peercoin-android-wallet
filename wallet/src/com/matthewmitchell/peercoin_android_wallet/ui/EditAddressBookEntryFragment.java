@@ -83,8 +83,8 @@ public final class EditAddressBookEntryFragment extends DialogFragment
 	}
 
 	@Override
-	public Dialog onCreateDialog(final Bundle savedInstanceState)
-	{
+	public Dialog onCreateDialog(final Bundle savedInstanceState) {
+
 		final Bundle args = getArguments();
 		final String address = args.getString(KEY_ADDRESS);
 		final String suggestedAddressLabel = args.getString(KEY_SUGGESTED_ADDRESS_LABEL);

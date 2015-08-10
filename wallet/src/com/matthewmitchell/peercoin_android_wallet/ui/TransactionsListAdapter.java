@@ -66,7 +66,7 @@ public class TransactionsListAdapter extends BaseAdapter
 	private final Wallet wallet;
 	private final int maxConnectedPeers;
 
-	private final List<Transaction> transactions = new ArrayList<Transaction>();
+	public final List<Transaction> transactions = new ArrayList<Transaction>();
 	private MonetaryFormat format;
 	private boolean showEmptyText = false;
 	private boolean showBackupWarning = false;
@@ -221,7 +221,7 @@ public class TransactionsListAdapter extends BaseAdapter
 		return row;
 	}
 
-	private class TransactionCacheEntry
+	public class TransactionCacheEntry
 	{
 		public TransactionCacheEntry(final Coin value, final boolean sent, final Address address)
 		{
@@ -237,8 +237,25 @@ public class TransactionsListAdapter extends BaseAdapter
 
 	private Map<Sha256Hash, TransactionCacheEntry> transactionCache = new HashMap<Sha256Hash, TransactionCacheEntry>();
 
-	public void bindView(@Nonnull final View row, @Nonnull final Transaction tx)
-	{
+	public TransactionCacheEntry getTxCache(final Transaction tx) {
+		
+		TransactionCacheEntry txCache = transactionCache.get(tx.getHash());
+		
+		if (txCache == null) {
+			final Coin value = tx.getValue(wallet);
+			final boolean sent = value.signum() < 0;
+			final Address address = sent ? WalletUtils.getWalletAddressOfReceived(tx, wallet) : WalletUtils.getFirstFromAddress(tx);
+			txCache = new TransactionCacheEntry(value, sent, address);
+
+			transactionCache.put(tx.getHash(), txCache);
+		}
+		
+		return txCache;
+		
+	}
+
+	public void bindView(@Nonnull final View row, @Nonnull final Transaction tx) {
+
 		final TransactionConfidence confidence = tx.getConfidence();
 		final ConfidenceType confidenceType = confidence.getConfidenceType();
 		final boolean isOwn = confidence.getSource().equals(TransactionConfidence.Source.SELF);
@@ -247,16 +264,7 @@ public class TransactionsListAdapter extends BaseAdapter
 		final Coin fee = tx.getFee();
 		final boolean hasFee = fee != null && !fee.isZero();
 
-		TransactionCacheEntry txCache = transactionCache.get(tx.getHash());
-		if (txCache == null)
-		{
-			final Coin value = tx.getValue(wallet);
-			final boolean sent = value.signum() < 0;
-			final Address address = sent ? WalletUtils.getWalletAddressOfReceived(tx, wallet) : WalletUtils.getFirstFromAddress(tx);
-			txCache = new TransactionCacheEntry(value, sent, address);
-
-			transactionCache.put(tx.getHash(), txCache);
-		}
+		TransactionCacheEntry txCache = getTxCache(tx);
 
 		final CircularProgressView rowConfidenceCircular = (CircularProgressView) row.findViewById(R.id.transaction_row_confidence_circular);
 		final TextView rowConfidenceTextual = (TextView) row.findViewById(R.id.transaction_row_confidence_textual);

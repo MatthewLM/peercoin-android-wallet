@@ -106,7 +106,8 @@ public class EncryptKeysDialogFragment extends DialogFragment
 		public void onTextChanged(final CharSequence s, final int start, final int before, final int count)
 		{
 			badPasswordView.setVisibility(View.INVISIBLE);
-			updateView();
+			if (isAdded())
+                updateView();
 		}
 
 		@Override
@@ -316,8 +317,8 @@ public class EncryptKeysDialogFragment extends DialogFragment
 
 	private void wipePasswords()
 	{
-		oldPasswordView.setText(null);
-		newPasswordView.setText(null);
+		oldPasswordView.setText("");
+		newPasswordView.setText("");
 	}
 	
 	private void safeUpdateView() {

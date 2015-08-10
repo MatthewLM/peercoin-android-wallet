@@ -46,6 +46,7 @@ import com.matthewmitchell.peercoinj.utils.MonetaryFormat;
 import com.matthewmitchell.peercoin_android_wallet.util.GenericUtils;
 import com.matthewmitchell.peercoin_android_wallet.util.MonetarySpannable;
 import com.matthewmitchell.peercoin_android_wallet.R;
+import java.util.Arrays;
 
 /**
  * @author Andreas Schildbach
@@ -59,6 +60,13 @@ public final class CurrencyAmountView extends FrameLayout
 		void focusChanged(final boolean hasFocus);
 	}
 
+    private enum CurrencyType {
+        COIN, FIAT, SHAPESHIFT
+    }
+
+    private CurrencyType currencyType;
+    private int smallestExponent;
+
 	private int significantColor, lessSignificantColor, errorColor;
 	private Drawable deleteButtonDrawable, contextButtonDrawable;
 	private Drawable currencySymbolDrawable;
@@ -68,6 +76,8 @@ public final class CurrencyAmountView extends FrameLayout
 	private MonetaryFormat hintFormat = new MonetaryFormat().noCode();
 	private boolean amountSigned = false;
 	private boolean validateAmount = true;
+
+    private long previousAmount = 0;
 
 	private TextView textView;
 	private View contextButton;
@@ -127,44 +137,106 @@ public final class CurrencyAmountView extends FrameLayout
 		updateAppearance();
 	}
 
-	public void setCurrencySymbol(@Nullable final String currencyCode)
-	{
-		if (MonetaryFormat.CODE_PPC.equals(currencyCode))
-		{
-			currencySymbolDrawable = getResources().getDrawable(R.drawable.currency_symbol_ppc);
-			localCurrencyCode = null;
-		}
-		else if (MonetaryFormat.CODE_MPPC.equals(currencyCode))
-		{
-			currencySymbolDrawable = getResources().getDrawable(R.drawable.currency_symbol_mppc);
-			localCurrencyCode = null;
-		}
-		else if (MonetaryFormat.CODE_UPPC.equals(currencyCode))
-		{
-			currencySymbolDrawable = getResources().getDrawable(R.drawable.currency_symbol_uppc);
-			localCurrencyCode = null;
-		}
-		else if (currencyCode != null) // fiat
-		{
-			final String currencySymbol = GenericUtils.currencySymbol(currencyCode);
-			final float textSize = textView.getTextSize();
-			final float smallerTextSize = textSize * (20f / 24f);
-			currencySymbolDrawable = new CurrencySymbolDrawable(currencySymbol, smallerTextSize, lessSignificantColor, textSize * 0.37f);
-			localCurrencyCode = currencyCode;
-		}
-		else
-		{
-			currencySymbolDrawable = null;
-			localCurrencyCode = null;
-		}
+    public void setCurrencySymbol(@Nullable final String currencyCode) {
 
-		updateAppearance();
-	}
+        int symbol;
+
+        localCurrencyCode = null;
+
+        if (MonetaryFormat.CODE_PPC.equals(currencyCode)) {
+            symbol = R.drawable.currency_symbol_ppc;
+            currencyType = CurrencyType.COIN;
+        }else if ("NBT".equals(currencyCode)) {
+            symbol = R.drawable.currency_symbol_nbt;
+            currencyType = CurrencyType.SHAPESHIFT;
+            smallestExponent = 4;
+        } else if ("BTC".equals(currencyCode)) {
+            symbol = R.drawable.currency_symbol_btc;
+            currencyType = CurrencyType.SHAPESHIFT;
+            smallestExponent = 8;
+        } else if ("BLK".equals(currencyCode)) {
+            symbol = R.drawable.currency_symbol_blk;
+            currencyType = CurrencyType.SHAPESHIFT;
+            smallestExponent = 8;
+        } else if ("XCP".equals(currencyCode)) {
+            symbol = R.drawable.currency_symbol_xcp;
+            currencyType = CurrencyType.SHAPESHIFT;
+            smallestExponent = 8;
+        } else if ("DASH".equals(currencyCode)) {
+            symbol = R.drawable.currency_symbol_dash;
+            currencyType = CurrencyType.SHAPESHIFT;
+            smallestExponent = 8;
+        } else if ("DGB".equals(currencyCode)) {
+            symbol = R.drawable.currency_symbol_dgb;
+            currencyType = CurrencyType.SHAPESHIFT;
+            smallestExponent = 8;
+        } else if ("DOGE".equals(currencyCode)) {
+            symbol = R.drawable.currency_symbol_doge;
+            currencyType = CurrencyType.SHAPESHIFT;
+            smallestExponent = 8;
+        } else if ("LTC".equals(currencyCode)) {
+            symbol = R.drawable.currency_symbol_ltc;
+            currencyType = CurrencyType.SHAPESHIFT;
+            smallestExponent = 8;
+        } else if ("MINT".equals(currencyCode)) {
+            symbol = R.drawable.currency_symbol_mint;
+            currencyType = CurrencyType.SHAPESHIFT;
+            smallestExponent = 6;
+        } else if ("NMC".equals(currencyCode)) {
+            symbol = R.drawable.currency_symbol_nmc;
+            currencyType = CurrencyType.SHAPESHIFT;
+            smallestExponent = 8;
+        } else if ("POT".equals(currencyCode)) {
+            symbol = R.drawable.currency_symbol_pot;
+            currencyType = CurrencyType.SHAPESHIFT;
+            smallestExponent = 8;
+        } else if ("NVC".equals(currencyCode)) {
+            symbol = R.drawable.currency_symbol_nvc;
+            currencyType = CurrencyType.SHAPESHIFT;
+            smallestExponent = 8;
+        } else if ("RDD".equals(currencyCode)) {
+            symbol = R.drawable.currency_symbol_rdd;
+            currencyType = CurrencyType.SHAPESHIFT;
+            smallestExponent = 8;
+        } else if ("VRC".equals(currencyCode)) {
+            symbol = R.drawable.currency_symbol_vrc;
+            currencyType = CurrencyType.SHAPESHIFT;
+            smallestExponent = 8;
+        } else if (Arrays.asList("BTCD", "CLAM", "FTC", "GEMZ", "MSC", "SDC", "START", "SJCX", "SWARM", "USDT", "UNO").contains(currencyCode)) {
+            currencyType = CurrencyType.SHAPESHIFT;
+            smallestExponent = 8;
+            symbol = -1;
+        } else if ("QRK".equals(currencyCode)) {
+            currencyType = CurrencyType.SHAPESHIFT;
+            smallestExponent = 5;
+            symbol = -1;
+        } else if (currencyCode != null) {
+            final String currencySymbol = GenericUtils.currencySymbol(currencyCode);
+            final float textSize = textView.getTextSize();
+            final float smallerTextSize = textSize * (20f / 24f);
+            currencySymbolDrawable = new CurrencySymbolDrawable(currencySymbol, smallerTextSize, lessSignificantColor, textSize * 0.37f);
+            localCurrencyCode = currencyCode;
+            currencyType = CurrencyType.FIAT;
+            updateAppearance();
+            return;	
+        }else
+            symbol = -1;
+
+        currencySymbolDrawable = (symbol == -1) ? null : getResources().getDrawable(symbol);
+        updateAppearance();
+
+    }
 
 	public void setInputFormat(final MonetaryFormat inputFormat)
 	{
 		this.inputFormat = inputFormat.noCode();
 	}
+
+    public void setHintAndFormat(final MonetaryFormat hintFormat, @Nullable final Monetary hint) {
+        this.hintFormat = hintFormat.noCode();
+        this.hint = hint;
+        updateAppearance();
+    }
 
 	public void setHintFormat(final MonetaryFormat hintFormat)
 	{
@@ -201,32 +273,42 @@ public final class CurrencyAmountView extends FrameLayout
 		this.listener = listener;
 	}
 
-	@CheckForNull
-	public Monetary getAmount()
-	{
-		if (!isValidAmount(false))
-			return null;
+    @CheckForNull
+    public Monetary getAmount() {
 
-		final String amountStr = textView.getText().toString().trim();
-		if (localCurrencyCode == null)
-			return inputFormat.parse(amountStr);
-		else
-			return inputFormat.parseFiat(localCurrencyCode, amountStr);
-	}
+        if (!isValidAmount(false))
+            return null;
 
-	public void setAmount(@Nullable final Monetary amount, final boolean fireListener)
-	{
-		if (!fireListener)
-			textViewListener.setFire(false);
+        final String amountStr = textView.getText().toString().trim();
+        if (currencyType == CurrencyType.COIN)
+            return inputFormat.parse(amountStr);
+        else if (currencyType == CurrencyType.FIAT)
+            return inputFormat.parseFiat(localCurrencyCode, amountStr);
+        else
+            return inputFormat.parseShapeShiftCoin(amountStr, smallestExponent);
 
-		if (amount != null)
-			textView.setText(new MonetarySpannable(inputFormat, amountSigned, amount));
-		else
-			textView.setText(null);
+    }
 
-		if (!fireListener)
-			textViewListener.setFire(true);
-	}
+    private long monetaryToValue(Monetary monetary) {
+        return monetary == null ? 0 : monetary.getValue();
+    }
+
+    public void setAmount(@Nullable final Monetary amount, final boolean fireListener) {
+
+        if (!fireListener)
+            textViewListener.setFire(false);
+
+        if (amount != null)
+            textView.setText(new MonetarySpannable(inputFormat, amountSigned, amount));
+        else
+            textView.setText(null);
+
+        if (!fireListener)
+            textViewListener.setFire(true);
+
+        previousAmount = monetaryToValue(amount);
+
+    }
 
 	@Override
 	public void setEnabled(final boolean enabled)
@@ -264,29 +346,31 @@ public final class CurrencyAmountView extends FrameLayout
 		textView.setNextFocusForwardId(nextFocusId);
 	}
 
-	private boolean isValidAmount(final boolean zeroIsValid)
-	{
-		final String str = textView.getText().toString().trim();
+	private boolean isValidAmount(final boolean zeroIsValid) {
 
-		try
-		{
-			if (!str.isEmpty())
-			{
-				final Monetary amount;
-				if (localCurrencyCode == null)
-					amount = inputFormat.parse(str);
-				else
-					amount = inputFormat.parseFiat(localCurrencyCode, str);
+        final String str = textView.getText().toString().trim();
 
-				// exactly zero
-				return zeroIsValid || amount.signum() > 0;
-			}
-		}
-		catch (final Exception x)
-		{
-		}
+        if (inputFormat == null)
+            return false;
 
-		return false;
+        try {
+            if (!str.isEmpty()) {
+                final Monetary amount;
+                if (currencyType == CurrencyType.COIN)
+                    amount = inputFormat.parse(str);
+                else if (currencyType == CurrencyType.FIAT)
+                    amount = inputFormat.parseFiat(localCurrencyCode, str);
+                else
+                    amount = inputFormat.parseShapeShiftCoin(str, smallestExponent);
+
+                // exactly zero
+                return zeroIsValid || amount.signum() > 0;
+            }
+        } catch (final NumberFormatException x) {
+        }
+
+        return false;
+
 	}
 
 	private final OnClickListener deleteClickListener = new OnClickListener()
@@ -337,25 +421,26 @@ public final class CurrencyAmountView extends FrameLayout
 	{
 		final Bundle state = new Bundle();
 		state.putParcelable("super_state", super.onSaveInstanceState());
-		state.putParcelable("child_textview", textView.onSaveInstanceState());
 		state.putSerializable("amount", getAmount());
 		return state;
 	}
 
 	@Override
-	protected void onRestoreInstanceState(final Parcelable state)
-	{
-		if (state instanceof Bundle)
-		{
+	protected void onRestoreInstanceState(final Parcelable state) {
+
+		if (state instanceof Bundle) {
+
 			final Bundle bundle = (Bundle) state;
+
+            Monetary amount = (Monetary) bundle.getSerializable("amount");
+            previousAmount = monetaryToValue(amount);
+
 			super.onRestoreInstanceState(bundle.getParcelable("super_state"));
-			textView.onRestoreInstanceState(bundle.getParcelable("child_textview"));
-			setAmount((Monetary) bundle.getSerializable("amount"), false);
-		}
-		else
-		{
+            setAmount(amount, false);
+
+		} else 
 			super.onRestoreInstanceState(state);
-		}
+
 	}
 
 	private final TextViewListener textViewListener = new TextViewListener();
@@ -390,12 +475,11 @@ public final class CurrencyAmountView extends FrameLayout
 		}
 
 		@Override
-		public void onTextChanged(final CharSequence s, final int start, final int before, final int count)
-		{
-			updateAppearance();
-			if (listener != null && fire)
-				listener.changed();
-		}
+        public void onTextChanged(final CharSequence s, final int start, final int before, final int count) {
+            updateAppearance();
+            if (listener != null && fire && monetaryToValue(getAmount()) != previousAmount)
+                listener.changed();
+        }
 
 		@Override
 		public void onFocusChange(final View v, final boolean hasFocus)

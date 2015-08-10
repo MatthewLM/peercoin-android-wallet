@@ -1,3 +1,11 @@
+v3.0
+
+* Using peercoinj 0.13.0
+* Shapeshift API integration. This enables seamless payments in supported foreign coin addresses and URIs 
+from within the App without the use of external plugins by either merchant or customer. 
+* Transactions can be exported to csv files by the "Export" menu option.
+* Users can now configure trusted servers to download valid block hashes from, in a priority list.
+
 v2.6
 
 * Bugfix

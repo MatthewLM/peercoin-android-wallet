@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/drag_item_height">
+    <ImageView
+        android:id="@+id/drag_handle"
+        android:background="@drawable/drag"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/drag_item_height"
+        android:layout_alignParentLeft="true" />
+    <TextView
+        android:id="@+id/trusted_server_priority"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/drag_item_height"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:gravity="center_vertical"
+        android:paddingLeft="20dp"
+        android:layout_toRightOf="@+id/drag_handle" />
+    <TextView
+        android:id="@+id/trusted_server_name"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/drag_item_height"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:gravity="center_vertical|right"
+        android:paddingRight="15dp"
+        android:scrollHorizontally="true"
+        android:ellipsize="end" 
+        android:maxLines="1"
+        android:layout_toRightOf="@+id/trusted_server_priority"
+        android:layout_toLeftOf="@+id/trusted_server_status" />
+    <View
+        android:id="@+id/trusted_server_status"
+        android:layout_width="10dp"
+        android:layout_height="@dimen/drag_item_height"
+        android:layout_alignParentRight="true" />
+</RelativeLayout>

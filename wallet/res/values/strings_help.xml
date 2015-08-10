@@ -1,110 +1,140 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
 
-	<string name="help_wallet">
-<![CDATA[
-		<p>
-			The upper left part of the screen displays your balance in Peercoins and one selected national currency.
-			Tap to go to the list of national currencies, and tap on one of the currencies to select it as default.
-		</p>
-		<p>
-			The QR code on the right contains your peercoin address and can be used for scanning by another party.
-			Tap on the QR code to get a larger version of it.
-		</p>
-		<p>
-			The bottom of the screen is covered by your transactions list, which is empty at the beginning.
-			Pending transactions are greyed out until they are confirmed.
-			Tap on one entry to add the senders or receivers address to the address book.
-			Swipe left or right to apply filters to the list.
-		</p>
-		<p>
-			You can send or request coins by tapping the buttons in the action bar.
-			More options are available in the options menu.
-		</p>
-	]]>
-	</string>
-	<string name="help_request_coins">
-<![CDATA[
-		<p>
-			Using this dialog, you can request coins from another person (who should already have installed Peercoin Wallet).
-		</p>
-		<p>
-			First, you can enter an amount of Peercoins to request.
-		</p>
-		<p>
-			Then, you either have the generated QR code scanned by the other person.
-			Or, you can send your request to a remote person with the share button in the action bar.
-			The other person will have to click the Peercoin URL.
-		</p>
-		<p>
-			Either way, the other person will be presented a dialog for sending coins with all fields pre-populated.
-			If she accepts, all she needs to do is sending the payment.
-		</p>
-	]]>
-	</string>
-	<string name="help_send_coins">
-<![CDATA[
-		<p>
-			You have initiated the process of sending coins.
-			You came here either through the main screen or by clicking on a Peercoin URL in your mobile browser.
-		</p>
-		<p>
-			First, you enter the Peercoin address to pay to.
-			The address will autocomplete from known entries in your address book.
-			You can also scan QR codes with Peercoin addresses or Peercoin requests by pressing the QR button in the action bar.
-		</p>
-		<p>
-			Next, you can see how many Peercoins you can spend at the moment.
-			Any difference to the balance from the main screen is still unconfirmed and can thus not yet be spent.
-		</p>
-		<p>
-			Last, you enter the amount to pay.
-		</p>
-		<p>
-			You can enter a payment while being offline.
-			It will be sent on next restart of Peercoin Wallet.
-			If you want a payment to be processed as fast as possible, make sure you are well connected (i.e. on a WLAN).
-		</p>
-		<p>
-			Note:
-			Payments are irreversible!
-			Always check the receiving address.
-		</p>
-	]]>
-	</string>
-	<string name="help_safety">
-<![CDATA[
-		<p>
-			<b>Important safety notes:</b>
-		</p>
-		<p>
-			Peercoins are stored on the device.
-			<b>If you lose it, you\'ll lose your Peercoins.</b>
-		</p>
-		<p>
-			This means you need to <b>back up your wallet</b>!
-			Use the in-app backup facility for this, rather than a third party backup app.
-			Keep your backup safe and remember the password.
-		</p>
-		<p>
-			<b>Before uninstalling</b> (or clearing app data/wiping your device), <b>transfer your Peercoins to another wallet</b>.
-			Remaining Peercoins will be lost.
-		</p>
-		<p>
-			<b>Payments are irreversible</b>.
-			If you send your Peercoins into the void, there is almost no way to get them back.
-		</p>
-		<p>
-			<b>Keep your mobile device safe!</b>
-			Do not root your device.
-			Do only install apps you fully trust.
-			Malicious apps could be trying to steal your wallet.
-		</p>
-		<p>
-			Keep the risk low!
-			<b>Only use with small amounts</b> for day use.
-		</p>
-	]]>
-	</string>
+    <string name="help_wallet">
+        <![CDATA[
+        <p>
+            The upper left part of the screen displays your balance in Peercoins and one selected national currency.
+            Tap to go to the list of national currencies, and tap on one of the currencies to select it as default.
+        </p>
+        <p>
+            The QR code on the right contains your peercoin address and can be used for scanning by another party.
+            Tap on the QR code to get a larger version of it.
+        </p>
+        <p>
+            The bottom of the screen is covered by your transactions list, which is empty at the beginning.
+            Pending transactions are greyed out until they are confirmed.
+            Tap on one entry to add the senders or receivers address to the address book.
+            Swipe left or right to apply filters to the list.
+        </p>
+        <p>
+            You can send or request coins by tapping the buttons in the action bar.
+            More options are available in the options menu.
+        </p>
+        ]]>
+    </string>
+    <string name="help_request_coins">
+        <![CDATA[
+        <p>
+            Using this dialog, you can request coins from another person (who should already have installed Peercoin Wallet).
+        </p>
+        <p>
+            First, you can enter an amount of Peercoins to request.
+        </p>
+        <p>
+            Then, you either have the generated QR code scanned by the other person.
+            Or, you can send your request to a remote person with the share button in the action bar.
+            The other person will have to click the Peercoin URL.
+        </p>
+        <p>
+            Either way, the other person will be presented a dialog for sending coins with all fields pre-populated.
+            If she accepts, all she needs to do is sending the payment.
+        </p>
+        ]]>
+    </string>
+    <string name="help_send_coins">
+        <![CDATA[
+        <p>
+            You have initiated the process of sending coins.
+            You came here either through the main screen or by clicking on a payment URI in your mobile browser.
+        </p>
+        <p>
+            First, you specify the Peercoin or supported ShapeShift coin address to pay to.
+            The address will autocomplete from known entries in your address book.
+            You can also scan QR codes with addresses or requests by pressing the QR button in the action bar.
+        </p>
+        <p>
+            You can specify a destination coin from the dropdown menu. You can specify the amount in Peercoin or your 
+            local currency. If the coin is not Peercoin, the transfer will be made using ShapeShift. For ShapeShift coins 
+            the rate and foreign amount will be estimated unless you specify an exact foreign amount.
+        </p>
+        <p>
+            You can enter a payment while being offline.
+            It will be sent on next restart of Peercoin Wallet.
+            If you want a payment to be processed as fast as possible, make sure you are well connected (i.e. on a WLAN).
+        </p>
+        <p>
+            Note:
+            Payments are irreversible!
+            Always check the receiving address.
+            The third-party ShapeShift API is used to send to coins other than Peercoin. There is no guarentee that ShapeShift 
+            will function correctly, or at all.
+        </p>
+        ]]>
+    </string>
+    <string name="help_safety">
+        <![CDATA[
+        <p>
+            <b>Important safety notes:</b>
+        </p>
+        <p>
+            Peercoins are stored on the device.
+            <b>If you lose it, you\'ll lose your Peercoins.</b>
+        </p>
+        <p>
+            This means you need to <b>back up your wallet</b>!
+            Use the in-app backup facility for this, rather than a third party backup app.
+            Keep your backup safe and remember the password.
+        </p>
+        <p>
+            <b>Before uninstalling</b> (or clearing app data/wiping your device), <b>transfer your Peercoins to another wallet</b>.
+            Remaining Peercoins will be lost.
+        </p>
+        <p>
+            <b>Payments are irreversible</b>.
+            If you send your Peercoins into the void, there is almost no way to get them back.
+        </p>
+        <p>
+            <b>Keep your mobile device safe!</b>
+            Do not root your device.
+            Do only install apps you fully trust.
+            Malicious apps could be trying to steal your wallet.
+        </p>
+        <p>
+            Keep the risk low!
+            <b>Only use with small amounts</b> for day use.
+        </p>
+        ]]>
+    </string>
+    <string name="help_trusted_servers">
+        <![CDATA[
+        <p>
+            Here is a list of trusted servers that obtain block hashes for blockchain validation. These servers will 
+            never have access to your funds, but dishonest servers may trick your wallet onto an incorrect blockchain.
+        </p>
+        <p>
+            Servers are listed in order of priority, with high priority coming first. Priority numbers are shown on the 
+            left. You may reorder servers by draging the slider handles on the left.
+        </p>
+        <p>
+            Servers with the highest priority will be tried first, in a random order. If all of the highest priority 
+            servers have failed, the servers with the next priority will be attempted and so on.
+        </p>
+        <p>
+            The last successful server is highlighted in bold. Green servers have been successfully tried. Red servers 
+            have failed on the last attempt. Grey servers have not been tried. Beware that green servers may still give 
+            bad block hashes.
+        </p>
+        <p>
+            You may add new servers or edit existing ones. Clicking on a server will you give options to edit or delete a 
+            server. You must provide a server name and valid URL for the server. You may also select an option for the 
+            server to have equal priority to the server above it.
+        </p>
+        <p>
+            Server URLs should implement the getvalidhashes API. If you need to restore the default settings, you may do 
+            so in the menu.
+        </p>
+        ]]>
+    </string>
 
 </resources>

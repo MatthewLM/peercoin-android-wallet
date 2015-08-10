@@ -4,6 +4,13 @@
 	<header
 		android:fragment="com.matthewmitchell.peercoin_android_wallet.ui.preference.SettingsFragment"
 		android:title="@string/preferences_activity_title" />
+    <header
+        android:title="@string/preferences_category_trusted_servers">
+
+        <intent android:targetPackage="com.matthewmitchell.peercoin_android_wallet"
+            android:targetClass="com.matthewmitchell.peercoin_android_wallet.ui.preference.TrustedServersActivity" />
+
+    </header>
 	<header
 		android:fragment="com.matthewmitchell.peercoin_android_wallet.ui.preference.DiagnosticsFragment"
 		android:title="@string/preferences_category_diagnostics" />
