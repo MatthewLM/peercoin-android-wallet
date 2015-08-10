@@ -46,8 +46,7 @@ public class DialogBuilder extends AlertDialog.Builder
 		return builder;
 	}
 
-	public DialogBuilder(final Context context)
-	{
+	public DialogBuilder(final Context context) {
 		super(context);
 
 		setInverseBackgroundForced(true);
