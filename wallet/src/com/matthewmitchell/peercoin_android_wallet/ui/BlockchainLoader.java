@@ -113,10 +113,10 @@ public class BlockchainLoader extends AsyncTaskLoader<BlockchainData> {
 		
 	}
         
-        public void stopLoading(boolean resetBlockchain) {
+    public void stopLoading(boolean resetBlockchain) {
 		this.resetBlockchain = resetBlockchain;
 		super.stopLoading();
-        }
+    }
 	
 	@Override
 	protected void onStopLoading() {

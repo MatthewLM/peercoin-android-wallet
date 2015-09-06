@@ -50,6 +50,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.os.Handler;
+import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.format.DateUtils;
@@ -69,6 +71,9 @@ import com.matthewmitchell.peercoin_android_wallet.util.Io;
 import com.matthewmitchell.peercoin_android_wallet.util.LinuxSecureRandom;
 import com.matthewmitchell.peercoinj.shapeshift.ShapeShift;
 import com.matthewmitchell.peercoin_android_wallet.R;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import static junit.framework.Assert.assertTrue;
 
@@ -83,6 +88,10 @@ public class WalletApplication extends Application
 	private Intent blockchainServiceIntent;
 	private Intent blockchainServiceCancelCoinsReceivedIntent;
 	private Intent blockchainServiceResetBlockchainIntent;
+	
+	private boolean blockchainServiceHasStopped;
+	private final Lock blockchainServiceStopLock = new ReentrantLock();
+	private final Condition blockchainServiceStopCond = blockchainServiceStopLock.newCondition();
 
 	private File walletFile;
 	private Wallet wallet;
@@ -402,14 +411,10 @@ public class WalletApplication extends Application
 		}
 	}
 
-	public void saveWallet()
-	{
-		try
-		{
+	public void saveWallet() {
+		try {
 			protobufSerializeWallet(wallet);
-		}
-		catch (final IOException x)
-		{
+		} catch (final IOException x) {
 			throw new RuntimeException(x);
 		}
 	}
@@ -503,30 +508,61 @@ public class WalletApplication extends Application
 		
 	}
 
-	public void stopBlockchainService()
-	{
+	public void stopBlockchainService() {
+		// Sends intent to service to stop
+		blockchainServiceHasStopped = false;
 		stopService(blockchainServiceIntent);
 	}
 
-	public void resetBlockchain()
-	{
+	public void resetBlockchain() {
 		internalResetBlockchain();
+		waitForBlockChainServiceToStop();
+		startBlockchainService(true);
 
 		final Intent broadcast = new Intent(ACTION_WALLET_CHANGED);
 		broadcast.setPackage(getPackageName());
 		LocalBroadcastManager.getInstance(this).sendBroadcast(broadcast);
 	}
 
-	private void internalResetBlockchain()
-	{
+	private void internalResetBlockchain() {
 		// actually stops the service
-		assertTrue(config != null);
+		blockchainServiceHasStopped = false;
 		startService(blockchainServiceResetBlockchainIntent);
 	}
+	
+	public void blockchainServiceHasStopped() {
+		
+		blockchainServiceStopLock.lock();
+		try {
+			blockchainServiceHasStopped = true;
+			blockchainServiceStopCond.signalAll();
+		} finally {
+			blockchainServiceStopLock.unlock();
+		}
+		
+	}
+	
+	public void waitForBlockChainServiceToStop() {
+		
+		blockchainServiceStopLock.lock();
+		try {
+			if (!blockchainServiceHasStopped) {
+				log.info("Waiting for blockchain service at {}", System.currentTimeMillis());
+				blockchainServiceStopCond.await(60, TimeUnit.SECONDS);
+				log.info("Blockchain service stopped at {}", System.currentTimeMillis());
+			}
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+		} finally {
+			blockchainServiceStopLock.unlock();
+		}
+		
+	}
 
-	public void replaceWallet(final Wallet newWallet){
+	public void replaceWallet(final Wallet newWallet) {
 		
 		internalResetBlockchain(); // implicitly stops blockchain service
+		waitForBlockChainServiceToStop();
 		wallet.shutdownAutosaveAndWait();
 
 		wallet = newWallet;
@@ -538,6 +574,9 @@ public class WalletApplication extends Application
 		LocalBroadcastManager.getInstance(this).sendBroadcast(broadcast);
 		
 		config.disarmBackupReminder();
+		
+		// Start blockchain service again with new wallet
+		startBlockchainService(true);
 		
 	}
 
@@ -628,7 +667,7 @@ public class WalletApplication extends Application
 				
 				log.info("last used {} minutes ago, rescheduling blockchain sync in roughly {} minutes", lastUsedAgo / DateUtils.MINUTE_IN_MILLIS,
 				alarmInterval / DateUtils.MINUTE_IN_MILLIS);
-				assertTrue(config != null);
+
 				final AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 				final PendingIntent alarmIntent = PendingIntent.getService(wa, 0, new Intent(wa, BlockchainServiceImpl.class), 0);
 				alarmManager.cancel(alarmIntent);
@@ -647,7 +686,7 @@ public class WalletApplication extends Application
 	    
 	    // Wait for loadedCallbacks to run
 	    synchronized (this) {
-		return isLoaded;
+			return isLoaded;
 	    }
 	    
 	}

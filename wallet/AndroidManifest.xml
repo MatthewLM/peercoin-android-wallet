@@ -183,7 +183,10 @@
 		<activity
 			android:name="com.matthewmitchell.peercoin_android_wallet.ui.RestoreWalletActivity"
 			android:configChanges="orientation|keyboard|keyboardHidden"
-			android:theme="@style/My.Theme.Dialog" >
+			android:theme="@style/My.Theme.Dialog"
+			android:finishOnTaskLaunch="true"
+			android:taskAffinity="com.matthewmitchell.peercoin_android_wallet.ui.RestoreWalletActivity"
+			android:excludeFromRecents="true" >
 			<intent-filter android:label="@string/import_keys_intent_filter_action" >
 				<action android:name="android.intent.action.VIEW" />
 

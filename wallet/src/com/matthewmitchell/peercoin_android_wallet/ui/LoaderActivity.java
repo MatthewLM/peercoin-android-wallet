@@ -18,6 +18,7 @@
 package com.matthewmitchell.peercoin_android_wallet.ui;
 
 import com.matthewmitchell.peercoin_android_wallet.WalletApplication;
+import com.matthewmitchell.peercoin_android_wallet.R;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -36,8 +37,7 @@ public class LoaderActivity extends Activity {
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
             
-		progressDialog = ProgressDialog.show(this, "Loading Wallet",  
-				"Loading the wallet. This may or may not take a while...", true, false); 
+		progressDialog = ProgressDialog.show(this, getString(R.string.load_wallet_title), getString(R.string.load_wallet_message), true, false); 
 		
 		this.application = (WalletApplication) getApplication();
 		

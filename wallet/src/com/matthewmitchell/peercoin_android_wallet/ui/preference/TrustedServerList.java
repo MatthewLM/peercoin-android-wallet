@@ -220,10 +220,11 @@ public class TrustedServerList extends ArrayList<TrustedServer> implements Trust
             @Override
             public void run() {
 
-                long id = TrustedServersDatabaseHelper.getInstance(context).restoreDefaults();
+                TrustedServer[] servers = TrustedServersDatabaseHelper.getInstance(context).restoreDefaults();
 
                 synchronized (this) {
-                    addServer(new TrustedServer(id, context.getString(R.string.trusted_servers_default_new_york), TrustedServersDatabaseHelper.DEFAULT_SERVER_NEW_YORK, false));
+					for (TrustedServer server: servers)
+						addServer(server);
                     invalidated = true;
                 }
 
@@ -246,10 +247,10 @@ public class TrustedServerList extends ArrayList<TrustedServer> implements Trust
             @Override
             public void run() {
 
-                long id = TrustedServersDatabaseHelper.getInstance(context).insertServer(name, url, equal);
+                TrustedServer server = TrustedServersDatabaseHelper.getInstance(context).insertServer(name, url, equal);
 
                 synchronized (this) {
-                    addServer(new TrustedServer(id, name, url, equal));
+                    addServer(server);
                 }
 
                 if (onChanged != null)

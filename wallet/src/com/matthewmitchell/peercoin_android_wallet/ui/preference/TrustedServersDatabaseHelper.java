@@ -20,14 +20,11 @@ package com.matthewmitchell.peercoin_android_wallet.ui.preference;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.matthewmitchell.peercoin_android_wallet.R;
 import java.util.Locale;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A database helper for storing trusted servers in an SQLite database.
@@ -47,6 +44,7 @@ public class TrustedServersDatabaseHelper extends SQLiteOpenHelper {
     private static final String FIELD_EQUAL = "equal";
 
     public static final String DEFAULT_SERVER_NEW_YORK = "https://peercoinexplorer.info/q/getvalidhashes";
+	public static final String DEFAULT_SERVER_LONDON = "https://london.getvalidhashes.com/peercoin";
 
     private final Context context;
 
@@ -71,14 +69,21 @@ public class TrustedServersDatabaseHelper extends SQLiteOpenHelper {
 
     }
 
-    private long insertDefaults(SQLiteDatabase db) {
-        return insertServer(db, context.getString(R.string.trusted_servers_default_new_york), DEFAULT_SERVER_NEW_YORK, false, 0);
+    private TrustedServer[] insertDefaults(SQLiteDatabase db) {
+		
+        TrustedServer[] servers = {
+			insertServer(db, context.getString(R.string.trusted_servers_default_new_york), DEFAULT_SERVER_NEW_YORK, false, 0),
+			insertServer(db, context.getString(R.string.trusted_servers_default_london), DEFAULT_SERVER_LONDON, true, 1),
+		};
+		
+		return servers;
+		
     }
 
     /**
      * Reset the server list to the default in the database.
      */
-    public long restoreDefaults() {
+    public TrustedServer[] restoreDefaults() {
 
         SQLiteDatabase db = getWritableDatabase();
         db.delete(TABLE_NAME, null, null);
@@ -89,7 +94,7 @@ public class TrustedServersDatabaseHelper extends SQLiteOpenHelper {
     /**
      * Insert the information for a new server to be added to the end of the list.
      */
-    public long insertServer(String name, String url, boolean equal) {
+    public TrustedServer insertServer(String name, String url, boolean equal) {
 
         SQLiteDatabase db = getWritableDatabase();
 
@@ -106,7 +111,7 @@ public class TrustedServersDatabaseHelper extends SQLiteOpenHelper {
 
     }
 
-    private long insertServer(SQLiteDatabase db, String name, String url, boolean equal, int order) {
+    private TrustedServer insertServer(SQLiteDatabase db, String name, String url, boolean equal, int order) {
 
         ContentValues values = new ContentValues(4);
         values.put(FIELD_ORDER, order);
@@ -114,7 +119,7 @@ public class TrustedServersDatabaseHelper extends SQLiteOpenHelper {
         values.put(FIELD_URL, url);
         values.put(FIELD_EQUAL, equal);
 
-        return db.insert(TABLE_NAME, null, values);
+        return new TrustedServer(db.insert(TABLE_NAME, null, values), name, url, equal);
 
     }
 

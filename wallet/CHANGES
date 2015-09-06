@@ -5,6 +5,8 @@ v3.0
 from within the App without the use of external plugins by either merchant or customer. 
 * Transactions can be exported to csv files by the "Export" menu option.
 * Users can now configure trusted servers to download valid block hashes from, in a priority list.
+* Fast DNS peer discovery
+* Many bugfixes and enhancements
 
 v2.6
 

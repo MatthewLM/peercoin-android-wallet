@@ -17,14 +17,8 @@
 
 package com.matthewmitchell.peercoin_android_wallet.ui;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-
-import javax.annotation.Nonnull;
 
 import com.matthewmitchell.peercoinj.core.Wallet;
 import com.matthewmitchell.peercoinj.core.Wallet.BalanceType;
@@ -41,14 +35,9 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
-import com.google.common.base.Charsets;
-
 import com.matthewmitchell.peercoin_android_wallet.Configuration;
-import com.matthewmitchell.peercoin_android_wallet.Constants;
 import com.matthewmitchell.peercoin_android_wallet.WalletApplication;
-import com.matthewmitchell.peercoin_android_wallet.util.Crypto;
-import com.matthewmitchell.peercoin_android_wallet.util.Io;
-import com.matthewmitchell.peercoin_android_wallet.util.WalletUtils;
+import com.matthewmitchell.peercoin_android_wallet.ui.RestoreWalletTask.CloseAction;
 import com.matthewmitchell.peercoin_android_wallet.R;
 
 /**
@@ -122,7 +111,7 @@ public final class RestoreWalletActivity extends AbstractWalletActivity
 				try
 				{
 					final InputStream is = contentResolver.openInputStream(backupFileUri);
-					restoreWalletFromEncrypted(is, password);
+					restoreWalletFromEncrypted(is, password, CloseAction.CLOSE_FINISH);
 				}
 				catch (final FileNotFoundException x)
 				{

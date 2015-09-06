@@ -159,7 +159,6 @@ public final class BlockListFragment extends ListFragment
 		super.onResume();
 
 		activity.registerReceiver(tickReceiver, new IntentFilter(Intent.ACTION_TIME_TICK));
-		adapter.notifyDataSetChanged();
 		resumed = true;
 		
 		this.activity.runAfterLoad(new Runnable() {
@@ -167,6 +166,7 @@ public final class BlockListFragment extends ListFragment
 			@Override
 			public void run() {
 				loaderManager.initLoader(ID_TRANSACTION_LOADER, null, transactionLoaderCallbacks);
+				adapter.notifyDataSetChanged();
 			}
 			
 		});

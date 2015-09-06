@@ -91,6 +91,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.AutoCompleteTextView;
@@ -197,7 +198,6 @@ public final class SendCoinsFragment extends Fragment
         NONE, FUTURE_UPDATE, UPDATING, OUTSIDE_LIMITS, PARSE_ERROR, CONNECTION_ERROR, OTHER_ERROR, TOO_SMALL
     }
 
-    private LinearLayout destCoinLayout;
     private LinearLayout shapeShiftTitles;
     private LinearLayout shapeShiftAmounts;
     private Spinner destCoinSpinner;
@@ -219,6 +219,7 @@ public final class SendCoinsFragment extends Fragment
     private Handler updateDelayHandler = new Handler(Looper.getMainLooper());
     private long lastSendAmountUpdate = 0;
     private long secondsToUpdate;
+	private long futureUpdateTime;
 
     private final long SHAPESHIFT_ERROR_DELAY = 20000;
     private final long SHAPESHIFT_LIMIT_DELAY = 30000;
@@ -647,7 +648,6 @@ public final class SendCoinsFragment extends Fragment
         localAmountView = (CurrencyAmountView) view.findViewById(R.id.send_coins_amount_local);
         amountCalculatorLink = new CurrencyCalculatorLink(ppcAmountView, localAmountView);
 
-        destCoinLayout = (LinearLayout) view.findViewById(R.id.send_coins_shapeshift_dest_coin);
         shapeShiftTitles = (LinearLayout) view.findViewById(R.id.send_coins_shapeshift_titles);
         shapeShiftAmounts = (LinearLayout) view.findViewById(R.id.send_coins_shapeshift_amounts);
         destCoinSpinner = (Spinner) view.findViewById(R.id.send_coins_shapeshift_dest_coin_spinner);
@@ -881,7 +881,7 @@ public final class SendCoinsFragment extends Fragment
             outState.putSerializable("shapeshift_status", shapeShiftStatus);
             outState.putSerializable("shapeshift_foreign_amount", shapeShiftForeignAmountView.getAmount());
             outState.putLong("shapeshift_last_update", lastSendAmountUpdate);
-            outState.putLong("shapeshift_seconds_to_update", secondsToUpdate);
+            outState.putLong("shapeshift_update_time", futureUpdateTime);
         }
 
     }
@@ -911,15 +911,24 @@ public final class SendCoinsFragment extends Fragment
             shapeShiftStatus = (ShapeShiftStatus) savedInstanceState.getSerializable("shapeshift_status");
             lastSendAmountUpdate = savedInstanceState.getLong("shapeshift_last_update");
             isExactForeignAmount = savedInstanceState.getBoolean("exact_foreign_amount");
-            secondsToUpdate = savedInstanceState.getLong("shapeshift_seconds_to_update");
+            futureUpdateTime = savedInstanceState.getLong("shapeshift_update_time");
 
             setShapeShiftNoUpdate(ShapeShift.getCoin(savedInstanceState.getString("shapeshift_coin")),
                     (Monetary) savedInstanceState.getSerializable("shapeshift_foreign_amount"));
 
-            if (shapeShiftStatus == ShapeShiftStatus.FUTURE_UPDATE)
-                futureUpdate(secondsToUpdate * 1000);
-            else
-                updateShapeShift(isExactForeignAmount);
+			// As the amounts get reset after this function run it in a Handler
+			
+			handler.post(new Runnable() {
+
+				@Override
+				public void run() {
+					if (shapeShiftStatus == ShapeShiftStatus.FUTURE_UPDATE)
+						futureUpdate(futureUpdateTime - System.currentTimeMillis());
+					else
+						updateShapeShift(isExactForeignAmount);
+				}
+				
+			});
 
         }
 
@@ -1050,7 +1059,7 @@ public final class SendCoinsFragment extends Fragment
 
         updateDelayHandler.removeCallbacksAndMessages(null);
 
-        final long endTime = System.currentTimeMillis() + delay;
+        futureUpdateTime = System.currentTimeMillis() + delay;
 
         final Runnable timerRunnable = new Runnable() {
 
@@ -1061,7 +1070,7 @@ public final class SendCoinsFragment extends Fragment
                     return;
 
                 long now = System.currentTimeMillis();
-                long remaining = endTime - now;
+                long remaining = futureUpdateTime - now;
 
                 if (remaining <= 0) {
                     updateShapeShift(isExactForeignAmount);
@@ -1092,6 +1101,7 @@ public final class SendCoinsFragment extends Fragment
                     updateDelay += (secondPart >= 30 ? secondPart - 30 : secondPart + 30) * 1000;
 
                 updateDelayHandler.postDelayed(this, updateDelay);
+				
             }
 
 
@@ -1102,13 +1112,14 @@ public final class SendCoinsFragment extends Fragment
     }
 
     private void handleShapeShiftError(final int networkCode, final String text) {
-        if (networkCode == AsyncHttpClient.API_ERROR) {
-            shapeShiftStatus = ShapeShiftStatus.OTHER_ERROR;
-            shapeShiftStatusText = text;
-        }else if (networkCode == AsyncHttpClient.CONNECTION_ERROR)
+        if (networkCode == AsyncHttpClient.CONNECTION_ERROR)
             shapeShiftStatus = ShapeShiftStatus.CONNECTION_ERROR;
         else if (networkCode == AsyncHttpClient.PARSE_ERROR)
             shapeShiftStatus = ShapeShiftStatus.PARSE_ERROR;
+		else {
+			shapeShiftStatus = ShapeShiftStatus.OTHER_ERROR;
+            shapeShiftStatusText = text;
+		}
     }
 
     class ShapeShiftCallbacks extends ShapeShiftComm.Callbacks {
@@ -1429,8 +1440,8 @@ public final class SendCoinsFragment extends Fragment
 
     }
 
-    private void handleGo()
-    {
+    private void handleGo() {
+		
         privateKeyBadPasswordView.setVisibility(View.INVISIBLE);
 
         if (usingShapeShiftCoin != null && !isExactForeignAmount && depositAddress == null) {
@@ -1469,6 +1480,7 @@ public final class SendCoinsFragment extends Fragment
 
                             handleShapeShiftError(networkCode, text);
                             setState(State.INPUT);
+							futureUpdate(SHAPESHIFT_ERROR_DELAY);
 
                         }
 
@@ -1609,9 +1621,9 @@ public final class SendCoinsFragment extends Fragment
             }
 
             @Override
-            protected void onInsufficientMoney(@Nonnull final Coin missing)
-            {
-                setState(State.INPUT);
+            protected void onInsufficientMoney(@Nonnull final Coin missing) {
+				
+                returnToInputAndUpdate();
 
                 final Coin estimated = wallet.getBalance(BalanceType.ESTIMATED);
                 final Coin available = wallet.getBalance(BalanceType.AVAILABLE);
@@ -1640,23 +1652,25 @@ public final class SendCoinsFragment extends Fragment
             }
 
             @Override
-            protected void onInvalidKey()
-            {
-                setState(State.INPUT);
+            protected void onInvalidKey() {
+				
+                returnToInputAndUpdate();
 
                 privateKeyBadPasswordView.setVisibility(View.VISIBLE);
                 privateKeyPasswordView.requestFocus();
+				
             }
 
             @Override
-            protected void onEmptyWalletFailed()
-            {
-                setState(State.INPUT);
+            protected void onEmptyWalletFailed() {
+                
+				returnToInputAndUpdate();
 
                 final DialogBuilder dialog = DialogBuilder.warn(activity, R.string.send_coins_fragment_empty_wallet_failed_title);
                 dialog.setMessage(R.string.send_coins_fragment_hint_empty_wallet_failed);
                 dialog.setNeutralButton(R.string.button_dismiss, null);
                 dialog.show();
+				
             }
 
             @Override
@@ -1725,14 +1739,19 @@ public final class SendCoinsFragment extends Fragment
             }
         }
     };
+	
+	private void returnToInputAndUpdate() {
+		
+		setState(State.INPUT);
+		updateShapeShift(isExactForeignAmount);
+		
+	}
 
     private void setState(final State state) {
 
         this.state = state;
 
-        if (state == State.INPUT)
-            updateShapeShift(isExactForeignAmount);
-        else if (activeShapeShiftComm != null)
+        if (state != State.INPUT && activeShapeShiftComm != null)
             activeShapeShiftComm.stop();
 
         activity.invalidateOptionsMenu();

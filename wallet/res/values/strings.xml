@@ -252,6 +252,11 @@
     <string name="export_transactions_mail_intent_chooser">Export transactions using…</string>
     <string name="export_transactions_mail_intent_failed">Exporting transactions failed.</string>
     <string name="export_transactions_dialog_success"><![CDATA[<p>Your transactions have been exported to <tt>%s</tt></p><p>If your device has a removable SD card, your transactions <i>should</i> be on that card. Do you want to archive your transactions now?</p>]]></string>
+	<string name="export_transactions_unknown">Unknown</string>
+	<string name="load_wallet_title">Loading Wallet</string>
+	<string name="load_wallet_message">Loading the wallet. This may or may not take a while...</string>
+	<string name="reset_blockchain_title">Resetting Blockchain</string>
+	<string name="reset_blockchain_message">Please wait while the blockchain is reset.</string>
 
 	<!-- generic buttons -->
 	<string name="button_ok">OK</string>
@@ -291,7 +296,8 @@
     <string name="trusted_servers_restore_defaults_message">Are you sure you wish to restore the default settings? This will remove the current settings.</string>
     <string name="trusted_servers_new">Add New</string>
     <string name="preferences_category_trusted_servers">Trusted Servers</string>
-    <string name="trusted_servers_default_new_york">Default Server - New York</string>
+    <string name="trusted_servers_default_new_york">Default - New York</string>
+	<string name="trusted_servers_default_london">Default - London</string>
     <string name="trusted_server_dialog_equal">Equal priority to previous server</string>
     <string name="trusted_server_dialog_title_new">New Server</string>
     <string name="trusted_server_dialog_title_edit">Edit Server</string>

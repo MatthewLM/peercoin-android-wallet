@@ -23,8 +23,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
@@ -127,20 +129,38 @@ public final class DiagnosticsFragment extends PreferenceFragment
 		dialog.show();
 	}
 
-	public void handleInitiateReset()
-	{
+	public void handleInitiateReset() {
 		final DialogBuilder dialog = new DialogBuilder(activity);
 		dialog.setTitle(R.string.preferences_initiate_reset_title);
 		dialog.setMessage(R.string.preferences_initiate_reset_dialog_message);
-		dialog.setPositiveButton(R.string.preferences_initiate_reset_dialog_positive, new OnClickListener()
-		{
+		dialog.setPositiveButton(R.string.preferences_initiate_reset_dialog_positive, new OnClickListener() {
 			@Override
-			public void onClick(final DialogInterface dialog, final int which)
-			{
+			public void onClick(final DialogInterface dialog, final int which) {
 				log.info("manually initiated blockchain reset");
 
-				application.resetBlockchain();
-				activity.finish(); // TODO doesn't fully finish prefs on single pane layouts
+				new AsyncTask<Void, Void, Void>() {
+					
+					private ProgressDialog progressDialog = null;
+					
+					@Override
+					protected void onPreExecute () {
+						progressDialog = ProgressDialog.show(activity, getString(R.string.reset_blockchain_title), getString(R.string.reset_blockchain_message), true, false);
+					}
+
+					@Override
+					protected Void doInBackground(Void... params) {
+						application.resetBlockchain();
+						return null;
+					}
+					
+					@Override
+					protected  void onPostExecute(Void result) {
+						progressDialog.dismiss();
+						activity.finish();
+					}
+					
+				}.execute();
+				
 			}
 		});
 		dialog.setNegativeButton(R.string.button_dismiss, null);

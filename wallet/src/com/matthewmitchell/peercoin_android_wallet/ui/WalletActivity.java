@@ -91,6 +91,7 @@ import com.matthewmitchell.peercoin_android_wallet.util.Nfc;
 import com.matthewmitchell.peercoin_android_wallet.util.WalletUtils;
 import com.matthewmitchell.peercoin_android_wallet.util.WholeStringBuilder;
 import com.matthewmitchell.peercoin_android_wallet.R;
+import com.matthewmitchell.peercoin_android_wallet.ui.RestoreWalletTask.CloseAction;
 import com.matthewmitchell.peercoinj.utils.MonetaryFormat;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -381,12 +382,13 @@ public final class WalletActivity extends AbstractWalletActivity
                 TransactionsListAdapter.TransactionCacheEntry txCache = txListAdapter.getTxCache(tx);
                 String memo = tx.getMemo() == null ? "" : StringEscapeUtils.escapeCsv(tx.getMemo());
                 String fee = tx.getFee() == null ? "" : tx.getFee().toPlainString();
+				String address = txCache.address == null ? getString(R.string.export_transactions_unknown) : txCache.address.toString();
 
                 writer.append(dateFormat.format(tx.getUpdateTime()) + ",");
                 writer.append(memo + ",");
-                writer.append( txCache.value.toPlainString() + ",");
+                writer.append(txCache.value.toPlainString() + ",");
                 writer.append(fee + ",");
-                writer.append(txCache.address.toString() + ",");
+                writer.append(address + ",");
                 writer.append(tx.getHash().toString() + ",");
                 writer.append(tx.getConfidence().getDepthInBlocks() + "\n");
 
@@ -467,14 +469,6 @@ public final class WalletActivity extends AbstractWalletActivity
 	@Override
 	protected void onPrepareDialog(final int id, final Dialog dialog) {
 
-        if (!application.isLoaded()) {
-            // It's possible that the dialogs may be restored when the application initially starts.
-            // This behaviour would cause a crash, so dismiss the dialogs.
-            dismissDialog(DIALOG_RESTORE_WALLET);
-            dismissDialog(DIALOG_BACKUP_WALLET);
-            return;
-        }
-
 		if (id == DIALOG_RESTORE_WALLET)
 			prepareRestoreWalletDialog(dialog);
 		else if (id == DIALOG_BACKUP_WALLET)
@@ -501,11 +495,11 @@ public final class WalletActivity extends AbstractWalletActivity
 				passwordView.setText(null); // get rid of it asap
 
 				if (WalletUtils.BACKUP_FILE_FILTER.accept(file))
-					restoreWalletFromProtobuf(file);
+					restoreWalletFromProtobuf(file, CloseAction.CLOSE_RECREATE);
 				else if (WalletUtils.KEYS_FILE_FILTER.accept(file))
-					restorePrivateKeysFromBase58(file);
+					restorePrivateKeysFromBase58(file, CloseAction.CLOSE_RECREATE);
 				else if (Crypto.OPENSSL_FILE_FILTER.accept(file))
-					restoreWalletFromEncrypted(file, password);
+					restoreWalletFromEncrypted(file, password, CloseAction.CLOSE_RECREATE);
 			}
 		});
 		dialog.setNegativeButton(R.string.button_cancel, new OnClickListener()
