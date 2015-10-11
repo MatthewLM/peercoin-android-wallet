@@ -5,13 +5,13 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>integration-android</artifactId>
-	<version>3.0</version>
+	<version>3.1</version>
 	<name>Peercoin Integration for Android</name>
 
 	<parent>
 		<groupId>com.matthewmitchell.peercoin_android_wallet</groupId>
 		<artifactId>base</artifactId>
-		<version>1.2</version>
+		<version>3.0</version>
 	</parent>
 
 	<licenses>

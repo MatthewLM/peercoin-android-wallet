@@ -219,7 +219,7 @@ public final class SendCoinsFragment extends Fragment
     private Handler updateDelayHandler = new Handler(Looper.getMainLooper());
     private long lastSendAmountUpdate = 0;
     private long secondsToUpdate;
-	private long futureUpdateTime;
+    private long futureUpdateTime;
 
     private final long SHAPESHIFT_ERROR_DELAY = 20000;
     private final long SHAPESHIFT_LIMIT_DELAY = 30000;
@@ -916,19 +916,19 @@ public final class SendCoinsFragment extends Fragment
             setShapeShiftNoUpdate(ShapeShift.getCoin(savedInstanceState.getString("shapeshift_coin")),
                     (Monetary) savedInstanceState.getSerializable("shapeshift_foreign_amount"));
 
-			// As the amounts get reset after this function run it in a Handler
-			
-			handler.post(new Runnable() {
+            // As the amounts get reset after this function run it in a Handler
 
-				@Override
-				public void run() {
-					if (shapeShiftStatus == ShapeShiftStatus.FUTURE_UPDATE)
-						futureUpdate(futureUpdateTime - System.currentTimeMillis());
-					else
-						updateShapeShift(isExactForeignAmount);
-				}
-				
-			});
+            handler.post(new Runnable() {
+
+                @Override
+                public void run() {
+                    if (shapeShiftStatus == ShapeShiftStatus.FUTURE_UPDATE)
+                        futureUpdate(futureUpdateTime - System.currentTimeMillis());
+                    else
+                        updateShapeShift(isExactForeignAmount);
+                }
+
+            });
 
         }
 
@@ -984,7 +984,7 @@ public final class SendCoinsFragment extends Fragment
         }
         else if (requestCode == REQUEST_CODE_ENABLE_BLUETOOTH_FOR_DIRECT_PAYMENT)
         {
-            if (paymentIntent.isBluetoothPaymentUrl())
+            if (paymentIntent.isBluetoothPaymentUrl() && usingShapeShiftCoin == null)
                 directPaymentEnableView.setChecked(resultCode == Activity.RESULT_OK);
         }
     }
@@ -1101,7 +1101,7 @@ public final class SendCoinsFragment extends Fragment
                     updateDelay += (secondPart >= 30 ? secondPart - 30 : secondPart + 30) * 1000;
 
                 updateDelayHandler.postDelayed(this, updateDelay);
-				
+
             }
 
 
@@ -1116,10 +1116,10 @@ public final class SendCoinsFragment extends Fragment
             shapeShiftStatus = ShapeShiftStatus.CONNECTION_ERROR;
         else if (networkCode == AsyncHttpClient.PARSE_ERROR)
             shapeShiftStatus = ShapeShiftStatus.PARSE_ERROR;
-		else {
-			shapeShiftStatus = ShapeShiftStatus.OTHER_ERROR;
+        else {
+            shapeShiftStatus = ShapeShiftStatus.OTHER_ERROR;
             shapeShiftStatusText = text;
-		}
+        }
     }
 
     class ShapeShiftCallbacks extends ShapeShiftComm.Callbacks {
@@ -1417,9 +1417,9 @@ public final class SendCoinsFragment extends Fragment
 
     private boolean isShapeShiftValid() {
         return usingShapeShiftCoin == null || (
-            (!isExactForeignAmount || depositAddress != null)
-            && (shapeShiftStatus == ShapeShiftStatus.NONE || shapeShiftStatus == ShapeShiftStatus.FUTURE_UPDATE)
-        );
+                (!isExactForeignAmount || depositAddress != null)
+                && (shapeShiftStatus == ShapeShiftStatus.NONE || shapeShiftStatus == ShapeShiftStatus.FUTURE_UPDATE)
+                );
 
     }
 
@@ -1441,7 +1441,7 @@ public final class SendCoinsFragment extends Fragment
     }
 
     private void handleGo() {
-		
+
         privateKeyBadPasswordView.setVisibility(View.INVISIBLE);
 
         if (usingShapeShiftCoin != null && !isExactForeignAmount && depositAddress == null) {
@@ -1480,7 +1480,7 @@ public final class SendCoinsFragment extends Fragment
 
                             handleShapeShiftError(networkCode, text);
                             setState(State.INPUT);
-							futureUpdate(SHAPESHIFT_ERROR_DELAY);
+                            futureUpdate(SHAPESHIFT_ERROR_DELAY);
 
                         }
 
@@ -1622,7 +1622,7 @@ public final class SendCoinsFragment extends Fragment
 
             @Override
             protected void onInsufficientMoney(@Nonnull final Coin missing) {
-				
+
                 returnToInputAndUpdate();
 
                 final Coin estimated = wallet.getBalance(BalanceType.ESTIMATED);
@@ -1653,24 +1653,24 @@ public final class SendCoinsFragment extends Fragment
 
             @Override
             protected void onInvalidKey() {
-				
+
                 returnToInputAndUpdate();
 
                 privateKeyBadPasswordView.setVisibility(View.VISIBLE);
                 privateKeyPasswordView.requestFocus();
-				
+
             }
 
             @Override
             protected void onEmptyWalletFailed() {
-                
-				returnToInputAndUpdate();
+
+                returnToInputAndUpdate();
 
                 final DialogBuilder dialog = DialogBuilder.warn(activity, R.string.send_coins_fragment_empty_wallet_failed_title);
                 dialog.setMessage(R.string.send_coins_fragment_hint_empty_wallet_failed);
                 dialog.setNeutralButton(R.string.button_dismiss, null);
                 dialog.show();
-				
+
             }
 
             @Override
@@ -1739,13 +1739,13 @@ public final class SendCoinsFragment extends Fragment
             }
         }
     };
-	
-	private void returnToInputAndUpdate() {
-		
-		setState(State.INPUT);
-		updateShapeShift(isExactForeignAmount);
-		
-	}
+
+    private void returnToInputAndUpdate() {
+
+        setState(State.INPUT);
+        updateShapeShift(isExactForeignAmount);
+
+    }
 
     private void setState(final State state) {
 
@@ -1922,8 +1922,8 @@ public final class SendCoinsFragment extends Fragment
                                     timeToWait = String.format("%d second%s", secondsToUpdate, secondsToUpdate == 1 ? "" : "s");
 
                                 shapeShiftHintView.setText(getString(
-                                    R.string.send_coins_fragment_hint_shapeshift_future_update, timeToWait
-                                ));
+                                            R.string.send_coins_fragment_hint_shapeshift_future_update, timeToWait
+                                            ));
 
                             }
 

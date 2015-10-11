@@ -75,11 +75,9 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.net.ConnectivityManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.Looper;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.support.v4.content.LocalBroadcastManager;
@@ -116,7 +114,6 @@ public class BlockchainServiceImpl extends android.app.Service implements Blockc
 
     private final Handler handler = new Handler();
     private final Handler delayHandler = new Handler();
-	private Handler mainHandler;
     private WakeLock wakeLock;
 
     BlockchainLoader loadBlockchain = null;
@@ -397,46 +394,44 @@ public class BlockchainServiceImpl extends android.app.Service implements Blockc
                 peerGroup.addPeerDiscovery(backup, true);
             }
 
-            peerGroup.addPeerDiscovery(new PeerDiscovery()
+            peerGroup.addPeerDiscovery(new PeerDiscovery() {
+                private final PeerDiscovery normalPeerDiscovery = new DnsDiscovery(Constants.NETWORK_PARAMETERS);
+
+                @Override
+                public InetSocketAddress[] getPeers(final long timeoutValue, final TimeUnit timeoutUnit) throws PeerDiscoveryException
+                {
+                    final List<InetSocketAddress> peers = new LinkedList<InetSocketAddress>();
+
+                    boolean needsTrimPeersWorkaround = false;
+
+                    if (hasTrustedPeer)
                     {
-                        private final PeerDiscovery normalPeerDiscovery = new DnsDiscovery(Constants.NETWORK_PARAMETERS);
+                        log.info("trusted peer '" + trustedPeerHost + "'" + (connectTrustedPeerOnly ? " only" : ""));
 
-                        @Override
-                        public InetSocketAddress[] getPeers(final long timeoutValue, final TimeUnit timeoutUnit) throws PeerDiscoveryException
+                        final InetSocketAddress addr = new InetSocketAddress(trustedPeerHost, Constants.NETWORK_PARAMETERS.getPort());
+                        if (addr.getAddress() != null)
                         {
-                            final List<InetSocketAddress> peers = new LinkedList<InetSocketAddress>();
-
-                            boolean needsTrimPeersWorkaround = false;
-
-                            if (hasTrustedPeer)
-                            {
-                                log.info("trusted peer '" + trustedPeerHost + "'" + (connectTrustedPeerOnly ? " only" : ""));
-
-                                final InetSocketAddress addr = new InetSocketAddress(trustedPeerHost, Constants.NETWORK_PARAMETERS.getPort());
-                                if (addr.getAddress() != null)
-                                {
-                                    peers.add(addr);
-                                    needsTrimPeersWorkaround = true;
-                                }
-                            }
-
-                            if (!connectTrustedPeerOnly)
-                                peers.addAll(Arrays.asList(normalPeerDiscovery.getPeers(timeoutValue, timeoutUnit)));
-
-                            // workaround because PeerGroup will shuffle peers
-                            if (needsTrimPeersWorkaround)
-                                while (peers.size() >= maxConnectedPeers)
-                                    peers.remove(peers.size() - 1);
-
-                            return peers.toArray(new InetSocketAddress[0]);
+                            peers.add(addr);
+                            needsTrimPeersWorkaround = true;
                         }
+                    }
 
-                        @Override
-                        public void shutdown()
-                        {
-                            normalPeerDiscovery.shutdown();
-                        }
-                    });
+                    if (!connectTrustedPeerOnly)
+                        peers.addAll(Arrays.asList(normalPeerDiscovery.getPeers(timeoutValue, timeoutUnit)));
+
+                    // workaround because PeerGroup will shuffle peers
+                    if (needsTrimPeersWorkaround)
+                        while (peers.size() >= maxConnectedPeers)
+                            peers.remove(peers.size() - 1);
+
+                    return peers.toArray(new InetSocketAddress[0]);
+                }
+
+                @Override
+                public void shutdown() {
+                    normalPeerDiscovery.shutdown();
+                }
+            });
 
             // start peergroup
             peerGroup.startAsync();
@@ -579,7 +574,7 @@ public class BlockchainServiceImpl extends android.app.Service implements Blockc
     @Override
     public IBinder onBind(final Intent intent) {
         return mBinder;
-		
+
     }
 
     @Override
@@ -623,8 +618,6 @@ public class BlockchainServiceImpl extends android.app.Service implements Blockc
             }
 
         });
-		
-		mainHandler = new Handler();
 
         final IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
@@ -683,16 +676,20 @@ public class BlockchainServiceImpl extends android.app.Service implements Blockc
 
     @Override
     public void onDestroy() {
-		
-		// Stop the loader first, to ensure we are not going to create the information after stopping.
-		
-		loadBlockchain.unregisterListener(this);
+
+        // Stop the loader first, to ensure we are not going to create the information after stopping.
+
+        loadBlockchain.unregisterListener(this);
         loadBlockchain.stopLoading(resetBlockchainOnShutdown);
 
-        if (bcd != null)
-            bcd.delete(resetBlockchainOnShutdown);
+         if (bcd == null && resetBlockchainOnShutdown)
+            // Get the files to delete, without loading the blockchain
+            bcd = new BlockchainData(this);
 
-        bcd = null;
+        if (bcd != null) {
+            bcd.delete(resetBlockchainOnShutdown);
+            bcd = null;
+        }
 
         application.scheduleStartBlockchainService();
         unregisterReceiver(tickReceiver);
@@ -701,12 +698,12 @@ public class BlockchainServiceImpl extends android.app.Service implements Blockc
         delayHandler.removeCallbacksAndMessages(null);
 
         // Use a Thread to do the shutdown which takes some significant time.
-		// As this is used rarely, do not use a Thread pool?
+        // As this is used rarely, do not use a Thread pool?
 
         new Thread() {
-				
-			@Override
-			public void run() {
+
+            @Override
+            public void run() {
 
                 if (peerGroup != null) {
 
@@ -718,15 +715,15 @@ public class BlockchainServiceImpl extends android.app.Service implements Blockc
                     peerGroup.stopAsync();
 
                 }
-				
-				peerConnectivityListener.stop();
+
+                peerConnectivityListener.stop();
                 application.saveWallet();
 
-				application.blockchainServiceHasStopped();
-				
-			}
-			
-		}.start();
+                application.blockchainServiceHasStopped();
+
+            }
+
+        }.start();
 
         if (wakeLock.isHeld()) {
             log.debug("wakelock still held, releasing");
