@@ -358,7 +358,7 @@ public class ExchangeRatesProvider extends ContentProvider
 			yahoo = new URL(
 				Uri.parse("https://query.yahooapis.com/v1/public/yql")
 				.buildUpon()
-				.appendQueryParameter("q", "select * from yahoo.finance.xchange where pair=\"usdeur, usdgbp, usdcny, usdjpy, usdsgd, usdhkd, usdcad, usdnzd, usdaud, usdclp, usddkk, usdsek, usdisk, usdchf, usdbrl, usdrub, usdpln, usdthb, usdkrw, usdtwd\"")
+				.appendQueryParameter("q", "select * from yahoo.finance.xchange where pair=\"usdeur, usdgbp, usdcny, usdjpy, usdsgd, usdhkd, usdcad, usdnzd, usdaud, usdclp, usddkk, usdnok, usdsek, usdisk, usdchf, usdbrl, usdrub, usdpln, usdthb, usdkrw, usdtwd\"")
 				.appendQueryParameter("format", "json")
 				.appendQueryParameter("env", "store://datatables.org/alltableswithkeys")
 				.build().toString()
