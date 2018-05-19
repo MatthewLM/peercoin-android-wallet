@@ -1,3 +1,10 @@
+v3.2
+
+* Added willy's trusted server (abe.peercoinexplorer.net)
+* Updated DNS seeds
+* Updated logo
+* Using peercoinj 0.13.1
+
 v3.1
 
 * Fixed bug relating to restoring wallets
@@ -5,8 +12,8 @@ v3.1
 v3.0
 
 * Using peercoinj 0.13.0
-* Shapeshift API integration. This enables seamless payments in supported foreign coin addresses and URIs 
-from within the App without the use of external plugins by either merchant or customer. 
+* Shapeshift API integration. This enables seamless payments in supported foreign coin addresses and URIs
+from within the App without the use of external plugins by either merchant or customer.
 * Transactions can be exported to csv files by the "Export" menu option.
 * Users can now configure trusted servers to download valid block hashes from, in a priority list.
 * Fast DNS peer discovery

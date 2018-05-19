@@ -45,14 +45,14 @@
 		<dependency>
 			<groupId>com.matthewmitchell.peercoin_android_wallet</groupId>
 			<artifactId>integration-android</artifactId>
-			<version>3.1</version>
+			<version>3.2</version>
 		</dependency>
 
 		<!-- com.matthewmitchell.peercoinj.* -->
 		<dependency>
 			<groupId>com.matthewmitchell</groupId>
 			<artifactId>peercoinj</artifactId>
-			<version>0.13.0</version>
+			<version>0.13.1</version>
 		</dependency>
 
 		<dependency>

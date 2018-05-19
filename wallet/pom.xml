@@ -6,13 +6,13 @@
 
     <artifactId>wallet</artifactId>
     <packaging>apk</packaging>
-    <version>3.1</version>
+    <version>3.2</version>
     <name>Peercoin Wallet</name>
 
     <parent>
         <groupId>com.matthewmitchell.peercoin_android_wallet</groupId>
         <artifactId>base</artifactId>
-        <version>3.1</version>
+        <version>3.2</version>
     </parent>
 
     <licenses>
@@ -73,16 +73,16 @@
         <dependency>
             <groupId>com.matthewmitchell</groupId>
             <artifactId>peercoinj</artifactId>
-            <version>0.13.0</version>
+            <version>0.13.1</version>
         </dependency> 
 
         <!-- com.matthewmitchell.peercoin_android_wallet.integration.android.* -->
         <dependency>
             <groupId>com.matthewmitchell.peercoin_android_wallet</groupId>
             <artifactId>integration-android</artifactId>
-            <version>3.1</version>
+            <version>3.2</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/../integration-android/target/integration-android-3.1.jar</systemPath>
+            <systemPath>${project.basedir}/../integration-android/target/integration-android-3.2.jar</systemPath>
         </dependency>
 
         <!-- com.google.protobuf.* -->
