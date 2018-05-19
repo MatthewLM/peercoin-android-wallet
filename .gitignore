@@ -9,3 +9,4 @@ target/
 *.sw*
 Session.vim
 tags
+.directory
