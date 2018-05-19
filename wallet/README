@@ -1,165 +1,180 @@
 FILES
 
-Your wallet contains your private keys and various transaction related metadata. It is stored in app-private
+Your wallet contains your private keys and various transaction related metadata.
+It is stored in app-private storage:
+
+    Mainnet:
+/data/data/com.matthewmitchell.peercoin_android_wallet/files/wallet-protobuf
+(MODE_PRIVATE)
+
+    Testnet:
+/data/data/com.matthewmitchell.peercoin_android_wallet_test/files/wallet-protobuf-testnet
+(MODE_WORLD_READABLE | MODE_WORLD_WRITEABLE)
+
+The wallet file format is not compatible to wallet.dat (Satoshi client). Rather,
+it uses a custom protobuf format which should be compatible between clients
+using peercoinj.
+
+Certain actions cause automatic rolling backups of your wallet to app-private
 storage:
 
-	Mainnet: /data/data/com.matthewmitchell.peercoin_android_wallet/files/wallet-protobuf (MODE_PRIVATE)
+    Mainnet:
+/data/data/com.matthewmitchell.peercoin_android_wallet/files/key-backup-protobuf
+(MODE_PRIVATE)
 
-	Testnet: /data/data/com.matthewmitchell.peercoin_android_wallet_test/files/wallet-protobuf-testnet (MODE_WORLD_READABLE | MODE_WORLD_WRITEABLE)
-
-The wallet file format is not compatible to wallet.dat (Satoshi client). Rather, it uses a custom protobuf format
-which should be compatible between clients using peercoinj.
-
-Certain actions cause automatic rolling backups of your wallet to app-private storage:
-
-	Mainnet: /data/data/com.matthewmitchell.peercoin_android_wallet/files/key-backup-protobuf (MODE_PRIVATE)
-
-	Testnet: /data/data/com.matthewmitchell.peercoin_android_wallet_test/files/key-backup-protobuf-testnet (MODE_PRIVATE)
+    Testnet:
+/data/data/com.matthewmitchell.peercoin_android_wallet_test/files/key-backup-protobuf-testnet
+(MODE_PRIVATE)
 
 Your wallet can be manually backed up to and restored from external storage:
 
-	Mainnet: /sdcard/Download/peercoin-wallet-backup-<yyyy-MM-dd>
+    Mainnet: /sdcard/Download/peercoin-wallet-backup-<yyyy-MM-dd>
 
-	Testnet: /sdcard/Download/peercoin-wallet-backup-testnet-<yyyy-MM-dd>
+    Testnet: /sdcard/Download/peercoin-wallet-backup-testnet-<yyyy-MM-dd>
 
-If you want to recover coins from manual backups and for whatever reason you cannot use the app
-itself to restore from the backup, see the separate README.recover guide.
+If you want to recover coins from manual backups and for whatever reason you
+cannot use the app itself to restore from the backup, see the separate
+README.recover guide.
 
 
 DEBUGGING
 
 Wallet file for Testnet can be pulled from an (even un-rooted) device using
 
-	adb pull /data/data/com.matthewmitchell.peercoin_android_wallet_test/files/wallet-protobuf-testnet
+    adb pull
+/data/data/com.matthewmitchell.peercoin_android_wallet_test/files/wallet-protobuf-testnet
 
 Log messages can be viewed by
 
-	adb logcat
+    adb logcat
 
-The app can send extensive debug information. Use Options > Settings > Report Issue and follow the dialog.
-In the generated e-mail, replace the support address with yours.
+The app can send extensive debug information. Use Options > Settings > Report
+Issue and follow the dialog.  In the generated e-mail, replace the support
+address with yours.
 
 
 BUILDING THE DEVELOPMENT VERSION
 
-It's important to know that the development version uses Testnet, is debuggable and the wallet file
-is world readable/writeable. The goal is to be able to debug easily.
+It's important to know that the development version uses Testnet, is debuggable
+and the wallet file is world readable/writeable. The goal is to be able to debug
+easily.
 
 You can probably skip some steps, especially if you built Android apps before.
 
-You'll need git, a Java SDK 6 (or later) and Maven 3.0.4 for this. I'll assume Ubuntu Linux for
-the package installs.
+You'll need git, a Java SDK 6 (or later) and Maven 3.0.4 for this. I'll assume
+Ubuntu Linux for the package installs.
 
-	# first time only
-	sudo apt-get install git maven openjdk-6-jdk libstdc++6:i386
+    # first time only sudo apt-get install git maven openjdk-6-jdk
+libstdc++6:i386
 
-If you want to use Maven 3.1.0 or later, you need edit pom.xml to use android-maven-plugin version
-3.8.2 or later.
+If you want to use Maven 3.1.0 or later, you need edit pom.xml to use
+android-maven-plugin version 3.8.2 or later.
 
 Get the Android SDK (Tools only) from
 
-	http://developer.android.com/sdk/
+    http://developer.android.com/sdk/
 
-and unpack it to your workspace directory. Point your ANDROID_HOME variable to that Android SDK directory
-and switch to it. Use
+and unpack it to your workspace directory. Point your ANDROID_HOME variable to
+that Android SDK directory and switch to it. Use
 
-	# make sure tools are at the newest version
-	tools/android update sdk --no-ui --force --filter tools
+    # make sure tools are at the newest version tools/android update sdk --no-ui
+--force --filter tools
 
-	# fetch required android dependencies
-	tools/android update sdk --no-ui --force --filter build-tools-20.0.0,android-10,android-16,extra-android-m2repository
+    # fetch required android dependencies tools/android update sdk --no-ui
+--force --filter
+build-tools-20.0.0,android-10,android-16,extra-android-m2repository
 
 to download the necessary API level.
 
-Finally, you can build Peercoin Wallet and sign it with your development key. Again in your workspace,
-use
+Finally, you can build Peercoin Wallet and sign it with your development key.
+Again in your workspace, use
 
-	# first time only
-	git clone -b master https://github.com/MatthewLM/peercoin-android-wallet peercoin-wallet
+    # first time only git clone -b master
+https://github.com/MatthewLM/peercoin-android-wallet peercoin-wallet
 
-	# each time
-	cd peercoin-wallet
-	git pull
-	mvn clean install
+    # each time cd peercoin-wallet git pull mvn clean install
 
 To upload the app to your Android device, use
 
-	# first time only
-	sudo apt-get install android-tools-adb
+    # first time only sudo apt-get install android-tools-adb
 
-	# each time
-	adb install wallet/target/wallet-*-test.apk
+    # each time adb install wallet/target/wallet-*-test.apk
 
 
 BUILDING THE PRODUCTIVE VERSION
 
-At this point I'd like to remind that you continue on your own risk. According to the license,
-there is basically no warranty and liability. It's your responsibility to audit the source code
-for security issues and build, install and run the application in a secure way.
+At this point I'd like to remind that you continue on your own risk. According
+to the license, there is basically no warranty and liability. It's your
+responsibility to audit the source code for security issues and build, install
+and run the application in a secure way.
 
-The productive version uses Mainnet, is built non-debuggable, space-optimized with ProGuard and the
-wallet file is protected against access from non-root users. In the code repository, it lives in a
-separate 'prod' branch that gets rebased against master with each released version.
+The productive version uses Mainnet, is built non-debuggable, space-optimized
+with ProGuard and the wallet file is protected against access from non-root
+users. In the code repository, it lives in a separate 'prod' branch that gets
+rebased against master with each released version.
 
-	# each time
-	cd peercoin-wallet
-	git fetch origin
-	git checkout origin/prod
-	mvn clean install -Prelease -Dandroid.sdk.path=<path to your android sdk>
+    # each time cd peercoin-wallet git fetch origin git checkout origin/prod mvn
+clean install -Prelease -Dandroid.sdk.path=<path to your android sdk>
 
 
 SETTING UP FOR DEVELOPMENT
 
 Make sure you've got Eclipse Luna with ADT 23 installed.
 
-Use Git to check out the project and an Android library dependency to your workspace:
+Use Git to check out the project and an Android library dependency to your
+workspace:
 
-	# clone Peercoin Wallet project
-	git clone -b master https://github.Com.matthewmitchell/AndroidWallet.git peercoin-wallet
+    # clone Peercoin Wallet project git clone -b master
+https://github.Com.matthewmitchell/AndroidWallet.git peercoin-wallet
 
-	# clone ActionBarSherlock library project
-	git clone https://github.com/JakeWharton/ActionBarSherlock.git action-bar-sherlock
-	cd action-bar-sherlock
-	git checkout 4.1.0
+    # clone ActionBarSherlock library project git clone
+https://github.com/JakeWharton/ActionBarSherlock.git action-bar-sherlock cd
+action-bar-sherlock git checkout 4.1.0
 
 Use the maven-eclipse-plugin to create Eclipse project files:
 
-	cd peercoin-wallet
-	mvn clean install eclipse:eclipse
+    cd peercoin-wallet mvn clean install eclipse:eclipse
 
-Optional: In the generated .classpath, remove the org.eclipse.jdt.launching.JRE_CONTAINER
-classpath entry. It does not belong there, but cannot be excluded from being generated currently.
+Optional: In the generated .classpath, remove the
+org.eclipse.jdt.launching.JRE_CONTAINER classpath entry. It does not belong
+there, but cannot be excluded from being generated currently.
 
-In Eclipse, use File -> Import -> General -> Existing Project into Workspace to import project.
+In Eclipse, use File -> Import -> General -> Existing Project into Workspace to
+import project.
 
-If you see loads of "should be tagged with @Override" errors, set Project -> Properties ->
-Java Compiler -> Errors/Warnings -> Annotations -> Missing @Override annotation to 'Warning'
+If you see loads of "should be tagged with @Override" errors, set Project ->
+Properties -> Java Compiler -> Errors/Warnings -> Annotations -> Missing
+@Override annotation to 'Warning'
 
 
 NFC (Near field communication)
 
-Peercoin Wallet supports reading Peercoin requests via NFC, either from a passive NFC tag or from
-another NFC capable Android device that is requesting coins.
+Peercoin Wallet supports reading Peercoin requests via NFC, either from a
+passive NFC tag or from another NFC capable Android device that is requesting
+coins.
 
-For this to work, just enable NFC in your phone and hold your phone to the tag or device (with
-the "Request coins" dialog open). The "Send coins" dialog will open with fields populated.
+For this to work, just enable NFC in your phone and hold your phone to the tag
+or device (with the "Request coins" dialog open). The "Send coins" dialog will
+open with fields populated.
 
 Instructions for preparing an NFC tag with your address:
 
 - We have successfully tested this NFC tag writer:
-  https://play.google.com/store/apps/details?id=com.nxp.nfc.tagwriter
-  Other writers should work as well, let us know if you succeed.
+  https://play.google.com/store/apps/details?id=com.nxp.nfc.tagwriter Other
+writers should work as well, let us know if you succeed.
 
-- Some tags have less than 50 bytes capacity, those won't work. 1 KB tags recommended.
+- Some tags have less than 50 bytes capacity, those won't work. 1 KB tags
+  recommended.
 
-- The tag needs to contain a Peercoin URI. You can construct one with the "Request coins" dialog,
-  then share with messaging or email. You can also construct the URI manually. Example for Mainnet:
-  peercoin:1G2Y2jP5YFZ5RGk2PXaeWwbeA5y1ZtFhoL
+- The tag needs to contain a Peercoin URI. You can construct one with the
+  "Request coins" dialog, then share with messaging or email. You can also
+construct the URI manually. Example for Mainnet:
+peercoin:1G2Y2jP5YFZ5RGk2PXaeWwbeA5y1ZtFhoL
 
 - The type of the message needs to be URI or URL (not Text).
 
-- If you put your tag at a public place, don't forget to enable write protect. Otherwise, someone
-  could overwrite the tag with his own Peercoin address.
+- If you put your tag at a public place, don't forget to enable write protect.
+  Otherwise, someone could overwrite the tag with his own Peercoin address.
 
 PEERCOINJ
 
@@ -171,6 +186,5 @@ EXCHANGE RATES
 
 Exchange rates are taken from:
 
-    Peercoin to USD: btc-e.com
-    USD to Other Fiat: yahooapis.com
+    Peercoin to USD: btc-e.com USD to Other Fiat: yahooapis.com
 
