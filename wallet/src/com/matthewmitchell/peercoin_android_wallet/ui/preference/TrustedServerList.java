@@ -223,8 +223,8 @@ public class TrustedServerList extends ArrayList<TrustedServer> implements Trust
                 TrustedServer[] servers = TrustedServersDatabaseHelper.getInstance(context).restoreDefaults();
 
                 synchronized (this) {
-					for (TrustedServer server: servers)
-						addServer(server);
+                    for (TrustedServer server: servers)
+                        addServer(server);
                     invalidated = true;
                 }
 
@@ -425,3 +425,4 @@ public class TrustedServerList extends ArrayList<TrustedServer> implements Trust
     }
 
 }
+

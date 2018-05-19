@@ -44,7 +44,8 @@ public class TrustedServersDatabaseHelper extends SQLiteOpenHelper {
     private static final String FIELD_EQUAL = "equal";
 
     public static final String DEFAULT_SERVER_NEW_YORK = "https://peercoinexplorer.info/q/getvalidhashes";
-	public static final String DEFAULT_SERVER_LONDON = "https://london.getvalidhashes.com/peercoin";
+    public static final String DEFAULT_SERVER_LONDON = "https://london.getvalidhashes.com/peercoin";
+    public static final String DEFAULT_SERVER_WILLY = "https://abe.peercoinexplorer.net/q/getvalidhashes";
 
     private final Context context;
 
@@ -70,14 +71,15 @@ public class TrustedServersDatabaseHelper extends SQLiteOpenHelper {
     }
 
     private TrustedServer[] insertDefaults(SQLiteDatabase db) {
-		
+
         TrustedServer[] servers = {
-			insertServer(db, context.getString(R.string.trusted_servers_default_new_york), DEFAULT_SERVER_NEW_YORK, false, 0),
-			insertServer(db, context.getString(R.string.trusted_servers_default_london), DEFAULT_SERVER_LONDON, true, 1),
-		};
-		
-		return servers;
-		
+            insertServer(db, context.getString(R.string.trusted_servers_default_new_york), DEFAULT_SERVER_NEW_YORK, false, 0),
+            insertServer(db, context.getString(R.string.trusted_servers_default_london), DEFAULT_SERVER_LONDON, true, 1),
+            insertServer(db, context.getString(R.string.trusted_servers_default_willy), DEFAULT_SERVER_WILLY, true, 2),
+        };
+
+        return servers;
+
     }
 
     /**

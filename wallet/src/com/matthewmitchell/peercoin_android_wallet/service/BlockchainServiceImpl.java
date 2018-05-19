@@ -132,10 +132,6 @@ public class BlockchainServiceImpl extends android.app.Service implements Blockc
     private long serviceCreatedAt;
     private boolean resetBlockchainOnShutdown = false;
 
-    private final String backupDNS[] = new String[]{
-        "seed.peercoinexplorer.info"
-    };
-
     private static final int MIN_COLLECT_HISTORY = 2;
     private static final int IDLE_BLOCK_TIMEOUT_MIN = 2;
     private static final int IDLE_TRANSACTION_TIMEOUT_MIN = 9;
@@ -388,10 +384,6 @@ public class BlockchainServiceImpl extends android.app.Service implements Blockc
 
                 });
                 loadPDB.startLoading();
-
-                // Use backup nodes when needed
-                DnsDiscovery backup = new DnsDiscovery(backupDNS, Constants.NETWORK_PARAMETERS);
-                peerGroup.addPeerDiscovery(backup, true);
             }
 
             peerGroup.addPeerDiscovery(new PeerDiscovery() {
