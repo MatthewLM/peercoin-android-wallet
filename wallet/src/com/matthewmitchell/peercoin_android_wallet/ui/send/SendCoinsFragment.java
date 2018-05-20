@@ -578,10 +578,16 @@ public final class SendCoinsFragment extends Fragment
                     final String scheme = intentUri != null ? intentUri.getScheme() : null;
                     final String mimeType = intent.getType();
 
-                    if ((Intent.ACTION_VIEW.equals(action) || NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)) && intentUri != null
-                            && ("ppcoin".equals(scheme) || ShapeShift.getCoin(scheme) != null)) {
+                    if (
+                        (Intent.ACTION_VIEW.equals(action)
+                             || NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)
+                        ) && intentUri != null && (
+                            "ppcoin".equals(scheme) || "peercoin".equals(scheme)
+                            || ShapeShift.getCoin(scheme) != null
+                        )
+                    ) {
                         initStateFromPeercoinUri(intentUri);
-                    }else if ((NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)) && PaymentProtocol.MIMETYPE_PAYMENTREQUEST.equals(mimeType)) {
+                    } else if ((NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)) && PaymentProtocol.MIMETYPE_PAYMENTREQUEST.equals(mimeType)) {
                         final NdefMessage ndefMessage = (NdefMessage) intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES)[0];
                         final byte[] ndefMessagePayload = Nfc.extractMimePayload(PaymentProtocol.MIMETYPE_PAYMENTREQUEST, ndefMessage);
                         initStateFromPaymentRequest(mimeType, ndefMessagePayload);

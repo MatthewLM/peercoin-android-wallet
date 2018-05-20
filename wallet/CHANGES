@@ -2,6 +2,7 @@ v3.2
 
 * Added willy's trusted server (abe.peercoinexplorer.net)
 * Updated DNS seeds
+* Use "peercoin:" URI prefix
 * Updated logo
 * Using peercoinj 0.13.1
 

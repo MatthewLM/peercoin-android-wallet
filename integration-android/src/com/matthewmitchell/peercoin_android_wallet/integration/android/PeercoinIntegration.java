@@ -229,7 +229,7 @@ public final class PeercoinIntegration
 
 	private static Intent makePeercoinUriIntent(final String address, final Long amount)
 	{
-		final StringBuilder uri = new StringBuilder("ppcoin:");
+		final StringBuilder uri = new StringBuilder("peercoin:");
 		if (address != null)
 			uri.append(address);
 		if (amount != null)
