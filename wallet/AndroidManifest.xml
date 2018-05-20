@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.matthewmitchell.peercoin_android_wallet"
     android:installLocation="internalOnly"
-    android:versionCode="12"
+    android:versionCode="13"
     android:versionName="3.2" >
 
     <uses-sdk
